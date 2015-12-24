@@ -51,6 +51,20 @@ public class FXMLTableViewController implements Initializable{
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		initComponents();
+
+		//valorColumn.setCellFactory(TextFieldTableCell.<ListItem>forTableColumn());
+
+		/*valorColumn.setOnEditStart(new EventHandler<TableColumn.CellEditEvent<ListItem, String>>(){
+			@Override
+			public void handle(CellEditEvent<ListItem, String> event) {
+				event.getTableView().getItems().get(event.getTablePosition().getRow()).
+			}
+		});
+*/
+	}
+
+	private void initComponents() {
 		boolean development = true;
 		if (development)
 			initializeAreas();
@@ -70,21 +84,11 @@ public class FXMLTableViewController implements Initializable{
                 return new PairValueCell();
             }
         });
-
-		//valorColumn.setCellFactory(TextFieldTableCell.<ListItem>forTableColumn());
-
-		/*valorColumn.setOnEditStart(new EventHandler<TableColumn.CellEditEvent<ListItem, String>>(){
-			@Override
-			public void handle(CellEditEvent<ListItem, String> event) {
-				event.getTableView().getItems().get(event.getTablePosition().getRow()).
-			}
-		});
-*/
 	}
 
 	@FXML
 	protected void extrairBookAction(ActionEvent event) {
-
+		initComponents();
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Campos Obrigatórios Não Preenchidos");
 		alert.setHeaderText("Erro");
@@ -128,6 +132,7 @@ public class FXMLTableViewController implements Initializable{
 
 	@FXML
 	protected void extrairSaidaAction(ActionEvent event) {
+		initComponents();
 
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Campos Obrigatórios Não Preenchidos");
@@ -164,6 +169,7 @@ public class FXMLTableViewController implements Initializable{
     		yy03Radio.setDisable(false);
     		yy06Radio.setDisable(false);
     		glogRadio.setDisable(true);
+    		glogRadio.setSelected(false);
     		textoRadio.setDisable(true);
     		gerarAreaButtom.setDisable(true);
     		extrairButtom.setDisable(false);
@@ -286,25 +292,6 @@ public class FXMLTableViewController implements Initializable{
 						  + "00000: F2 4B F2 F0 F1 F5 40 40 40 40 40 40 40 40 40 40 40 40 40 40  2.2015              \n"
 						  + "00000: 40 40 40 40 40 40            "
 						   );
-	}
-
-	@FXML
-	protected void processAction(ActionEvent evt){
-/*		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Campos Obrigatórios Não Preenchidos");
-		alert.setHeaderText("Erro");
-
-		if(bookArea.getText().isEmpty() && commArea.getText().isEmpty()){
-			alert.setContentText("Favor Preencher o Book e a Commarea");
-		}else {
-			if(bookArea.getText().isEmpty()){
-				alert.setContentText("Favor Preencher o Book");
-			}
-			if(commArea.getText().isEmpty()){
-				alert.setContentText("Favor Preenchera Commarea");
-			}
-		}*/
-		process();
 	}
 
 	private void process(){
@@ -510,6 +497,10 @@ public class FXMLTableViewController implements Initializable{
 			System.out.println(campo.getNivel() + " - " + campo.getNome() + " - " + campo.getTam() + " - " + campo.getPos());
 		}*/
 		generateCommAreaTable(convertHextoText(commArea));
+				for (Iterator<Campo> iterator = listCampos.iterator(); iterator.hasNext();) {
+		Campo campo = (Campo) iterator.next();
+		System.out.println(campo.getNivel() + " - " + campo.getNome() + " - " + campo.getTam() + " - " + campo.getPos() + ": " + campo.getValor());
+	}
 	}
 
 	private String processGlogFinalLine(String line){
@@ -673,6 +664,7 @@ public class FXMLTableViewController implements Initializable{
 	class PairValueCell extends TableCell<Pair<String, Object>, Object> {
 	    private MaskTextField textField;
 
+
 		@Override
 	    protected void updateItem(Object item, boolean empty) {
 	        super.updateItem(item, empty);
@@ -692,15 +684,16 @@ public class FXMLTableViewController implements Initializable{
 						setText("");
 	            	if (glogRadio.isSelected())
 	            		setText(((MyValue) item).getValue());
-	            	else
+	            	else{
+	            		textField.setText("");
 	            		setGraphic(textField);
+	            	}
 	            } else {
 	                setText("");
 	                textField = new MaskTextField();
 	                setGraphic(textField);
 	            }
 	        } else {
-	            setText(null);
 	            textField = new MaskTextField();
                 setGraphic(textField);
 	        }
