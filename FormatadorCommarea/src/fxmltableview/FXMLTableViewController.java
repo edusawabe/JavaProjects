@@ -9,11 +9,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
-import javafx.beans.value.ChangeListener;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -22,18 +21,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
+import javafx.util.Pair;
 
 public class FXMLTableViewController implements Initializable{
-    @FXML private TableView<ListItem> tableView;
-    @FXML private TableColumn<ListItem,String> campoColumn;
-    @FXML private TableColumn<ListItem,String> valorColumn;
+    @FXML private TableView<Pair<String,Object>> tableView;
+    @FXML private TableColumn<Pair<String,Object>,String> campoColumn;
+    @FXML private TableColumn<Pair<String,Object>,Object> valorColumn;
 
     @FXML private TextField firstNameField;
     @FXML private TextField lastNameField;
@@ -50,6 +48,39 @@ public class FXMLTableViewController implements Initializable{
 	@FXML Button extrairButtom;
 	@FXML Button gerarAreaButtom;
 	@FXML Button processButtom;
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		boolean development = true;
+		if (development)
+			initializeAreas();
+		extrairButtom.setDisable(true);
+		gerarAreaButtom.setDisable(true);
+		processButtom.setDisable(true);
+		commArea.setFont(Font.font("Courier New", 12));
+		bookArea.setFont(Font.font("Courier New", 12));
+
+		//tableView.getColumns().addAll(campoColumn, valorColumn);
+		tableView.setEditable(true);
+		campoColumn.setCellValueFactory(new PairKeyFactory());
+		valorColumn.setCellValueFactory(new PairValueFactory());
+		valorColumn.setCellFactory(new Callback<TableColumn<Pair<String, Object>, Object>, TableCell<Pair<String, Object>, Object>>() {
+            @Override
+            public TableCell<Pair<String, Object>, Object> call(TableColumn<Pair<String, Object>, Object> column) {
+                return new PairValueCell();
+            }
+        });
+
+		//valorColumn.setCellFactory(TextFieldTableCell.<ListItem>forTableColumn());
+
+		/*valorColumn.setOnEditStart(new EventHandler<TableColumn.CellEditEvent<ListItem, String>>(){
+			@Override
+			public void handle(CellEditEvent<ListItem, String> event) {
+				event.getTableView().getItems().get(event.getTablePosition().getRow()).
+			}
+		});
+*/
+	}
 
 	@FXML
 	protected void extrairBookAction(ActionEvent event) {
@@ -158,129 +189,6 @@ public class FXMLTableViewController implements Initializable{
     		extrairButtom.setDisable(true);
     		processButtom.setDisable(false);
     	}
-    }
-
-
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		boolean development = true;
-		if (development)
-			initializeAreas();
-		extrairButtom.setDisable(true);
-		gerarAreaButtom.setDisable(true);
-		processButtom.setDisable(true);
-		commArea.setFont(Font.font("Courier New", 12));
-		bookArea.setFont(Font.font("Courier New", 12));
-
-		//tableView.getColumns().addAll(campoColumn, valorColumn);
-		tableView.setEditable(true);
-		Callback<TableColumn, TableCell> cellFactory =
-	             new Callback<TableColumn, TableCell>() {
-	                 public TableCell call(TableColumn p) {
-	                    return new EditingCell();
-	                 }
-	             };
-
-		campoColumn.setOnEditCommit(new EventHandler<CellEditEvent<ListItem, String>>() {
-			@Override
-			public void handle(CellEditEvent<ListItem, String> t) {
-				((ListItem) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCampo((t.getNewValue()));
-			}
-		});
-
-		valorColumn.setCellFactory(TextFieldTableCell.<ListItem>forTableColumn());
-		valorColumn.setOnEditCommit(new EventHandler<CellEditEvent<ListItem, String>>() {
-			@Override
-			public void handle(CellEditEvent<ListItem, String> t) {
-				((ListItem) t.getTableView().getItems().get(t.getTablePosition().getRow())).setValor((t.getNewValue()));
-			}
-		});
-
-		/*valorColumn.setOnEditStart(new EventHandler<TableColumn.CellEditEvent<ListItem, String>>(){
-			@Override
-			public void handle(CellEditEvent<ListItem, String> event) {
-				event.getTableView().getItems().get(event.getTablePosition().getRow()).
-			}
-		});
-*/
-	}
-
-	class EditingCell extends TableCell<ListItem, Object> {
-
-        private MaskTextField textField;
-
-        public EditingCell() {
-
-        }
-
-        @Override
-        public void startEdit() {
-            if (!isEmpty()) {
-                super.startEdit();
-                createTextField();
-                setText(null);
-                setGraphic(textField);
-                textField.selectAll();
-            }
-        }
-
-        @Override
-        public void cancelEdit() {
-            super.cancelEdit();
-
-            setText((String) getItem());
-            setGraphic(null);
-        }
-
-        public void updateItem(Object item, boolean empty) {
-            super.updateItem(item, empty);
-
-            if (empty) {
-                setText(null);
-                setGraphic(null);
-            } else {
-            	if(item instanceof ListItem){
-            		textField.setMask(((ListItem) item).getMask());
-            	}
-                if (isEditing()) {
-                    if (textField != null) {
-                        textField.setText(getString());
-                    }
-                    setText(null);
-                    setGraphic(textField);
-                } else {
-                    setText(getString());
-                    setGraphic(null);
-                }
-            }
-        }
-
-        private void createTextField() {
-            textField = new MaskTextField(getString());
-            textField.setMinWidth(this.getWidth() - this.getGraphicTextGap()* 2);
-            textField.focusedProperty().addListener(new ChangeListener<Boolean>(){
-
-				@Override
-				public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-					if (!newValue){
-						commitEdit(textField.getText());
-					}
-				}
-
-            });
-        }
-
-        private String getString() {
-            return getItem() == null ? "" : getItem().toString();
-        }
-
-		public MaskTextField getTextField() {
-			return textField;
-		}
-
-		public void setTextField(MaskTextField textField) {
-			this.textField = textField;
-		}
     }
 
 	public void initializeAreas(){
@@ -693,16 +601,16 @@ public class FXMLTableViewController implements Initializable{
 	}
 
 	private void generateCommAreaTable(String commArea){
-		ObservableList<ListItem> commAreaList = tableView.getItems();
+		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
 
 		for (Campo campo : listCampos) {
 			if(!campo.isOccurs()){
 				ListItem item = new ListItem();
 				item.setCampo(campo.getNivel() + " - " + campo.getNome() + " - " + campo.getType());
 				item.setValor(commArea.substring(campo.getPos(), campo.getPos() + campo.getTam()));
-				campo.setValor(commArea.substring(campo.getPos(), campo.getPos()));
+				campo.setValor(commArea.substring(campo.getPos(), campo.getPos() + campo.getTam()));
 				item.setMask(campo.getMask());
-				commAreaList.add(item);
+				commAreaList.add(new Pair(item.getCampo(), new MyValue(campo.getValor(),campo.getMask())));
 			}
 			else{
 				for (int i = 0; i < campo.getListOccurs().size(); i++) {
@@ -713,7 +621,7 @@ public class FXMLTableViewController implements Initializable{
 						item.setValor(commArea.substring(listCampo.getPos(), listCampo.getPos() + listCampo.getTam()));
 						listCampo.setValor(commArea.substring(listCampo.getPos(), listCampo.getPos()));
 						item.setMask(campo.getMask());
-						commAreaList.add(item);
+						commAreaList.add(new Pair(campo.getNome(),new MyValue(campo.getValor(),campo.getMask())));
 					}
 				}
 			}
@@ -721,14 +629,14 @@ public class FXMLTableViewController implements Initializable{
 	}
 
 	private void generateTable(){
-		ObservableList<ListItem> commAreaList = tableView.getItems();
+		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
 
 		for (Campo campo : listCampos) {
 			if(!campo.isOccurs()){
 				ListItem item = new ListItem(campo.getNivel() + " - " + campo.getNome(), "", "");
 				item.setCampo(campo.getNivel() + " - " + campo.getNome() + " - " + campo.getType());
 				item.setMask(campo.getMask());
-				commAreaList.add(item);
+				commAreaList.add(new Pair(campo.getNome(),new MyValue("",campo.getMask())));
 			}
 			else{
 				for (int i = 0; i < campo.getListOccurs().size(); i++) {
@@ -737,10 +645,67 @@ public class FXMLTableViewController implements Initializable{
 						ListItem item = new ListItem(listCampo.getNivel() + " - " + listCampo.getNome(), "", "");
 						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
 						item.setMask(campo.getMask());
-						commAreaList.add(item);
+						commAreaList.add(new Pair(campo.getNome(),new MyValue("",campo.getMask())));
 					}
 				}
 			}
 		}
 	}
+
+	class PairKeyFactory implements Callback<TableColumn.CellDataFeatures<Pair<String, Object>, String>, ObservableValue<String>> {
+	    @Override
+	    public ObservableValue<String> call(TableColumn.CellDataFeatures<Pair<String, Object>, String> data) {
+	        return new ReadOnlyObjectWrapper(data.getValue().getKey());
+	    }
+	}
+
+	class PairValueFactory implements Callback<TableColumn.CellDataFeatures<Pair<String, Object>, Object>, ObservableValue<Object>> {
+	    @SuppressWarnings("unchecked")
+	    @Override
+	    public ObservableValue<Object> call(TableColumn.CellDataFeatures<Pair<String, Object>, Object> data) {
+	        Object value = data.getValue().getValue();
+	        return (value instanceof ObservableValue)
+	                ? (ObservableValue) value
+	                : new ReadOnlyObjectWrapper<>(value);
+	    }
+	}
+
+	class PairValueCell extends TableCell<Pair<String, Object>, Object> {
+	    private MaskTextField textField;
+
+		@Override
+	    protected void updateItem(Object item, boolean empty) {
+	        super.updateItem(item, empty);
+
+	        if (item != null) {
+	            if (item instanceof String) {
+	                setText((String) item);
+	                textField = new MaskTextField();
+	                setGraphic(textField);
+	            } else if (item instanceof MyValue) {
+	            	textField = new MaskTextField();
+	                if(((MyValue) item).getMask()!=null)
+	                	textField.setMask(((MyValue) item).getMask());
+	            	if(((MyValue) item).getValue() != null)
+						textField.setText(((MyValue) item).getValue());
+					else
+						setText("");
+	            	if (glogRadio.isSelected())
+	            		setText(((MyValue) item).getValue());
+	            	else
+	            		setGraphic(textField);
+	            } else {
+	                setText("");
+	                textField = new MaskTextField();
+	                setGraphic(textField);
+	            }
+	        } else {
+	            setText(null);
+	            textField = new MaskTextField();
+                setGraphic(textField);
+	        }
+	    }
+	}
+
+
 }

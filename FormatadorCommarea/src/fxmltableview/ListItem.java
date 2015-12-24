@@ -41,4 +41,8 @@ public class ListItem {
 	public void setMask(String mask) {
     	this.mask = mask;
     }
+
+	public String toString(){
+		return campo.get();
+	}
 }

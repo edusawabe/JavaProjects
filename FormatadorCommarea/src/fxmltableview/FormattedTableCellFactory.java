@@ -44,6 +44,7 @@ public class FormattedTableCellFactory<S, T> implements Callback<TableColumn<S, 
 
     private TextAlignment alignment;
     private Format format;
+    private MaskTextField maskedTextField;
 
     public TextAlignment getAlignment() {
         return alignment;
@@ -81,8 +82,10 @@ public class FormattedTableCellFactory<S, T> implements Callback<TableColumn<S, 
                     super.setText(null);
                     super.setGraphic((Node) item);
                 } else {
+                	if(item instanceof ListItem)
+                		maskedTextField.setMask(((ListItem) item).getMask());
                     super.setText(item.toString());
-                    super.setGraphic(null);
+                    super.setGraphic(maskedTextField);
                 }
             }
         };
@@ -100,4 +103,12 @@ public class FormattedTableCellFactory<S, T> implements Callback<TableColumn<S, 
         }
         return cell;
     }
+
+	public MaskTextField getMaskedTextField() {
+		return maskedTextField;
+	}
+
+	public void setMaskedTextField(MaskTextField maskedTextField) {
+		this.maskedTextField = maskedTextField;
+	}
 }

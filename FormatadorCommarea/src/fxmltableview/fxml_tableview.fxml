@@ -18,20 +18,8 @@
      <TableView fx:id="tableView" GridPane.rowIndex="2">
        <columns>
          <TableColumn fx:id="campoColumn" editable="true" prefWidth="100.0" sortable="false" text="Campo">
-           <cellFactory>
-             <FormattedTableCellFactory alignment="LEFT" />
-           </cellFactory>
-           <cellValueFactory>
-             <PropertyValueFactory property="campo" />
-           </cellValueFactory>
          </TableColumn>
          <TableColumn fx:id="valorColumn" prefWidth="100.0" sortable="false" text="Valor">
-			<cellFactory>
-             <FormattedTableCellFactory alignment="LEFT" />
-           </cellFactory>
-           <cellValueFactory>
-             <PropertyValueFactory property="valor" />
-           </cellValueFactory>
          </TableColumn>
        </columns>
        <items>
