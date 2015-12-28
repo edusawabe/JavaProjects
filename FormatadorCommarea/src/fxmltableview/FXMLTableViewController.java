@@ -5,12 +5,14 @@
 package fxmltableview;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,19 +40,21 @@ public class FXMLTableViewController implements Initializable{
     @FXML private TextField emailField;
     @FXML private TextArea bookArea;
     @FXML private TextArea commArea;
-	private LinkedList<Campo> listCampos;
-	@FXML RadioButton entradaRadio;
-	@FXML RadioButton saidaRadio;
-	@FXML RadioButton glogRadio;
-	@FXML RadioButton textoRadio;
-	@FXML RadioButton yy03Radio;
-	@FXML RadioButton yy06Radio;
-	@FXML Button extrairButtom;
-	@FXML Button gerarAreaButtom;
-	@FXML Button processButtom;
+		  private LinkedList<Campo> listCampos;
+	@FXML private RadioButton entradaRadio;
+	@FXML private RadioButton saidaRadio;
+	@FXML private RadioButton glogRadio;
+	@FXML private RadioButton textoRadio;
+	@FXML private RadioButton yy03Radio;
+	@FXML private RadioButton yy06Radio;
+	@FXML private Button extrairButtom;
+	@FXML private Button gerarAreaButtom;
+	@FXML private Button processButtom;
+	      private boolean development;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		development = true;
 		initComponents();
 
 		//valorColumn.setCellFactory(TextFieldTableCell.<ListItem>forTableColumn());
@@ -65,29 +69,40 @@ public class FXMLTableViewController implements Initializable{
 	}
 
 	private void initComponents() {
-		boolean development = true;
+
 		if (development)
 			initializeAreas();
+		else{
+
+			int size = tableView.getItems().size() -1;
+			tableView.getItems().setAll(FXCollections.observableArrayList());
+
+			listCampos = new LinkedList<Campo>();
+		}
+
 		extrairButtom.setDisable(true);
 		gerarAreaButtom.setDisable(true);
 		processButtom.setDisable(true);
 		commArea.setFont(Font.font("Courier New", 12));
 		bookArea.setFont(Font.font("Courier New", 12));
 
-		//tableView.getColumns().addAll(campoColumn, valorColumn);
+
 		tableView.setEditable(true);
 		campoColumn.setCellValueFactory(new PairKeyFactory());
 		valorColumn.setCellValueFactory(new PairValueFactory());
 		valorColumn.setCellFactory(new Callback<TableColumn<Pair<String, Object>, Object>, TableCell<Pair<String, Object>, Object>>() {
-            @Override
+			@Override
             public TableCell<Pair<String, Object>, Object> call(TableColumn<Pair<String, Object>, Object> column) {
                 return new PairValueCell();
             }
         });
+		if (tableView.getColumns().isEmpty())
+			tableView.getColumns().addAll(campoColumn, valorColumn);
 	}
 
 	@FXML
 	protected void extrairBookAction(ActionEvent event) {
+		development = false;
 		initComponents();
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Campos Obrigatórios Não Preenchidos");
@@ -116,9 +131,13 @@ public class FXMLTableViewController implements Initializable{
 				gerarCommAreaYY03();
 			if (yy06Radio.isSelected())
 				gerarCommAreaYY06();
+			entradaRadio.setSelected(true);
+			setRadiosEntrada();
 		}
 		else{
 			alert.show();
+			entradaRadio.setSelected(true);
+			setRadiosEntrada();
 		}
 	}
 
@@ -132,6 +151,7 @@ public class FXMLTableViewController implements Initializable{
 
 	@FXML
 	protected void extrairSaidaAction(ActionEvent event) {
+		development = false;
 		initComponents();
 
 		Alert alert = new Alert(AlertType.ERROR);
@@ -156,30 +176,45 @@ public class FXMLTableViewController implements Initializable{
 			process();
 			if (glogRadio.isSelected())
 				processGlog();
+/*			saidaRadio.setSelected(true);
+			setRadiosSaida();*/
+			processButtom.setDisable(false);
 		}
 		else{
 			alert.show();
+			saidaRadio.setSelected(true);
+			setRadiosSaida();
+			processButtom.setDisable(false);
 		}
 	}
 
     @FXML
     protected void entradaSelected(ActionEvent event) {
     	if (entradaRadio.isSelected()){
-    		saidaRadio.setSelected(false);
-    		yy03Radio.setDisable(false);
-    		yy06Radio.setDisable(false);
-    		glogRadio.setDisable(true);
-    		glogRadio.setSelected(false);
-    		textoRadio.setDisable(true);
-    		gerarAreaButtom.setDisable(true);
-    		extrairButtom.setDisable(false);
-    		processButtom.setDisable(true);
+    		setRadiosEntrada();
     	}
     }
+
+	private void setRadiosEntrada() {
+		saidaRadio.setSelected(false);
+		yy03Radio.setDisable(false);
+		yy06Radio.setDisable(false);
+		glogRadio.setDisable(true);
+		glogRadio.setSelected(false);
+		textoRadio.setDisable(true);
+		gerarAreaButtom.setDisable(true);
+		extrairButtom.setDisable(false);
+		processButtom.setDisable(true);
+	}
 
     @FXML
     protected void saidaSelected(ActionEvent event) {
     	if (saidaRadio.isSelected()){
+    		setRadiosSaida();
+    	}
+    }
+
+	private void setRadiosSaida() {
     		entradaRadio.setSelected(false);
     		yy03Radio.setSelected(false);
     		yy06Radio.setSelected(false);
@@ -194,8 +229,7 @@ public class FXMLTableViewController implements Initializable{
     		gerarAreaButtom.setDisable(true);
     		extrairButtom.setDisable(true);
     		processButtom.setDisable(false);
-    	}
-    }
+	}
 
 	public void initializeAreas(){
 		bookArea.setText(
@@ -306,7 +340,7 @@ public class FXMLTableViewController implements Initializable{
 					campoAtual = processDecimal(bookLine[i]);
 				}
 				else{
-					if(bookLine[i].contains("PIC 9(")){
+					if(bookLine[i].contains("9(")){
 						if(bookLine[i].contains("VALUE")){
 							campoAtual = processNumericValue(bookLine[i]);
 						}
@@ -387,7 +421,7 @@ public class FXMLTableViewController implements Initializable{
 
 	private Campo processStringValue(String line){
 		int beginPic, endPic;
-		beginPic = line.indexOf("PIC X(") + 6;
+		beginPic = line.indexOf("X(") + 2;
 		endPic = line.indexOf(") ");
 
 		Campo c = new Campo();
@@ -399,7 +433,7 @@ public class FXMLTableViewController implements Initializable{
 
 	private Campo processString(String line){
 		int beginPic, endPic, posPonto;
-		beginPic = line.indexOf("PIC X(") + 6;
+		beginPic = line.indexOf("X(") + 2;
 		endPic = line.indexOf(").");
 
 		Campo c = new Campo();
@@ -414,7 +448,7 @@ public class FXMLTableViewController implements Initializable{
 	private Campo processNumeric(String line){
 		int beginPic, endPic, posPonto;
 
-		beginPic = line.indexOf("PIC 9(") + 6;
+		beginPic = line.indexOf("9(") + 2;
 		endPic = line.indexOf(").");
 
 		Campo c = new Campo();
@@ -428,7 +462,7 @@ public class FXMLTableViewController implements Initializable{
 
 	private Campo processNumericValue(String line){
 		int beginPic, endPic;
-		beginPic = line.indexOf("PIC 9(") + 6;
+		beginPic = line.indexOf("9(") + 2;
 		endPic = line.indexOf(") ");
 		Campo c = new Campo();
 		getNomeNivelCampo(line, c);
@@ -442,7 +476,7 @@ public class FXMLTableViewController implements Initializable{
 		Campo c = new Campo();
 
 		if (line.contains(")V9(")){
-			beginPic = line.indexOf("PIC 9(") + 6;
+			beginPic = line.indexOf(" 9(") + 3;
 			beginV = line.indexOf(")V9(");
 			endV = line.indexOf(")V9(") + 4;
 			endPic = line.indexOf(").");
@@ -450,21 +484,21 @@ public class FXMLTableViewController implements Initializable{
 		}
 
 		if (line.contains(")V99")){
-			beginPic = line.indexOf("PIC 9(") + 6;
+			beginPic = line.indexOf(" 9(") + 3;
 			beginV = line.indexOf(")V9");
 			endPic = line.indexOf(").");
 			c.setTam((Integer.parseInt(line.substring(beginPic, beginV)) + (2)));
 		}
 
 		if (line.contains(")V999")){
-			beginPic = line.indexOf("PIC 9(") + 6;
+			beginPic = line.indexOf(" 9(") + 3;
 			beginV = line.indexOf(")V9");
 			endPic = line.indexOf(").");
 			c.setTam((Integer.parseInt(line.substring(beginPic, beginV)) + (3)));
 		}
 
 		if (line.contains(")V9999")){
-			beginPic = line.indexOf("PIC 9(") + 6;
+			beginPic = line.indexOf(" 9(") + 3;
 			beginV = line.indexOf(")V9");
 			endPic = line.indexOf(").");
 			c.setTam((Integer.parseInt(line.substring(beginPic, beginV)) + (4)));
@@ -611,8 +645,8 @@ public class FXMLTableViewController implements Initializable{
 						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
 						item.setValor(commArea.substring(listCampo.getPos(), listCampo.getPos() + listCampo.getTam()));
 						listCampo.setValor(commArea.substring(listCampo.getPos(), listCampo.getPos()));
-						item.setMask(campo.getMask());
-						commAreaList.add(new Pair(campo.getNome(),new MyValue(campo.getValor(),campo.getMask())));
+						item.setMask(listCampo.getMask());
+						commAreaList.add(new Pair(item.getCampo(),new MyValue(item.getValor(),item.getMask())));
 					}
 				}
 			}
@@ -633,10 +667,10 @@ public class FXMLTableViewController implements Initializable{
 				for (int i = 0; i < campo.getListOccurs().size(); i++) {
 					LinkedList<Campo> listItem = campo.getListOccurs().get(i);
 					for(Campo listCampo : listItem){
-						ListItem item = new ListItem(listCampo.getNivel() + " - " + listCampo.getNome(), "", "");
+						ListItem item = new ListItem("   " + listCampo.getNivel() + " - " + listCampo.getNome(), "", "");
 						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
-						item.setMask(campo.getMask());
-						commAreaList.add(new Pair(campo.getNome(),new MyValue("",campo.getMask())));
+						item.setMask(listCampo.getMask());
+						commAreaList.add(new Pair(item.getCampo(),new MyValue("",item.getMask())));
 					}
 				}
 			}
@@ -682,9 +716,12 @@ public class FXMLTableViewController implements Initializable{
 						textField.setText(((MyValue) item).getValue());
 					else
 						setText("");
-	            	if (glogRadio.isSelected())
+	            	if (glogRadio.isSelected()){
+	            		setGraphic(null);
 	            		setText(((MyValue) item).getValue());
+	            	}
 	            	else{
+	            		setText("");
 	            		textField.setText("");
 	            		setGraphic(textField);
 	            	}
