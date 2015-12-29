@@ -9,6 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
+<?import fxmltableview.MaskTextField?>
 
 <GridPane alignment="CENTER" hgap="10.0" prefHeight="700.0" prefWidth="1024.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxmltableview.FXMLTableViewController">
   <padding>
@@ -54,6 +55,7 @@
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
@@ -67,14 +69,17 @@
                         <Label prefHeight="17.0" prefWidth="178.0" text="CommArea" />
                         <Label prefHeight="17.0" prefWidth="72.0" text="Tipo:" GridPane.rowIndex="1" />
                         <RadioButton fx:id="entradaRadio" mnemonicParsing="false" onAction="#entradaSelected" text="Entrada" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <RadioButton fx:id="saidaRadio" mnemonicParsing="false" onAction="#saidaSelected" text="Saída" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <RadioButton fx:id="glogRadio" mnemonicParsing="false" text="GLOG" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <RadioButton fx:id="saidaRadio" mnemonicParsing="false" onAction="#saidaSelected" text="Saída" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <RadioButton fx:id="glogRadio" mnemonicParsing="false" text="GLOG" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                         <RadioButton fx:id="yy03Radio" mnemonicParsing="false" text="YY03" GridPane.rowIndex="2" />
-                        <RadioButton fx:id="textoRadio" mnemonicParsing="false" text="Texto" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <RadioButton fx:id="textoRadio" mnemonicParsing="false" text="Texto" GridPane.columnIndex="4" GridPane.rowIndex="2" />
                         <RadioButton fx:id="yy06Radio" mnemonicParsing="false" text="YY06" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Button fx:id="extrairButtom" mnemonicParsing="false" onAction="#extrairBookAction" prefHeight="25.0" prefWidth="89.0" text="Extr. Book" GridPane.rowIndex="3" />
-                        <Button fx:id="processButtom" mnemonicParsing="false" onAction="#extrairSaidaAction" prefHeight="25.0" prefWidth="90.0" text="Extrair Saída" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                        <Button fx:id="gerarAreaButtom" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Gerar Área" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Button fx:id="processButtom" mnemonicParsing="false" onAction="#extrairSaidaAction" prefHeight="25.0" prefWidth="90.0" text="Extrair Saída" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                        <Button fx:id="gerarAreaButtom" mnemonicParsing="false" prefHeight="25.0" prefWidth="101.0" text="Gerar Área" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <Button fx:id="gerarOccurs" mnemonicParsing="false" onAction="#generateOccursTable" prefHeight="25.0" prefWidth="103.0" text="Gerar Occurs" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <MaskTextField  fx:id="fluxoField" GridPane.columnIndex="3" />
+                        <Label prefHeight="17.0" prefWidth="101.0" text="Fluxo:" GridPane.columnIndex="2" />
                      </children>
                   </GridPane>
                </top>

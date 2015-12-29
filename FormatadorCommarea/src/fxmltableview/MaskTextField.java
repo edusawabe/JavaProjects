@@ -68,6 +68,13 @@ public class MaskTextField extends TextField {
         patterns = new ArrayList<String>();
     }
 
+    public MaskTextField(String text, String mask) {
+        super(text);
+        patterns = new ArrayList<String>();
+        setMask(mask);
+    }
+
+
     @Override
     public void replaceText(int start, int end, String text) {
 

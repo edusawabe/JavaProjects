@@ -5,7 +5,6 @@
 package fxmltableview;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
@@ -38,6 +37,7 @@ public class FXMLTableViewController implements Initializable{
     @FXML private TextField firstNameField;
     @FXML private TextField lastNameField;
     @FXML private TextField emailField;
+    @FXML private MaskTextField fluxoField;
     @FXML private TextArea bookArea;
     @FXML private TextArea commArea;
 		  private LinkedList<Campo> listCampos;
@@ -50,12 +50,14 @@ public class FXMLTableViewController implements Initializable{
 	@FXML private Button extrairButtom;
 	@FXML private Button gerarAreaButtom;
 	@FXML private Button processButtom;
+	@FXML private Button gerarOccurs;
 	      private boolean development;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		development = true;
 		initComponents();
+		fluxoField = new MaskTextField("","********");
 
 		//valorColumn.setCellFactory(TextFieldTableCell.<ListItem>forTableColumn());
 
@@ -83,6 +85,7 @@ public class FXMLTableViewController implements Initializable{
 		extrairButtom.setDisable(true);
 		gerarAreaButtom.setDisable(true);
 		processButtom.setDisable(true);
+		gerarOccurs.setDisable(true);
 		commArea.setFont(Font.font("Courier New", 12));
 		bookArea.setFont(Font.font("Courier New", 12));
 
@@ -126,6 +129,7 @@ public class FXMLTableViewController implements Initializable{
 			process();
 			calculateFieldPosition(null);
 			generateTable();
+			gerarOccurs.setDisable(false);
 			gerarAreaButtom.setDisable(false);
 			if (yy03Radio.isSelected())
 				gerarCommAreaYY03();
@@ -176,8 +180,6 @@ public class FXMLTableViewController implements Initializable{
 			process();
 			if (glogRadio.isSelected())
 				processGlog();
-/*			saidaRadio.setSelected(true);
-			setRadiosSaida();*/
 			processButtom.setDisable(false);
 		}
 		else{
@@ -229,9 +231,41 @@ public class FXMLTableViewController implements Initializable{
     		gerarAreaButtom.setDisable(true);
     		extrairButtom.setDisable(true);
     		processButtom.setDisable(false);
+    		gerarOccurs.setDisable(true);
 	}
 
 	public void initializeAreas(){
+		bookArea.setText(
+		          "       05  RFINWJ6S-HEADER.                                             \n"
+				 +"           10 RFINWJ6S-COD-LAYOUT          PIC X(008)  VALUE 'RFINWJ6S'.\n"
+				 +"           10 RFINWJ6S-TAM-LAYOUT          PIC 9(005)  VALUE 00506.     \n"
+				 +"       05  RFINWJ6S-REGISTRO.                                           \n"
+				 +"           10 RFINWJ6S-BLOCO-SAIDA.                                     \n"
+				 +"              15 RFINWJ6S-S-CTPO-SISTC-REPAS      PIC 9(001).           \n"
+				 +"              15 RFINWJ6S-S-CEXTER-OPER-REPAS     PIC 9(010).           \n"
+				 +"              15 RFINWJ6S-S-CESTAG-REPAS-FINAN    PIC 9(003).           \n"
+				 +"              15 RFINWJ6S-S-IESTAG-REPAS-FINAN    PIC X(060).           \n"
+				 +"              15 RFINWJ6S-S-CSIT-REPAS-FINAN      PIC 9(003).           \n"
+				 +"              15 RFINWJ6S-S-NCARAC-PROG-REPAS     PIC 9(005).           \n"
+				 +"              15 RFINWJ6S-S-CREPAS-CSCIO-BCO      PIC X(001).           \n"
+				 +"              15 RFINWJ6S-S-CCNPJ-FORNC           PIC 9(014).           \n"
+				 +"              15 RFINWJ6S-S-IPSSOA-REPAS-FINAN    PIC X(080).           \n"
+				 +"              15 RFINWJ6S-S-CCNPJ-FABR            PIC 9(014).           \n"
+				 +"              15 RFINWJ6S-S-IPSSOA-FABR           PIC X(080).           \n"
+				 +"              15 RFINWJ6S-S-IPSSOA-PROMO          PIC X(080).           \n"
+				 +"              15 RFINWJ6S-S-CEXTER-CONDC-OPER     PIC 9(004).           \n"
+				 +"              15 RFINWJ6S-S-IEXTER-OPER-REPAS     PIC X(060).           \n"
+				 +"              15 RFINWJ6S-S-CCONVE-LIM            PIC 9(005).           \n"
+				 +"              15 RFINWJ6S-S-CSEQ-CONVE-LIM        PIC 9(003).           \n"
+				 +"              15 RFINWJ6S-S-NOME-CONVENIO         PIC X(040).           \n"
+				 +"              15 RFINWJ6S-S-DVALDD-RESU-SOLTC     PIC X(010).           \n"
+				 +"              15 RFINWJ6S-S-VTOT-SDO-LIB          PIC 9(015)V99.        \n"
+				 +"              15 RFINWJ6S-S-QTDE-PARCELAS         PIC 9(003).           \n"
+				 +"              15 RFINWJ6S-S-LIST OCCURS 3 TIMES.                        \n"
+				 + "                20 RFINWJ6S-S-DATA-PARCELA       PIC X(010).           \n"
+				 + "                20 RFINWJ6S-S-DATA-AMORTIZACAO   PIC X(010).           \n"
+		);
+
 		bookArea.setText(
 				          "       05  RFINWJ6S-HEADER.                                             \n"
 						 +"           10 RFINWJ6S-COD-LAYOUT          PIC X(008)  VALUE 'RFINWJ6S'.\n"
@@ -263,37 +297,6 @@ public class FXMLTableViewController implements Initializable{
 						 + "                20 RFINWJ6S-S-DATA-PARCELA       PIC X(010).           \n"
 						 + "                20 RFINWJ6S-S-DATA-AMORTIZACAO   PIC X(010).           \n"
 				);
-
-		bookArea.setText(
-		          "       05  RFINWJ6S-HEADER.                                             \n"
-				 +"           10 RFINWJ6S-COD-LAYOUT          PIC X(008)  VALUE 'RFINWJ6S'.\n"
-				 +"           10 RFINWJ6S-TAM-LAYOUT          PIC 9(005)  VALUE 00506.     \n"
-				 +"       05  RFINWJ6S-REGISTRO.                                           \n"
-				 +"           10 RFINWJ6S-BLOCO-SAIDA.                                     \n"
-				 +"              15 RFINWJ6S-S-CTPO-SISTC-REPAS      PIC 9(001).           \n"
-				 +"              15 RFINWJ6S-S-CEXTER-OPER-REPAS     PIC 9(010).           \n"
-				 +"              15 RFINWJ6S-S-CESTAG-REPAS-FINAN    PIC 9(003).           \n"
-				 +"              15 RFINWJ6S-S-IESTAG-REPAS-FINAN    PIC X(060).           \n"
-				 +"              15 RFINWJ6S-S-CSIT-REPAS-FINAN      PIC 9(003).           \n"
-				 +"              15 RFINWJ6S-S-NCARAC-PROG-REPAS     PIC 9(005).           \n"
-				 +"              15 RFINWJ6S-S-CREPAS-CSCIO-BCO      PIC X(001).           \n"
-				 +"              15 RFINWJ6S-S-CCNPJ-FORNC           PIC 9(014).           \n"
-				 +"              15 RFINWJ6S-S-IPSSOA-REPAS-FINAN    PIC X(080).           \n"
-				 +"              15 RFINWJ6S-S-CCNPJ-FABR            PIC 9(014).           \n"
-				 +"              15 RFINWJ6S-S-IPSSOA-FABR           PIC X(080).           \n"
-				 +"              15 RFINWJ6S-S-IPSSOA-PROMO          PIC X(080).           \n"
-				 +"              15 RFINWJ6S-S-CEXTER-CONDC-OPER     PIC 9(004).           \n"
-				 +"              15 RFINWJ6S-S-IEXTER-OPER-REPAS     PIC X(060).           \n"
-				 +"              15 RFINWJ6S-S-CCONVE-LIM            PIC 9(005).           \n"
-				 +"              15 RFINWJ6S-S-CSEQ-CONVE-LIM        PIC 9(003).           \n"
-				 +"              15 RFINWJ6S-S-NOME-CONVENIO         PIC X(040).           \n"
-				 +"              15 RFINWJ6S-S-DVALDD-RESU-SOLTC     PIC X(010).           \n"
-				 +"              15 RFINWJ6S-S-VTOT-SDO-LIB          PIC 9(015)V99.        \n"
-				 +"              15 RFINWJ6S-S-QTDE-PARCELAS         PIC 9(003).           \n"
-				 +"              15 RFINWJ6S-S-LIST OCCURS 3 TIMES.                        \n"
-				 + "                20 RFINWJ6S-S-DATA-PARCELA       PIC X(010).           \n"
-				 + "                20 RFINWJ6S-S-DATA-AMORTIZACAO   PIC X(010).           \n"
-		);
 
 		commArea.setText(
 				            "00001: D9 C6 C9 D5 E6 D1 F6 E2 F0 F0 F5 F0 F6 F2 F0 F0 F0 F0 F0 F0  RFINWJ6S005062000000\n"
@@ -526,10 +529,6 @@ public class FXMLTableViewController implements Initializable{
 
 		}
 		calculateFieldPosition(convertHextoText(commArea));
-/*		for (Iterator<Campo> iterator = listCampos.iterator(); iterator.hasNext();) {
-			Campo campo = (Campo) iterator.next();
-			System.out.println(campo.getNivel() + " - " + campo.getNome() + " - " + campo.getTam() + " - " + campo.getPos());
-		}*/
 		generateCommAreaTable(convertHextoText(commArea));
 				for (Iterator<Campo> iterator = listCampos.iterator(); iterator.hasNext();) {
 		Campo campo = (Campo) iterator.next();
@@ -638,7 +637,17 @@ public class FXMLTableViewController implements Initializable{
 				commAreaList.add(new Pair(item.getCampo(), new MyValue(campo.getValor(),campo.getMask())));
 			}
 			else{
-				for (int i = 0; i < campo.getListOccurs().size(); i++) {
+				int size = 0;
+				if(campo.getDeppendingOn() == null){
+					size = campo.getListOccurs().size();
+				}
+				else{
+					if (campo.getDeppendingOn().isEmpty())
+						size = campo.getListOccurs().size();
+					else
+						size = getDeppendingOnValue(campo.getDeppendingOn(),commArea);
+				}
+				for (int i = 0; i < size; i++) {
 					LinkedList<Campo> listItem = campo.getListOccurs().get(i);
 					for(Campo listCampo : listItem){
 						ListItem item = new ListItem();
@@ -646,7 +655,7 @@ public class FXMLTableViewController implements Initializable{
 						item.setValor(commArea.substring(listCampo.getPos(), listCampo.getPos() + listCampo.getTam()));
 						listCampo.setValor(commArea.substring(listCampo.getPos(), listCampo.getPos()));
 						item.setMask(listCampo.getMask());
-						commAreaList.add(new Pair(item.getCampo(),new MyValue(item.getValor(),item.getMask())));
+						commAreaList.add(new Pair(item.getCampo(),new String(item.getValor())));
 					}
 				}
 			}
@@ -655,16 +664,26 @@ public class FXMLTableViewController implements Initializable{
 
 	private void generateTable(){
 		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
+		commAreaList.clear();
 
 		for (Campo campo : listCampos) {
 			if(!campo.isOccurs()){
 				ListItem item = new ListItem(campo.getNivel() + " - " + campo.getNome(), "", "");
 				item.setCampo(campo.getNivel() + " - " + campo.getNome() + " - " + campo.getType());
 				item.setMask(campo.getMask());
-				commAreaList.add(new Pair(campo.getNome(),new MyValue("",campo.getMask())));
+				commAreaList.add(new Pair(campo.getNome(),new MaskTextField("",campo.getMask())));
 			}
 			else{
-				for (int i = 0; i < campo.getListOccurs().size(); i++) {
+				int size = 0;
+				if (campo.getDeppendingOn() == null)
+					size = campo.getListOccurs().size();
+				else{
+					if (campo.getDeppendingOn().isEmpty())
+						size = campo.getListOccurs().size();
+					else
+						size = 0;
+				}
+				for (int i = 0; i < size; i++) {
 					LinkedList<Campo> listItem = campo.getListOccurs().get(i);
 					for(Campo listCampo : listItem){
 						ListItem item = new ListItem("   " + listCampo.getNivel() + " - " + listCampo.getNome(), "", "");
@@ -675,6 +694,77 @@ public class FXMLTableViewController implements Initializable{
 				}
 			}
 		}
+	}
+
+	@FXML
+	private void generateOccursTable(ActionEvent event){
+		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
+
+		int size = 0;
+		for (Campo campo : listCampos) {
+			if(campo.isOccurs()){
+				for (int i = 0; i < commAreaList.size(); i++) {
+					if(commAreaList.get(i).getKey().equals(campo.getDeppendingOn())){
+						size = Integer.parseInt(((MaskTextField)commAreaList.get(i).getValue()).getText());
+					}
+				}
+				for (int i = 0; i < size; i++) {
+					LinkedList<Campo> listItem = campo.getListOccurs().get(i);
+					for(Campo listCampo : listItem){
+						ListItem item = new ListItem("   " + listCampo.getNivel() + " - " + listCampo.getNome(), "", "");
+						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
+						item.setMask(listCampo.getMask());
+						commAreaList.add(new Pair(item.getCampo(), new MaskTextField("",campo.getMask())));
+					}
+				}
+			}
+		}
+	}
+
+	@FXML
+	private void generateCommArea(ActionEvent event){
+		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
+
+		String area =
+	    "FRWKGL010021600001330                                51174335457216TERM"+
+		"00011                 PSDCIASN0023700001050TERM0001       012008121215 "+
+		"4737NNNIEA700013                       E                               "+
+		"217230GSEGGLAA00230                    EI913140                        "+
+		"NN                                                                     "+
+        "                                                                       "+
+		"                          GSEGGLAE00041006Nsenha006                RFI "+
+		"NWEQE010590006000068          OK                                       ";
+
+	}
+
+	private String generateCommAreaYY06(ActionEvent event){
+		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
+
+		String area =
+	    "FRWKGL010021600001330                                51174335457216TERM"+
+		"00011                 PSDCIASN0023700001050TERM0001       012008121215 "+
+		"4737NNNIEA700013                       E                               "+
+		"217230GSEGGLAA00230                    EI913140                        "+
+		"NN                                                                     "+
+        "                                                                       "+
+		"                          GSEGGLAE00041006Nsenha006                RFI "+
+		"NWEQE010590006000068          OK                                       ";
+
+	}
+
+	private String generateCommAreaYY03(ActionEvent event){
+		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
+
+		String area =
+	    "FRWKGL010021600001330                                51174335457216TERM"+
+		"00011                 PSDCIASN0023700001050TERM0001       012008121215 "+
+		"4737NNNIEA700013                       E                               "+
+		"217230GSEGGLAA00230                    EI913140                        "+
+		"NN                                                                     "+
+        "                                                                       "+
+		"                          GSEGGLAE00041006Nsenha006                RFI "+
+		"NWEQE010590006000068          OK                                       ";
+
 	}
 
 	class PairKeyFactory implements Callback<TableColumn.CellDataFeatures<Pair<String, Object>, String>, ObservableValue<String>> {
@@ -696,9 +786,6 @@ public class FXMLTableViewController implements Initializable{
 	}
 
 	class PairValueCell extends TableCell<Pair<String, Object>, Object> {
-	    private MaskTextField textField;
-
-
 		@Override
 	    protected void updateItem(Object item, boolean empty) {
 	        super.updateItem(item, empty);
@@ -706,36 +793,34 @@ public class FXMLTableViewController implements Initializable{
 	        if (item != null) {
 	            if (item instanceof String) {
 	                setText((String) item);
-	                textField = new MaskTextField();
-	                setGraphic(textField);
 	            } else if (item instanceof MyValue) {
-	            	textField = new MaskTextField();
-	                if(((MyValue) item).getMask()!=null)
-	                	textField.setMask(((MyValue) item).getMask());
+	            	setGraphic(null);
 	            	if(((MyValue) item).getValue() != null)
-						textField.setText(((MyValue) item).getValue());
+						setText(((MyValue) item).getValue());
 					else
 						setText("");
 	            	if (glogRadio.isSelected()){
-	            		setGraphic(null);
 	            		setText(((MyValue) item).getValue());
 	            	}
 	            	else{
 	            		setText("");
-	            		textField.setText("");
-	            		setGraphic(textField);
 	            	}
-	            } else {
-	                setText("");
-	                textField = new MaskTextField();
-	                setGraphic(textField);
+	            } else if (item instanceof MaskTextField){
+	                setGraphic((MaskTextField)item);
 	            }
 	        } else {
-	            textField = new MaskTextField();
-                setGraphic(textField);
+	        	setGraphic(null);
+                setText("");
 	        }
 	    }
 	}
 
+	private Campo getCampoFromList(String c){
+		for (Campo campo : listCampos) {
+			if (campo.getNome().equals(c))
+				return campo;
+		}
+		return null;
+	}
 
 }
