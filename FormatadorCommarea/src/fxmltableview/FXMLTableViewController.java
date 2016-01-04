@@ -50,46 +50,45 @@ public class FXMLTableViewController implements Initializable{
 	@FXML private Button extrairButtom;
 	@FXML private Button gerarAreaButtom;
 	@FXML private Button processButtom;
-	@FXML private Button gerarOccurs;
+	@FXML private Button gerarOccursButtom;
 	      private boolean development;
+	      private boolean hasOccurs;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		development = true;
+		hasOccurs = false;
 		initComponents();
-		fluxoField = new MaskTextField("","********");
-
-		//valorColumn.setCellFactory(TextFieldTableCell.<ListItem>forTableColumn());
-
-		/*valorColumn.setOnEditStart(new EventHandler<TableColumn.CellEditEvent<ListItem, String>>(){
-			@Override
-			public void handle(CellEditEvent<ListItem, String> event) {
-				event.getTableView().getItems().get(event.getTablePosition().getRow()).
-			}
-		});
-*/
+		fluxoField.setMask("********");
 	}
 
 	private void initComponents() {
-
 		if (development)
 			initializeAreas();
 		else{
-
 			int size = tableView.getItems().size() -1;
 			tableView.getItems().setAll(FXCollections.observableArrayList());
 
 			listCampos = new LinkedList<Campo>();
 		}
 
+		//setting buttom states
 		extrairButtom.setDisable(true);
 		gerarAreaButtom.setDisable(true);
 		processButtom.setDisable(true);
-		gerarOccurs.setDisable(true);
+		gerarOccursButtom.setDisable(true);
+
+		//setting radio states
+		yy03Radio.setDisable(true);
+		yy06Radio.setDisable(true);
+		glogRadio.setDisable(true);
+		textoRadio.setDisable(true);
+
+		//setting TextArea configurations
 		commArea.setFont(Font.font("Courier New", 12));
 		bookArea.setFont(Font.font("Courier New", 12));
 
-
+		//setting TableView and TableColumns
 		tableView.setEditable(true);
 		campoColumn.setCellValueFactory(new PairKeyFactory());
 		valorColumn.setCellValueFactory(new PairValueFactory());
@@ -99,27 +98,30 @@ public class FXMLTableViewController implements Initializable{
                 return new PairValueCell();
             }
         });
-		if (tableView.getColumns().isEmpty())
+
+		if (tableView.getColumns().isEmpty()) {
 			tableView.getColumns().addAll(campoColumn, valorColumn);
+		}
 	}
+
+
+    /*
+     * ======================================================================================================
+     * Actions
+     * ======================================================================================================
+     */
+
 
 	@FXML
 	protected void extrairBookAction(ActionEvent event) {
 		development = false;
 		initComponents();
 		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Campos Obrigatórios Não Preenchidos");
-		alert.setHeaderText("Erro");
+		alert.setTitle("Erro");
+		alert.setHeaderText("Campos Obrigatórios Não Preenchidos");
 
-		if (bookArea.getText().isEmpty() && commArea.getText().isEmpty()) {
-			alert.setContentText("Favor Preencher o Book e a Commarea");
-		} else {
-			if (bookArea.getText().isEmpty()) {
-				alert.setContentText("Favor Preencher o Book");
-			}
-			if (commArea.getText().isEmpty()) {
-				alert.setContentText("Favor Preenchera Commarea");
-			}
+		if (bookArea.getText().isEmpty())  {
+			alert.setContentText("Favor Preencher o Book!");
 		}
 		if (!yy03Radio.isSelected() && !yy06Radio.isSelected()){
 			alert.setContentText("Favor Selecionar o tipo de Área");
@@ -129,28 +131,23 @@ public class FXMLTableViewController implements Initializable{
 			process();
 			calculateFieldPosition(null);
 			generateTable();
-			gerarOccurs.setDisable(false);
-			gerarAreaButtom.setDisable(false);
-			if (yy03Radio.isSelected())
-				gerarCommAreaYY03();
-			if (yy06Radio.isSelected())
-				gerarCommAreaYY06();
-			entradaRadio.setSelected(true);
 			setRadiosEntrada();
+			if (hasOccurs){
+				gerarOccursButtom.setDisable(false);
+				gerarAreaButtom.setDisable(true);
+			}
+			else{
+				gerarOccursButtom.setDisable(true);
+				gerarAreaButtom.setDisable(false);
+			}
+			entradaRadio.setSelected(true);
 		}
 		else{
 			alert.show();
 			entradaRadio.setSelected(true);
 			setRadiosEntrada();
+			yy03Radio.requestFocus();
 		}
-	}
-
-	private void gerarCommAreaYY03() {
-
-	}
-
-	private void gerarCommAreaYY06() {
-
 	}
 
 	@FXML
@@ -180,6 +177,8 @@ public class FXMLTableViewController implements Initializable{
 			process();
 			if (glogRadio.isSelected())
 				processGlog();
+			if (textoRadio.isSelected())
+				processText();
 			processButtom.setDisable(false);
 		}
 		else{
@@ -196,6 +195,35 @@ public class FXMLTableViewController implements Initializable{
     		setRadiosEntrada();
     	}
     }
+
+    @FXML
+    protected void yy06Selected(ActionEvent event) {
+    	if (yy06Radio.isSelected()){
+    		yy03Radio.setSelected(false);
+    	}
+    }
+
+    @FXML
+    protected void yy03Selected(ActionEvent event) {
+    	if (yy03Radio.isSelected()){
+    		yy06Radio.setSelected(false);
+    	}
+    }
+
+    @FXML
+    protected void glogSelected(ActionEvent event) {
+    	if (glogRadio.isSelected()){
+    		textoRadio.setSelected(false);
+    	}
+    }
+
+    @FXML
+    protected void textoSelected(ActionEvent event) {
+    	if (textoRadio.isSelected()){
+    		glogRadio.setSelected(false);
+    	}
+    }
+
 
 	private void setRadiosEntrada() {
 		saidaRadio.setSelected(false);
@@ -231,106 +259,21 @@ public class FXMLTableViewController implements Initializable{
     		gerarAreaButtom.setDisable(true);
     		extrairButtom.setDisable(true);
     		processButtom.setDisable(false);
-    		gerarOccurs.setDisable(true);
+    		gerarOccursButtom.setDisable(true);
 	}
 
-	public void initializeAreas(){
-		bookArea.setText(
-		          "       05  RFINWJ6S-HEADER.                                             \n"
-				 +"           10 RFINWJ6S-COD-LAYOUT          PIC X(008)  VALUE 'RFINWJ6S'.\n"
-				 +"           10 RFINWJ6S-TAM-LAYOUT          PIC 9(005)  VALUE 00506.     \n"
-				 +"       05  RFINWJ6S-REGISTRO.                                           \n"
-				 +"           10 RFINWJ6S-BLOCO-SAIDA.                                     \n"
-				 +"              15 RFINWJ6S-S-CTPO-SISTC-REPAS      PIC 9(001).           \n"
-				 +"              15 RFINWJ6S-S-CEXTER-OPER-REPAS     PIC 9(010).           \n"
-				 +"              15 RFINWJ6S-S-CESTAG-REPAS-FINAN    PIC 9(003).           \n"
-				 +"              15 RFINWJ6S-S-IESTAG-REPAS-FINAN    PIC X(060).           \n"
-				 +"              15 RFINWJ6S-S-CSIT-REPAS-FINAN      PIC 9(003).           \n"
-				 +"              15 RFINWJ6S-S-NCARAC-PROG-REPAS     PIC 9(005).           \n"
-				 +"              15 RFINWJ6S-S-CREPAS-CSCIO-BCO      PIC X(001).           \n"
-				 +"              15 RFINWJ6S-S-CCNPJ-FORNC           PIC 9(014).           \n"
-				 +"              15 RFINWJ6S-S-IPSSOA-REPAS-FINAN    PIC X(080).           \n"
-				 +"              15 RFINWJ6S-S-CCNPJ-FABR            PIC 9(014).           \n"
-				 +"              15 RFINWJ6S-S-IPSSOA-FABR           PIC X(080).           \n"
-				 +"              15 RFINWJ6S-S-IPSSOA-PROMO          PIC X(080).           \n"
-				 +"              15 RFINWJ6S-S-CEXTER-CONDC-OPER     PIC 9(004).           \n"
-				 +"              15 RFINWJ6S-S-IEXTER-OPER-REPAS     PIC X(060).           \n"
-				 +"              15 RFINWJ6S-S-CCONVE-LIM            PIC 9(005).           \n"
-				 +"              15 RFINWJ6S-S-CSEQ-CONVE-LIM        PIC 9(003).           \n"
-				 +"              15 RFINWJ6S-S-NOME-CONVENIO         PIC X(040).           \n"
-				 +"              15 RFINWJ6S-S-DVALDD-RESU-SOLTC     PIC X(010).           \n"
-				 +"              15 RFINWJ6S-S-VTOT-SDO-LIB          PIC 9(015)V99.        \n"
-				 +"              15 RFINWJ6S-S-QTDE-PARCELAS         PIC 9(003).           \n"
-				 +"              15 RFINWJ6S-S-LIST OCCURS 3 TIMES.                        \n"
-				 + "                20 RFINWJ6S-S-DATA-PARCELA       PIC X(010).           \n"
-				 + "                20 RFINWJ6S-S-DATA-AMORTIZACAO   PIC X(010).           \n"
-		);
+    /*
+     * ======================================================================================================
+     * END - Actions
+     * ======================================================================================================
+     */
 
-		bookArea.setText(
-				          "       05  RFINWJ6S-HEADER.                                             \n"
-						 +"           10 RFINWJ6S-COD-LAYOUT          PIC X(008)  VALUE 'RFINWJ6S'.\n"
-						 +"           10 RFINWJ6S-TAM-LAYOUT          PIC 9(005)  VALUE 00506.     \n"
-						 +"       05  RFINWJ6S-REGISTRO.                                           \n"
-						 +"           10 RFINWJ6S-BLOCO-SAIDA.                                     \n"
-						 +"              15 RFINWJ6S-S-CTPO-SISTC-REPAS      PIC 9(001).           \n"
-						 +"              15 RFINWJ6S-S-CEXTER-OPER-REPAS     PIC 9(010).           \n"
-						 +"              15 RFINWJ6S-S-CESTAG-REPAS-FINAN    PIC 9(003).           \n"
-						 +"              15 RFINWJ6S-S-IESTAG-REPAS-FINAN    PIC X(060).           \n"
-						 +"              15 RFINWJ6S-S-CSIT-REPAS-FINAN      PIC 9(003).           \n"
-						 +"              15 RFINWJ6S-S-NCARAC-PROG-REPAS     PIC 9(005).           \n"
-						 +"              15 RFINWJ6S-S-CREPAS-CSCIO-BCO      PIC X(001).           \n"
-						 +"              15 RFINWJ6S-S-CCNPJ-FORNC           PIC 9(014).           \n"
-						 +"              15 RFINWJ6S-S-IPSSOA-REPAS-FINAN    PIC X(080).           \n"
-						 +"              15 RFINWJ6S-S-CCNPJ-FABR            PIC 9(014).           \n"
-						 +"              15 RFINWJ6S-S-IPSSOA-FABR           PIC X(080).           \n"
-						 +"              15 RFINWJ6S-S-IPSSOA-PROMO          PIC X(080).           \n"
-						 +"              15 RFINWJ6S-S-CEXTER-CONDC-OPER     PIC 9(004).           \n"
-						 +"              15 RFINWJ6S-S-IEXTER-OPER-REPAS     PIC X(060).           \n"
-						 +"              15 RFINWJ6S-S-CCONVE-LIM            PIC 9(005).           \n"
-						 +"              15 RFINWJ6S-S-CSEQ-CONVE-LIM        PIC 9(003).           \n"
-						 +"              15 RFINWJ6S-S-NOME-CONVENIO         PIC X(040).           \n"
-						 +"              15 RFINWJ6S-S-DVALDD-RESU-SOLTC     PIC X(010).           \n"
-						 +"              15 RFINWJ6S-S-VTOT-SDO-LIB          PIC 9(015)V99.        \n"
-						 +"              15 RFINWJ6S-S-QTDE-PARCELAS         PIC 9(003).           \n"
-						 +"              15 RFINWJ6S-S-LIST OCCURS 0 TO 60 TIMES                   \n"
-						 +"                 DEPPENDING ON RFINWJ6S-S-QTDE-PARCELAS.                \n"
-						 + "                20 RFINWJ6S-S-DATA-PARCELA       PIC X(010).           \n"
-						 + "                20 RFINWJ6S-S-DATA-AMORTIZACAO   PIC X(010).           \n"
-				);
 
-		commArea.setText(
-				            "00001: D9 C6 C9 D5 E6 D1 F6 E2 F0 F0 F5 F0 F6 F2 F0 F0 F0 F0 F0 F0  RFINWJ6S005062000000\n"
-						  + "00021: F1 F0 F0 F0 F0 F8 F0 C5 D4 40 D7 D9 D6 C3 C5 E2 E2 D6 40 C4  1000080EM PROCESSO D\n"
-						  + "00041: C5 40 D3 C9 C2 C5 D9 C1 C3 C1 D6 40 D5 D6 40 C2 D5 C4 C5 E2  E LIBERACAO NO BNDES\n"
-						  + "00061: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00081: 40 40 40 40 40 40 40 F0 F0 F1 F0 F1 F8 F8 F1 D5 F2 F0 F1 F2         00101881N2012\n"
-						  + "00101: F0 F5 F3 F1 F0 F0 F0 F1 F2 F5 D9 C1 E9 C1 D6 40 E3 C5 E2 E3  0531000125RAZAO TEST\n"
-						  + "00121: C5 40 E3 C5 E2 E3 C5 40 40 40 40 40 40 40 40 40 40 40 40 40  E TESTE             \n"
-						  + "00141: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00161: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00181: 40 40 40 40 40 40 40 40 40 40 F8 F4 F1 F4 F2 F2 F0 F8 F0 F0            8414220800\n"
-						  + "00201: F0 F1 F3 F5 C6 C1 C2 D9 C9 C3 C1 D5 E3 C5 40 C5 D8 E4 C9 D7  0135FABRICANTE EQUIP\n"
-						  + "00221: C1 D4 C5 D5 E3 D6 40 40 40 40 40 40 40 40 40 40 40 40 40 40  AMENTO              \n"
-						  + "00241: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00261: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00281: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00301: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00321: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00341: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00361: 40 40 40 40 F1 F9 F8 F7 E3 C5 E2 E3 C5 40 C3 D6 D5 C4 C9 C3      1987TESTE CONDIC\n"
-						  + "00381: C1 D6 F1 F2 F3 F1 40 40 40 40 40 40 40 40 40 40 40 40 40 40  AO1231              \n"
-						  + "00401: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00421: 40 40 40 40 40 40 40 40 F0 F0 F0 F0 F0 F0 F0 F0 40 40 40 40          00000000    \n"
-						  + "00441: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00461: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 F1 F5 4B F1                  15.1\n"
-						  + "00481: F2 4B F2 F0 F1 F5 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F1 F0  2.201500000000000010\n"
-						  + "00501: F0 F0 F0 F0 F0 F2 F1 F5 4B F1 F2 4B F2 F0 F1 F5 F1 F6 4B F1  00000215.12.201516.1\n"
-						  + "00000: F2 4B F2 F0 F1 F5 F2 F5 4B F1 F2 4B F2 F0 F1 F5 F2 F6 4B F1  2.201525.12.201526.1\n"
-						  + "00000: F2 4B F2 F0 F1 F5 40 40 40 40 40 40 40 40 40 40 40 40 40 40  2.2015              \n"
-						  + "00000: 40 40 40 40 40 40            "
-						   );
-	}
-
+    /*
+     * ======================================================================================================
+     * Commarea Processing Methods
+     * ======================================================================================================
+     */
 	private void process(){
 		listCampos = new LinkedList<Campo>();
 		Campo occursCampo = null;
@@ -369,6 +312,7 @@ public class FXMLTableViewController implements Initializable{
 			}
 			else
 				if (bookLine[i].contains("OCCURS")){
+					hasOccurs = true;
 					if (bookLine[i].contains("."))
 						occursCampo = processOccursLine(bookLine[i]);
 					else{
@@ -423,14 +367,17 @@ public class FXMLTableViewController implements Initializable{
 	}
 
 	private Campo processStringValue(String line){
-		int beginPic, endPic;
+		int beginPic, endPic, beginValue, endValue;
 		beginPic = line.indexOf("X(") + 2;
 		endPic = line.indexOf(") ");
+		beginValue = line.indexOf(" '") + 2;
+		endValue = line.indexOf("'.");
 
 		Campo c = new Campo();
 		getNomeNivelCampo(line, c);
 		c.setTam(Integer.parseInt(line.substring(beginPic, endPic)));
 		c.setType(line.substring(beginPic-6, endPic+1));
+		c.setValor(line.substring(beginValue, endValue));
 		return c;
 	}
 
@@ -464,13 +411,17 @@ public class FXMLTableViewController implements Initializable{
 	}
 
 	private Campo processNumericValue(String line){
-		int beginPic, endPic;
+		int beginPic, endPic, beginValue, endValue;
 		beginPic = line.indexOf("9(") + 2;
 		endPic = line.indexOf(") ");
+		beginValue = line.indexOf("VALUE ") + 6;
+		endValue = line.indexOf(".");
+
 		Campo c = new Campo();
 		getNomeNivelCampo(line, c);
 		c.setTam(Integer.parseInt(line.substring(beginPic, endPic)));
 		c.setType(line.substring(beginPic - 6, endPic + 1));
+		c.setValor((line.substring(beginValue, endValue)).replaceAll(" ", ""));
 		return c;
 	}
 
@@ -514,26 +465,38 @@ public class FXMLTableViewController implements Initializable{
 	}
 
 	private void processGlog(){
-		String line[]  = commArea.getText().split("\\r?\\n");
+		String line[] = commArea.getText().split("\\r?\\n");
 		String subLine[];
 		String commArea = new String();
 		for (int i = 0; i < line.length; i++) {
 			subLine = line[i].split(": ");
 			if (subLine[1].length() == 81)
 				if (commArea.isEmpty())
-					commArea = commArea +subLine[1].substring(0, 59);
+					commArea = commArea + subLine[1].substring(0, 59);
 				else
 					commArea = commArea + " " + subLine[1].substring(0, 59);
 			else
-				commArea = commArea + " " +processGlogFinalLine(subLine[1]);
+				commArea = commArea + " " + processGlogFinalLine(subLine[1]);
 
 		}
 		calculateFieldPosition(convertHextoText(commArea));
 		generateCommAreaTable(convertHextoText(commArea));
-				for (Iterator<Campo> iterator = listCampos.iterator(); iterator.hasNext();) {
-		Campo campo = (Campo) iterator.next();
-		System.out.println(campo.getNivel() + " - " + campo.getNome() + " - " + campo.getTam() + " - " + campo.getPos() + ": " + campo.getValor());
+		/*for (Iterator<Campo> iterator = listCampos.iterator(); iterator.hasNext();) {
+			Campo campo = (Campo) iterator.next();
+			System.out.println(campo.getNivel() + " - " + campo.getNome() + " - " + campo.getTam() + " - "
+					+ campo.getPos() + ": " + campo.getValor());
+		}*/
 	}
+
+	private void processText(){
+		String line[] = commArea.getText().split("\\r?\\n");
+		String subLine[];
+		String commArea = new String();
+		for (int i = 0; i < line.length; i++) {
+			commArea = commArea + (line[i].replaceAll("\\n", ""));
+		}
+		calculateFieldPosition(commArea);
+		generateCommAreaTable(commArea);
 	}
 
 	private String processGlogFinalLine(String line){
@@ -671,7 +634,10 @@ public class FXMLTableViewController implements Initializable{
 				ListItem item = new ListItem(campo.getNivel() + " - " + campo.getNome(), "", "");
 				item.setCampo(campo.getNivel() + " - " + campo.getNome() + " - " + campo.getType());
 				item.setMask(campo.getMask());
-				commAreaList.add(new Pair(campo.getNome(),new MaskTextField("",campo.getMask())));
+				if (campo.getValor() != null)
+					commAreaList.add(new Pair(item.getCampo(),new MaskTextField(campo.getValor(),item.getMask())));
+				else
+					commAreaList.add(new Pair(item.getCampo(),new MaskTextField("",item.getMask())));
 			}
 			else{
 				int size = 0;
@@ -689,7 +655,10 @@ public class FXMLTableViewController implements Initializable{
 						ListItem item = new ListItem("   " + listCampo.getNivel() + " - " + listCampo.getNome(), "", "");
 						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
 						item.setMask(listCampo.getMask());
-						commAreaList.add(new Pair(item.getCampo(),new MyValue("",item.getMask())));
+						if (campo.getValor() != null)
+							commAreaList.add(new Pair(item.getCampo(),new MaskTextField(campo.getValor(),item.getMask())));
+						else
+							commAreaList.add(new Pair(item.getCampo(),new MaskTextField("",item.getMask())));
 					}
 				}
 			}
@@ -698,13 +667,14 @@ public class FXMLTableViewController implements Initializable{
 
 	@FXML
 	private void generateOccursTable(ActionEvent event){
+		gerarAreaButtom.setDisable(false);
 		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
 
 		int size = 0;
 		for (Campo campo : listCampos) {
 			if(campo.isOccurs()){
 				for (int i = 0; i < commAreaList.size(); i++) {
-					if(commAreaList.get(i).getKey().equals(campo.getDeppendingOn())){
+					if(commAreaList.get(i).getKey().contains(campo.getDeppendingOn())){
 						size = Integer.parseInt(((MaskTextField)commAreaList.get(i).getValue()).getText());
 					}
 				}
@@ -714,7 +684,7 @@ public class FXMLTableViewController implements Initializable{
 						ListItem item = new ListItem("   " + listCampo.getNivel() + " - " + listCampo.getNome(), "", "");
 						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
 						item.setMask(listCampo.getMask());
-						commAreaList.add(new Pair(item.getCampo(), new MaskTextField("",campo.getMask())));
+						commAreaList.add(new Pair(item.getCampo(), new MaskTextField("",item.getMask())));
 					}
 				}
 			}
@@ -723,50 +693,129 @@ public class FXMLTableViewController implements Initializable{
 
 	@FXML
 	private void generateCommArea(ActionEvent event){
-		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
+		commArea.setText("");
 
-		String area =
-	    "FRWKGL010021600001330                                51174335457216TERM"+
-		"00011                 PSDCIASN0023700001050TERM0001       012008121215 "+
-		"4737NNNIEA700013                       E                               "+
-		"217230GSEGGLAA00230                    EI913140                        "+
-		"NN                                                                     "+
-        "                                                                       "+
-		"                          GSEGGLAE00041006Nsenha006                RFI "+
-		"NWEQE010590006000068          OK                                       ";
+		if (yy06Radio.isSelected())
+			commArea.setText(generateCommAreaYY06());
 
+		if (yy03Radio.isSelected())
+			commArea.setText(generateCommAreaYY03());
 	}
 
-	private String generateCommAreaYY06(ActionEvent event){
+	private String generateCommAreaYY06(){
 		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
+		String fluxo;
+		int commAreaSize;
+		String sCommAreaSize = new String();
+		int begin = 0;
+		int end = 0;
+		int aux;
+		String area;
 
-		String area =
-	    "FRWKGL010021600001330                                51174335457216TERM"+
-		"00011                 PSDCIASN0023700001050TERM0001       012008121215 "+
-		"4737NNNIEA700013                       E                               "+
-		"217230GSEGGLAA00230                    EI913140                        "+
-		"NN                                                                     "+
-        "                                                                       "+
-		"                          GSEGGLAE00041006Nsenha006                RFI "+
-		"NWEQE010590006000068          OK                                       ";
+		if (fluxoField.getText() != null)
+			fluxo = fluxoField.getText();
+		else
+			fluxo = "RFINIAAR";
 
+		if (fluxo.isEmpty())
+			fluxo = "RFINIAAR";
+
+		String enteredArea = new String();
+
+		for (int i = 0; i < commAreaList.size(); i++) {
+			if (((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().contains("N"))
+				enteredArea = enteredArea + Util.completeZeros(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
+			else
+				enteredArea = enteredArea + Util.completeSpaces(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length() - 2);
+		}
+
+		commAreaSize = Integer.parseInt(enteredArea.substring(8, 13)) + 271;
+		sCommAreaSize = sCommAreaSize + commAreaSize;
+		sCommAreaSize = Util.completeZeros(sCommAreaSize, 5);
+
+		area =
+			    "FRWKGL010021600"+ sCommAreaSize +"                                51174335457216TERM\n"+
+				"00011                 "+ fluxo +"0023700001050TERM0001       012008121215\n"+
+				"4737NNNIEA700013                       E                              \n"+
+				"217230GSEGGLAA00230                    EI910940                       \n"+
+				"NN                                                                    \n"+
+		        "                                                                      \n"+
+				"                          GSEGGLAE00041006Nsenha002                ";
+		area = area + enteredArea.substring(0, 3) +  "\n";
+
+		for (int i = 0; i < (enteredArea.length()); i++) {
+			begin = 3 + (70 * i);
+			end = 3 + (70 * (i + 1));
+			if(begin > enteredArea.length())
+				break;
+			if (end > enteredArea.length()) {
+				aux = enteredArea.length() - begin;
+				end = begin + aux;
+			}
+			area = area + enteredArea.substring(begin, end) + "\n";
+		}
+
+		return area;
 	}
 
-	private String generateCommAreaYY03(ActionEvent event){
+	private String generateCommAreaYY03(){
 		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
+		String fluxo;
+		int commAreaSize;
+		String sCommAreaSize = new String();
+		int begin = 0;
+		int end = 0;
+		int aux;
+		String area;
 
-		String area =
-	    "FRWKGL010021600001330                                51174335457216TERM"+
-		"00011                 PSDCIASN0023700001050TERM0001       012008121215 "+
-		"4737NNNIEA700013                       E                               "+
-		"217230GSEGGLAA00230                    EI913140                        "+
-		"NN                                                                     "+
-        "                                                                       "+
-		"                          GSEGGLAE00041006Nsenha006                RFI "+
-		"NWEQE010590006000068          OK                                       ";
+		if (fluxoField.getText() != null)
+			fluxo = fluxoField.getText();
+		else
+			fluxo = "RFINIAAR";
 
+		if (fluxo.isEmpty())
+			fluxo = "RFINIAAR";
+
+		String enteredArea = new String();
+
+		for (int i = 0; i < commAreaList.size(); i++) {
+			if (((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().contains("N"))
+				enteredArea = enteredArea + Util.completeZeros(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
+			else
+				enteredArea = enteredArea + Util.completeSpaces(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length() - 2);
+		}
+
+		commAreaSize = Integer.parseInt(enteredArea.substring(8, 13)) + 271;
+		sCommAreaSize = sCommAreaSize + commAreaSize;
+		sCommAreaSize = Util.completeZeros(sCommAreaSize, 5);
+
+		area = "";
+
+		for (int i = 0; i < (enteredArea.length()); i++) {
+			begin = (70 * i);
+			end = (70 * (i + 1));
+			if(begin > enteredArea.length())
+				break;
+			if (end > enteredArea.length()) {
+				aux = enteredArea.length() - begin;
+				end = begin + aux;
+			}
+			area = area + enteredArea.substring(begin, end) + "\n";
+		}
+
+		return area;
 	}
+    /*
+     * ======================================================================================================
+     * END - Commarea Processing Methods
+     * ======================================================================================================
+     */
 
+	/*
+	 * ======================================================================================================
+	 * Table Cell Classes
+	 * ======================================================================================================
+	 */
 	class PairKeyFactory implements Callback<TableColumn.CellDataFeatures<Pair<String, Object>, String>, ObservableValue<String>> {
 	    @Override
 	    public ObservableValue<String> call(TableColumn.CellDataFeatures<Pair<String, Object>, String> data) {
@@ -814,13 +863,113 @@ public class FXMLTableViewController implements Initializable{
 	        }
 	    }
 	}
+	/*
+	 * ======================================================================================================
+	 * END - Table Cell Classes
+	 * ======================================================================================================
+	 */
 
-	private Campo getCampoFromList(String c){
-		for (Campo campo : listCampos) {
-			if (campo.getNome().equals(c))
-				return campo;
-		}
-		return null;
+
+	/*
+	 * ======================================================================================================
+	 * Development Methods
+	 * ======================================================================================================
+	 */
+	public void initializeAreas(){
+		bookArea.setText(
+		          "       05  RFINWJ6S-HEADER.                                             \n"
+				 +"           10 RFINWJ6S-COD-LAYOUT          PIC X(008)  VALUE 'RFINWJ6S'.\n"
+				 +"           10 RFINWJ6S-TAM-LAYOUT          PIC 9(005)  VALUE 00506.     \n"
+				 +"       05  RFINWJ6S-REGISTRO.                                           \n"
+				 +"           10 RFINWJ6S-BLOCO-SAIDA.                                     \n"
+				 +"              15 RFINWJ6S-S-CTPO-SISTC-REPAS      PIC 9(001).           \n"
+				 +"              15 RFINWJ6S-S-CEXTER-OPER-REPAS     PIC 9(010).           \n"
+				 +"              15 RFINWJ6S-S-CESTAG-REPAS-FINAN    PIC 9(003).           \n"
+				 +"              15 RFINWJ6S-S-IESTAG-REPAS-FINAN    PIC X(060).           \n"
+				 +"              15 RFINWJ6S-S-CSIT-REPAS-FINAN      PIC 9(003).           \n"
+				 +"              15 RFINWJ6S-S-NCARAC-PROG-REPAS     PIC 9(005).           \n"
+				 +"              15 RFINWJ6S-S-CREPAS-CSCIO-BCO      PIC X(001).           \n"
+				 +"              15 RFINWJ6S-S-CCNPJ-FORNC           PIC 9(014).           \n"
+				 +"              15 RFINWJ6S-S-IPSSOA-REPAS-FINAN    PIC X(080).           \n"
+				 +"              15 RFINWJ6S-S-CCNPJ-FABR            PIC 9(014).           \n"
+				 +"              15 RFINWJ6S-S-IPSSOA-FABR           PIC X(080).           \n"
+				 +"              15 RFINWJ6S-S-IPSSOA-PROMO          PIC X(080).           \n"
+				 +"              15 RFINWJ6S-S-CEXTER-CONDC-OPER     PIC 9(004).           \n"
+				 +"              15 RFINWJ6S-S-IEXTER-OPER-REPAS     PIC X(060).           \n"
+				 +"              15 RFINWJ6S-S-CCONVE-LIM            PIC 9(005).           \n"
+				 +"              15 RFINWJ6S-S-CSEQ-CONVE-LIM        PIC 9(003).           \n"
+				 +"              15 RFINWJ6S-S-NOME-CONVENIO         PIC X(040).           \n"
+				 +"              15 RFINWJ6S-S-DVALDD-RESU-SOLTC     PIC X(010).           \n"
+				 +"              15 RFINWJ6S-S-VTOT-SDO-LIB          PIC 9(015)V99.        \n"
+				 +"              15 RFINWJ6S-S-QTDE-PARCELAS         PIC 9(003).           \n"
+				 +"              15 RFINWJ6S-S-LIST OCCURS 3 TIMES.                        \n"
+				 + "                20 RFINWJ6S-S-DATA-PARCELA       PIC X(010).           \n"
+				 + "                20 RFINWJ6S-S-DATA-AMORTIZACAO   PIC X(010).           \n"
+		);
+
+		bookArea.setText(
+				          "       05  RFINWJ6S-HEADER.                                             \n"
+						 +"           10 RFINWJ6S-COD-LAYOUT          PIC X(008)  VALUE 'RFINWJ6S'.\n"
+						 +"           10 RFINWJ6S-TAM-LAYOUT          PIC 9(005)  VALUE 00506.     \n"
+						 +"       05  RFINWJ6S-REGISTRO.                                           \n"
+						 +"           10 RFINWJ6S-BLOCO-SAIDA.                                     \n"
+						 +"              15 RFINWJ6S-S-CTPO-SISTC-REPAS      PIC 9(001).           \n"
+						 +"              15 RFINWJ6S-S-CEXTER-OPER-REPAS     PIC 9(010).           \n"
+						 +"              15 RFINWJ6S-S-CESTAG-REPAS-FINAN    PIC 9(003).           \n"
+						 +"              15 RFINWJ6S-S-IESTAG-REPAS-FINAN    PIC X(060).           \n"
+						 +"              15 RFINWJ6S-S-CSIT-REPAS-FINAN      PIC 9(003).           \n"
+						 +"              15 RFINWJ6S-S-NCARAC-PROG-REPAS     PIC 9(005).           \n"
+						 +"              15 RFINWJ6S-S-CREPAS-CSCIO-BCO      PIC X(001).           \n"
+						 +"              15 RFINWJ6S-S-CCNPJ-FORNC           PIC 9(014).           \n"
+						 +"              15 RFINWJ6S-S-IPSSOA-REPAS-FINAN    PIC X(080).           \n"
+						 +"              15 RFINWJ6S-S-CCNPJ-FABR            PIC 9(014).           \n"
+						 +"              15 RFINWJ6S-S-IPSSOA-FABR           PIC X(080).           \n"
+						 +"              15 RFINWJ6S-S-IPSSOA-PROMO          PIC X(080).           \n"
+						 +"              15 RFINWJ6S-S-CEXTER-CONDC-OPER     PIC 9(004).           \n"
+						 +"              15 RFINWJ6S-S-IEXTER-OPER-REPAS     PIC X(060).           \n"
+						 +"              15 RFINWJ6S-S-CCONVE-LIM            PIC 9(005).           \n"
+						 +"              15 RFINWJ6S-S-CSEQ-CONVE-LIM        PIC 9(003).           \n"
+						 +"              15 RFINWJ6S-S-NOME-CONVENIO         PIC X(040).           \n"
+						 +"              15 RFINWJ6S-S-DVALDD-RESU-SOLTC     PIC X(010).           \n"
+						 +"              15 RFINWJ6S-S-VTOT-SDO-LIB          PIC 9(015)V99.        \n"
+						 +"              15 RFINWJ6S-S-QTDE-PARCELAS         PIC 9(003).           \n"
+						 +"              15 RFINWJ6S-S-LIST OCCURS 0 TO 60 TIMES                   \n"
+						 +"                 DEPPENDING ON RFINWJ6S-S-QTDE-PARCELAS.                \n"
+						 + "                20 RFINWJ6S-S-DATA-PARCELA       PIC X(010).           \n"
+						 + "                20 RFINWJ6S-S-DATA-AMORTIZACAO   PIC X(010).           \n"
+				);
+
+		commArea.setText(
+				            "00001: D9 C6 C9 D5 E6 D1 F6 E2 F0 F0 F5 F0 F6 F2 F0 F0 F0 F0 F0 F0  RFINWJ6S005062000000\n"
+						  + "00021: F1 F0 F0 F0 F0 F8 F0 C5 D4 40 D7 D9 D6 C3 C5 E2 E2 D6 40 C4  1000080EM PROCESSO D\n"
+						  + "00041: C5 40 D3 C9 C2 C5 D9 C1 C3 C1 D6 40 D5 D6 40 C2 D5 C4 C5 E2  E LIBERACAO NO BNDES\n"
+						  + "00061: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
+						  + "00081: 40 40 40 40 40 40 40 F0 F0 F1 F0 F1 F8 F8 F1 D5 F2 F0 F1 F2         00101881N2012\n"
+						  + "00101: F0 F5 F3 F1 F0 F0 F0 F1 F2 F5 D9 C1 E9 C1 D6 40 E3 C5 E2 E3  0531000125RAZAO TEST\n"
+						  + "00121: C5 40 E3 C5 E2 E3 C5 40 40 40 40 40 40 40 40 40 40 40 40 40  E TESTE             \n"
+						  + "00141: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
+						  + "00161: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
+						  + "00181: 40 40 40 40 40 40 40 40 40 40 F8 F4 F1 F4 F2 F2 F0 F8 F0 F0            8414220800\n"
+						  + "00201: F0 F1 F3 F5 C6 C1 C2 D9 C9 C3 C1 D5 E3 C5 40 C5 D8 E4 C9 D7  0135FABRICANTE EQUIP\n"
+						  + "00221: C1 D4 C5 D5 E3 D6 40 40 40 40 40 40 40 40 40 40 40 40 40 40  AMENTO              \n"
+						  + "00241: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
+						  + "00261: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
+						  + "00281: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
+						  + "00301: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
+						  + "00321: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
+						  + "00341: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
+						  + "00361: 40 40 40 40 F1 F9 F8 F7 E3 C5 E2 E3 C5 40 C3 D6 D5 C4 C9 C3      1987TESTE CONDIC\n"
+						  + "00381: C1 D6 F1 F2 F3 F1 40 40 40 40 40 40 40 40 40 40 40 40 40 40  AO1231              \n"
+						  + "00401: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
+						  + "00421: 40 40 40 40 40 40 40 40 F0 F0 F0 F0 F0 F0 F0 F0 40 40 40 40          00000000    \n"
+						  + "00441: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
+						  + "00461: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 F1 F5 4B F1                  15.1\n"
+						  + "00481: F2 4B F2 F0 F1 F5 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F1 F0  2.201500000000000010\n"
+						  + "00501: F0 F0 F0 F0 F0 F2 F1 F5 4B F1 F2 4B F2 F0 F1 F5 F1 F6 4B F1  00000215.12.201516.1\n"
+						  + "00000: F2 4B F2 F0 F1 F5 F2 F5 4B F1 F2 4B F2 F0 F1 F5 F2 F6 4B F1  2.201525.12.201526.1\n"
+						  + "00000: F2 4B F2 F0 F1 F5 40 40 40 40 40 40 40 40 40 40 40 40 40 40  2.2015              \n"
+						  + "00000: 40 40 40 40 40 40            "
+						   );
 	}
 
 }
