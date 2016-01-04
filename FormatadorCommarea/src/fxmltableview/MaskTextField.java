@@ -56,6 +56,7 @@ import javafx.scene.control.TextField;
 public class MaskTextField extends TextField {
 
     private String mask;
+    private String informedMask;
     private ArrayList<String> patterns;
 
     public MaskTextField() {
@@ -71,6 +72,7 @@ public class MaskTextField extends TextField {
     public MaskTextField(String text, String mask) {
         super(text);
         patterns = new ArrayList<String>();
+        informedMask = mask;
         setMask(mask);
     }
 
@@ -119,6 +121,8 @@ public class MaskTextField extends TextField {
      * @param mask the mask to set
      */
     public void setMask(String mask) {
+
+    	informedMask = mask;
 
         String tempMask = "^";
 
@@ -208,5 +212,13 @@ public class MaskTextField extends TextField {
         this.mask = tempMask + "$";
 
     }
+
+	public String getInformedMask() {
+		return informedMask;
+	}
+
+	public void setInformedMask(String informedMask) {
+		this.informedMask = informedMask;
+	}
 
 }
