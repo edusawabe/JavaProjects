@@ -4,6 +4,11 @@
 
 package fxmltableview;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -16,6 +21,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -26,6 +32,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 import javafx.util.Callback;
 import javafx.util.Pair;
 
@@ -34,9 +42,8 @@ public class FXMLTableViewController implements Initializable{
     @FXML private TableColumn<Pair<String,Object>,String> campoColumn;
     @FXML private TableColumn<Pair<String,Object>,Object> valorColumn;
 
-    @FXML private TextField firstNameField;
-    @FXML private TextField lastNameField;
-    @FXML private TextField emailField;
+    @FXML private TextField tfbookFile;
+    @FXML private Button bookSelectButton;
     @FXML private MaskTextField fluxoField;
     @FXML private TextArea bookArea;
     @FXML private TextArea commArea;
@@ -47,10 +54,10 @@ public class FXMLTableViewController implements Initializable{
 	@FXML private RadioButton textoRadio;
 	@FXML private RadioButton yy03Radio;
 	@FXML private RadioButton yy06Radio;
-	@FXML private Button extrairButtom;
-	@FXML private Button gerarAreaButtom;
-	@FXML private Button processButtom;
-	@FXML private Button gerarOccursButtom;
+	@FXML private Button extrairButton;
+	@FXML private Button gerarAreaButton;
+	@FXML private Button processButton;
+	@FXML private Button gerarOccursButton;
 	      private boolean development;
 	      private boolean hasOccurs;
 
@@ -71,11 +78,11 @@ public class FXMLTableViewController implements Initializable{
 			listCampos = new LinkedList<Campo>();
 		}
 
-		//setting buttom states
-		extrairButtom.setDisable(true);
-		gerarAreaButtom.setDisable(true);
-		processButtom.setDisable(true);
-		gerarOccursButtom.setDisable(true);
+		//setting Button states
+		extrairButton.setDisable(true);
+		gerarAreaButton.setDisable(true);
+		processButton.setDisable(true);
+		gerarOccursButton.setDisable(true);
 
 		//setting radio states
 		yy03Radio.setDisable(true);
@@ -101,6 +108,10 @@ public class FXMLTableViewController implements Initializable{
 		if (tableView.getColumns().isEmpty()) {
 			tableView.getColumns().addAll(campoColumn, valorColumn);
 		}
+
+		if (tfbookFile == null)
+			tfbookFile = new TextField();
+		tfbookFile.setPromptText("Book");
 	}
 
 
@@ -110,6 +121,33 @@ public class FXMLTableViewController implements Initializable{
      * ======================================================================================================
      */
 
+	@FXML
+	protected void openBookFile(ActionEvent event) {
+		commArea.setText("");
+		bookArea.setText("");
+		String line;
+		String book = new String();
+		FileChooser fch = new FileChooser();
+		File file = fch.showOpenDialog(((Node)event.getSource()).getScene().getWindow());
+		tfbookFile.setText(file.getAbsolutePath());
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			line = reader.readLine();
+			while (line != null){
+				if (line.charAt(6) == ' ')
+					book = book + line + "\n";
+				line = reader.readLine();
+			}
+			bookArea.setText(book);
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	@FXML
 	protected void extrairBookAction(ActionEvent event) {
@@ -132,12 +170,12 @@ public class FXMLTableViewController implements Initializable{
 			generateTable();
 			setRadiosEntrada();
 			if (hasOccurs){
-				gerarOccursButtom.setDisable(false);
-				gerarAreaButtom.setDisable(true);
+				gerarOccursButton.setDisable(false);
+				gerarAreaButton.setDisable(true);
 			}
 			else{
-				gerarOccursButtom.setDisable(true);
-				gerarAreaButtom.setDisable(false);
+				gerarOccursButton.setDisable(true);
+				gerarAreaButton.setDisable(false);
 			}
 			entradaRadio.setSelected(true);
 		}
@@ -178,13 +216,13 @@ public class FXMLTableViewController implements Initializable{
 				processGlog();
 			if (textoRadio.isSelected())
 				processText();
-			processButtom.setDisable(false);
+			processButton.setDisable(false);
 		}
 		else{
 			alert.show();
 			saidaRadio.setSelected(true);
 			setRadiosSaida();
-			processButtom.setDisable(false);
+			processButton.setDisable(false);
 		}
 	}
 
@@ -231,9 +269,9 @@ public class FXMLTableViewController implements Initializable{
 		glogRadio.setDisable(true);
 		glogRadio.setSelected(false);
 		textoRadio.setDisable(true);
-		gerarAreaButtom.setDisable(true);
-		extrairButtom.setDisable(false);
-		processButtom.setDisable(true);
+		gerarAreaButton.setDisable(true);
+		extrairButton.setDisable(false);
+		processButton.setDisable(true);
 	}
 
     @FXML
@@ -255,10 +293,10 @@ public class FXMLTableViewController implements Initializable{
     		glogRadio.setDisable(false);
     		textoRadio.setDisable(false);
 
-    		gerarAreaButtom.setDisable(true);
-    		extrairButtom.setDisable(true);
-    		processButtom.setDisable(false);
-    		gerarOccursButtom.setDisable(true);
+    		gerarAreaButton.setDisable(true);
+    		extrairButton.setDisable(true);
+    		processButton.setDisable(false);
+    		gerarOccursButton.setDisable(true);
 	}
 
     /*
@@ -666,7 +704,7 @@ public class FXMLTableViewController implements Initializable{
 
 	@FXML
 	private void generateOccursTable(ActionEvent event){
-		gerarAreaButtom.setDisable(false);
+		gerarAreaButton.setDisable(false);
 		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
 
 		int size = 0;

@@ -33,18 +33,37 @@
       <BorderPane GridPane.rowIndex="1">
          <left>
             <BorderPane BorderPane.alignment="CENTER">
-               <top>
-                  <Label prefHeight="17.0" prefWidth="370.0" text="Book" BorderPane.alignment="CENTER" />
-               </top>
-               <center>
-                  <TextArea fx:id="bookArea" BorderPane.alignment="CENTER"/>
-               </center>
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
                <padding>
                   <Insets right="5.0" />
                </padding>
+               <center>
+                  <VBox BorderPane.alignment="CENTER">
+                     <children>
+                        <HBox prefHeight="25.0" prefWidth="464.0">
+                           <children>
+                              <Label alignment="CENTER" prefHeight="25.0" prefWidth="27.0" text="Book" HBox.hgrow="NEVER" />
+                              <TextField fx:id="tfbookFile" editable="false" prefHeight="25.0" prefWidth="374.0" promptText="Bookw">
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" />
+                                 </HBox.margin>
+                              </TextField>
+                              <Button fx:id="bookSelectButton" mnemonicParsing="false" onAction="#openBookFile" prefHeight="25.0" prefWidth="51.0" text="Abrir">
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                        </HBox>
+                        <TextArea fx:id="bookArea" prefHeight="168.0" prefWidth="335.0" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </center>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
             </BorderPane>
          </left>
          <center>
@@ -73,10 +92,10 @@
                         <RadioButton fx:id="yy03Radio" mnemonicParsing="false" onAction="#yy03Selected" text="YY03" GridPane.rowIndex="2" />
                         <RadioButton fx:id="textoRadio" mnemonicParsing="false" text="Texto" GridPane.columnIndex="4" GridPane.rowIndex="2" />
                         <RadioButton fx:id="yy06Radio" mnemonicParsing="false" onAction="#yy06Selected" text="YY06" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Button fx:id="extrairButtom" mnemonicParsing="false" onAction="#extrairBookAction" prefHeight="25.0" prefWidth="89.0" text="Extr. Book" GridPane.rowIndex="3" />
-                        <Button fx:id="processButtom" mnemonicParsing="false" onAction="#extrairSaidaAction" prefHeight="25.0" prefWidth="90.0" text="Extrair Saída" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                        <Button fx:id="gerarAreaButtom" mnemonicParsing="false" onAction="#generateCommArea" prefHeight="25.0" prefWidth="101.0" text="Gerar Área" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                        <Button fx:id="gerarOccursButtom" mnemonicParsing="false" onAction="#generateOccursTable" prefHeight="25.0" prefWidth="103.0" text="Gerar Occurs" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Button fx:id="extrairButton" mnemonicParsing="false" onAction="#extrairBookAction" prefHeight="25.0" prefWidth="89.0" text="Extr. Book" GridPane.rowIndex="3" />
+                        <Button fx:id="processButton" mnemonicParsing="false" onAction="#extrairSaidaAction" prefHeight="25.0" prefWidth="90.0" text="Extrair Saída" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                        <Button fx:id="gerarAreaButton" mnemonicParsing="false" onAction="#generateCommArea" prefHeight="25.0" prefWidth="101.0" text="Gerar Área" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <Button fx:id="gerarOccursButton" mnemonicParsing="false" onAction="#generateOccursTable" prefHeight="25.0" prefWidth="103.0" text="Gerar Occurs" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <MaskTextField fx:id="fluxoField" GridPane.columnIndex="3" />
                         <Label prefHeight="17.0" prefWidth="101.0" text="Fluxo:" GridPane.columnIndex="2" />
                      </children>
