@@ -5,7 +5,7 @@ public final class Util {
 	public static String completeSpaces(String s, int size){
 		int spacesToComplete = size - s.length();
 		for (int i = 0; i < spacesToComplete; i++) {
-			s = " " + s;
+			s = s + " ";
 		}
 		return s;
 	}

@@ -66,7 +66,6 @@ public class FXMLTableViewController implements Initializable{
 		if (development)
 			initializeAreas();
 		else{
-			int size = tableView.getItems().size() -1;
 			tableView.getItems().setAll(FXCollections.observableArrayList());
 
 			listCampos = new LinkedList<Campo>();
@@ -597,7 +596,7 @@ public class FXMLTableViewController implements Initializable{
 				item.setValor(commArea.substring(campo.getPos(), campo.getPos() + campo.getTam()));
 				campo.setValor(commArea.substring(campo.getPos(), campo.getPos() + campo.getTam()));
 				item.setMask(campo.getMask());
-				commAreaList.add(new Pair(item.getCampo(), new MyValue(campo.getValor(),campo.getMask())));
+				commAreaList.add(new Pair(item.getCampo(), new String(campo.getValor())));
 			}
 			else{
 				int size = 0;
@@ -726,7 +725,7 @@ public class FXMLTableViewController implements Initializable{
 			if (((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().contains("N"))
 				enteredArea = enteredArea + Util.completeZeros(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
 			else
-				enteredArea = enteredArea + Util.completeSpaces(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length() - 2);
+				enteredArea = enteredArea + Util.completeSpaces(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
 		}
 
 		commAreaSize = Integer.parseInt(enteredArea.substring(8, 13)) + 271;
@@ -745,7 +744,7 @@ public class FXMLTableViewController implements Initializable{
 
 		for (int i = 0; i < (enteredArea.length()); i++) {
 			begin = 3 + (70 * i);
-			end = 3 + (70 * (i + 1));
+			end = 3 + (70 + (70 * i));
 			if(begin > enteredArea.length())
 				break;
 			if (end > enteredArea.length()) {
@@ -782,7 +781,7 @@ public class FXMLTableViewController implements Initializable{
 			if (((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().contains("N"))
 				enteredArea = enteredArea + Util.completeZeros(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
 			else
-				enteredArea = enteredArea + Util.completeSpaces(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length() - 2);
+				enteredArea = enteredArea + Util.completeSpaces(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
 		}
 
 		commAreaSize = Integer.parseInt(enteredArea.substring(8, 13)) + 271;
@@ -793,7 +792,7 @@ public class FXMLTableViewController implements Initializable{
 
 		for (int i = 0; i < (enteredArea.length()); i++) {
 			begin = (70 * i);
-			end = (70 * (i + 1));
+			end = (70 + (70 * i));
 			if(begin > enteredArea.length())
 				break;
 			if (end > enteredArea.length()) {
