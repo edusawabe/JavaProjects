@@ -122,7 +122,7 @@ public class Campo{
 				if(type.contains("X")){
 					mask = mask + "*";
 				}
-				if(type.contains("9")){
+				else{
 					mask = mask + "N";
 				}
 			}

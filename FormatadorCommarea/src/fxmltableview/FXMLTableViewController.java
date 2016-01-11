@@ -158,12 +158,20 @@ public class FXMLTableViewController implements Initializable{
 		alert.setHeaderText("Campos Obrigatórios Não Preenchidos");
 
 		if (bookArea.getText().isEmpty())  {
-			alert.setContentText("Favor Preencher o Book!");
+			alert.setContentText("Favor Preencher o Book");
 		}
 		if (!yy03Radio.isSelected() && !yy06Radio.isSelected()){
-			alert.setContentText("Favor Selecionar o tipo de Área");
+			if (alert.getContentText().isEmpty())
+				alert.setContentText("Favor Selecionar o tipo de Área");
+			else
+				alert.setContentText(alert.getContentText() + "\nFavor Selecionar o tipo de Área");
 		}
-
+		if (yy06Radio.isSelected() && fluxoField.getText().isEmpty()){
+			if (alert.getContentText().isEmpty())
+				alert.setContentText("Favor Preencher o Fluxo");
+			else
+				alert.setContentText(alert.getContentText() + "\nFavor Preencher o Fluxo");
+		}
 		if (alert.getContentText().isEmpty()) {
 			process();
 			calculateFieldPosition(null);
@@ -193,8 +201,8 @@ public class FXMLTableViewController implements Initializable{
 		initComponents();
 
 		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Campos Obrigatórios Não Preenchidos");
-		alert.setHeaderText("Erro");
+		alert.setHeaderText("Campos Obrigatórios Não Preenchidos");
+		alert.setTitle("Erro");
 		alert.setContentText("");
 
 		if (bookArea.getText().isEmpty() && commArea.getText().isEmpty()) {
@@ -216,6 +224,8 @@ public class FXMLTableViewController implements Initializable{
 				processGlog();
 			if (textoRadio.isSelected())
 				processText();
+			saidaRadio.setSelected(true);
+			setRadiosSaida();
 			processButton.setDisable(false);
 		}
 		else{
@@ -223,6 +233,7 @@ public class FXMLTableViewController implements Initializable{
 			saidaRadio.setSelected(true);
 			setRadiosSaida();
 			processButton.setDisable(false);
+			glogRadio.requestFocus();
 		}
 	}
 
@@ -349,7 +360,6 @@ public class FXMLTableViewController implements Initializable{
 			}
 			else
 				if (bookLine[i].contains("OCCURS")){
-					hasOccurs = true;
 					if (bookLine[i].contains("."))
 						occursCampo = processOccursLine(bookLine[i]);
 					else{
@@ -382,8 +392,12 @@ public class FXMLTableViewController implements Initializable{
 		else{
 			c.setTimes(Integer.parseInt(line.substring(posOccurs + 7, posTimes -1).replaceAll(" ", "")));
 		}
-		if (posDeppendingON > 0)
+		if (posDeppendingON > 0){
 			c.setDeppendingOn(line.substring(posDeppendingON + 13, posPonto).replaceAll(" ", ""));
+			hasOccurs = true;
+		}
+		else
+			hasOccurs = false;
 		listCampos.add(c);
 		getNomeNivelCampo(line,c);
 		return c;

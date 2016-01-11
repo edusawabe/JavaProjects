@@ -88,14 +88,14 @@
                         <Label prefHeight="17.0" prefWidth="72.0" text="Tipo:" GridPane.rowIndex="1" />
                         <RadioButton fx:id="entradaRadio" mnemonicParsing="false" onAction="#entradaSelected" text="Entrada" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <RadioButton fx:id="saidaRadio" mnemonicParsing="false" onAction="#saidaSelected" text="Saída" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        <RadioButton fx:id="glogRadio" mnemonicParsing="false" text="GLOG" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <RadioButton fx:id="glogRadio" mnemonicParsing="false" onAction="#glogSelected" text="GLOG" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                         <RadioButton fx:id="yy03Radio" mnemonicParsing="false" onAction="#yy03Selected" text="YY03" GridPane.rowIndex="2" />
-                        <RadioButton fx:id="textoRadio" mnemonicParsing="false" text="Texto" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                        <RadioButton fx:id="textoRadio" mnemonicParsing="false" onAction="#textoSelected" text="Texto" GridPane.columnIndex="4" GridPane.rowIndex="2" />
                         <RadioButton fx:id="yy06Radio" mnemonicParsing="false" onAction="#yy06Selected" text="YY06" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Button fx:id="extrairButton" mnemonicParsing="false" onAction="#extrairBookAction" prefHeight="25.0" prefWidth="89.0" text="Extr. Book" GridPane.rowIndex="3" />
-                        <Button fx:id="processButton" mnemonicParsing="false" onAction="#extrairSaidaAction" prefHeight="25.0" prefWidth="90.0" text="Extrair Saída" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                        <Button fx:id="gerarAreaButton" mnemonicParsing="false" onAction="#generateCommArea" prefHeight="25.0" prefWidth="101.0" text="Gerar Área" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                        <Button fx:id="gerarOccursButton" mnemonicParsing="false" onAction="#generateOccursTable" prefHeight="25.0" prefWidth="103.0" text="Gerar Occurs" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Button fx:id="extrairButton" mnemonicParsing="false" onAction="#extrairBookAction" prefHeight="25.0" prefWidth="112.0" text="Extr. Book" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+                        <Button fx:id="processButton" mnemonicParsing="false" onAction="#extrairSaidaAction" prefHeight="25.0" prefWidth="105.0" text="Extrair Saída" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+                        <Button fx:id="gerarAreaButton" mnemonicParsing="false" onAction="#generateCommArea" prefHeight="25.0" prefWidth="101.0" text="Gerar Área" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+                        <Button fx:id="gerarOccursButton" mnemonicParsing="false" onAction="#generateOccursTable" prefHeight="25.0" prefWidth="103.0" text="Gerar Occurs" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
                         <MaskTextField fx:id="fluxoField" GridPane.columnIndex="3" />
                         <Label prefHeight="17.0" prefWidth="101.0" text="Fluxo:" GridPane.columnIndex="2" />
                      </children>
