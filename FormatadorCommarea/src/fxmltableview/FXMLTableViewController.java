@@ -70,6 +70,7 @@ public class FXMLTableViewController implements Initializable{
 	}
 
 	private void initComponents() {
+		hasOccurs = false;
 		if (development)
 			initializeAreas();
 		else{
