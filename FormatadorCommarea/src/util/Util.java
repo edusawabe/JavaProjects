@@ -1,4 +1,4 @@
-package fxmltableview;
+package util;
 
 public final class Util {
 

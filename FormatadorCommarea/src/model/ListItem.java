@@ -1,4 +1,4 @@
-package fxmltableview;
+package model;
 
 import javafx.beans.property.SimpleStringProperty;
 

@@ -1,4 +1,4 @@
-package fxmltableview;
+package model;
 
 import java.util.LinkedList;
 

@@ -2,7 +2,7 @@
  *
  */
 
-package fxmltableview;
+package business;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,8 +14,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -33,9 +31,16 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
-import javafx.stage.Window;
 import javafx.util.Callback;
 import javafx.util.Pair;
+import model.Campo;
+import model.ListItem;
+import model.PairKeyFactory;
+import model.PairValueCell;
+import model.PairValueFactory;
+import util.HashMapHexAscii;
+import util.Util;
+import view.MaskTextField;
 
 public class FXMLTableViewController implements Initializable{
     @FXML private TableView<Pair<String,Object>> tableView;
@@ -69,6 +74,7 @@ public class FXMLTableViewController implements Initializable{
 		fluxoField.setMask("********");
 	}
 
+	@SuppressWarnings("unchecked")
 	private void initComponents() {
 		hasOccurs = false;
 		if (development)
@@ -140,6 +146,7 @@ public class FXMLTableViewController implements Initializable{
 				line = reader.readLine();
 			}
 			bookArea.setText(book);
+			reader.close();
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -542,7 +549,6 @@ public class FXMLTableViewController implements Initializable{
 
 	private void processText(){
 		String line[] = commArea.getText().split("\\r?\\n");
-		String subLine[];
 		String commArea = new String();
 		for (int i = 0; i < line.length; i++) {
 			commArea = commArea + (line[i].replaceAll("\\n", ""));
@@ -649,7 +655,7 @@ public class FXMLTableViewController implements Initializable{
 				item.setValor(commArea.substring(campo.getPos(), campo.getPos() + campo.getTam()));
 				campo.setValor(commArea.substring(campo.getPos(), campo.getPos() + campo.getTam()));
 				item.setMask(campo.getMask());
-				commAreaList.add(new Pair(item.getCampo(), new String(campo.getValor())));
+				commAreaList.add(new Pair<String, Object>(item.getCampo(), new String(campo.getValor())));
 			}
 			else{
 				int size = 0;
@@ -670,7 +676,7 @@ public class FXMLTableViewController implements Initializable{
 						item.setValor(commArea.substring(listCampo.getPos(), listCampo.getPos() + listCampo.getTam()));
 						listCampo.setValor(commArea.substring(listCampo.getPos(), listCampo.getPos()));
 						item.setMask(listCampo.getMask());
-						commAreaList.add(new Pair(item.getCampo(),new String(item.getValor())));
+						commAreaList.add(new Pair<String, Object>(item.getCampo(),new String(item.getValor())));
 					}
 				}
 			}
@@ -687,9 +693,9 @@ public class FXMLTableViewController implements Initializable{
 				item.setCampo(campo.getNivel() + " - " + campo.getNome() + " - " + campo.getType());
 				item.setMask(campo.getMask());
 				if (campo.getValor() != null)
-					commAreaList.add(new Pair(item.getCampo(),new MaskTextField(campo.getValor(),item.getMask())));
+					commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField(campo.getValor(),item.getMask())));
 				else
-					commAreaList.add(new Pair(item.getCampo(),new MaskTextField("",item.getMask())));
+					commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField("",item.getMask())));
 			}
 			else{
 				int size = 0;
@@ -708,9 +714,9 @@ public class FXMLTableViewController implements Initializable{
 						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
 						item.setMask(listCampo.getMask());
 						if (campo.getValor() != null)
-							commAreaList.add(new Pair(item.getCampo(),new MaskTextField(campo.getValor(),item.getMask())));
+							commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField(campo.getValor(),item.getMask())));
 						else
-							commAreaList.add(new Pair(item.getCampo(),new MaskTextField("",item.getMask())));
+							commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField("",item.getMask())));
 					}
 				}
 			}
@@ -736,7 +742,7 @@ public class FXMLTableViewController implements Initializable{
 						ListItem item = new ListItem("   " + listCampo.getNivel() + " - " + listCampo.getNome(), "", "");
 						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
 						item.setMask(listCampo.getMask());
-						commAreaList.add(new Pair(item.getCampo(), new MaskTextField("",item.getMask())));
+						commAreaList.add(new Pair<String, Object>(item.getCampo(), new MaskTextField("",item.getMask())));
 					}
 				}
 			}
@@ -862,64 +868,6 @@ public class FXMLTableViewController implements Initializable{
      * END - Commarea Processing Methods
      * ======================================================================================================
      */
-
-	/*
-	 * ======================================================================================================
-	 * Table Cell Classes
-	 * ======================================================================================================
-	 */
-	class PairKeyFactory implements Callback<TableColumn.CellDataFeatures<Pair<String, Object>, String>, ObservableValue<String>> {
-	    @Override
-	    public ObservableValue<String> call(TableColumn.CellDataFeatures<Pair<String, Object>, String> data) {
-	        return new ReadOnlyObjectWrapper(data.getValue().getKey());
-	    }
-	}
-
-	class PairValueFactory implements Callback<TableColumn.CellDataFeatures<Pair<String, Object>, Object>, ObservableValue<Object>> {
-	    @SuppressWarnings("unchecked")
-	    @Override
-	    public ObservableValue<Object> call(TableColumn.CellDataFeatures<Pair<String, Object>, Object> data) {
-	        Object value = data.getValue().getValue();
-	        return (value instanceof ObservableValue)
-	                ? (ObservableValue) value
-	                : new ReadOnlyObjectWrapper<>(value);
-	    }
-	}
-
-	class PairValueCell extends TableCell<Pair<String, Object>, Object> {
-		@Override
-	    protected void updateItem(Object item, boolean empty) {
-	        super.updateItem(item, empty);
-
-	        if (item != null) {
-	            if (item instanceof String) {
-	                setText((String) item);
-	            } else if (item instanceof MyValue) {
-	            	setGraphic(null);
-	            	if(((MyValue) item).getValue() != null)
-						setText(((MyValue) item).getValue());
-					else
-						setText("");
-	            	if (glogRadio.isSelected()){
-	            		setText(((MyValue) item).getValue());
-	            	}
-	            	else{
-	            		setText("");
-	            	}
-	            } else if (item instanceof MaskTextField){
-	                setGraphic((MaskTextField)item);
-	            }
-	        } else {
-	        	setGraphic(null);
-                setText("");
-	        }
-	    }
-	}
-	/*
-	 * ======================================================================================================
-	 * END - Table Cell Classes
-	 * ======================================================================================================
-	 */
 
 
 	/*

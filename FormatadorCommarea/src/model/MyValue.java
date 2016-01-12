@@ -1,4 +1,4 @@
-package fxmltableview;
+package model;
 
 public class MyValue {
 	private String valor;

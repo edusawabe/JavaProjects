@@ -1,4 +1,4 @@
-package fxmltableview;
+package util;
 
 import java.util.HashMap;
 
