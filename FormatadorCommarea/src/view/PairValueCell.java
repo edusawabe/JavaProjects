@@ -9,6 +9,7 @@ public class PairValueCell extends TableCell<Pair<String, Object>, Object> {
     protected void updateItem(Object item, boolean empty) {
         super.updateItem(item, empty);
 
+        this.setStyle("-fx-background-color:white");
         if (item != null) {
             if (item instanceof String) {
                 setText((String) item);
@@ -19,7 +20,9 @@ public class PairValueCell extends TableCell<Pair<String, Object>, Object> {
 				else
 					setText("");
             } else if (item instanceof MaskTextField){
-                setGraphic((MaskTextField)item);
+                if (((MaskTextField) item).isDependingOn())
+                	this.setStyle("-fx-background-color:red");
+            	setGraphic((MaskTextField)item);
             }
         } else {
         	setGraphic(null);
