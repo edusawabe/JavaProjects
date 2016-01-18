@@ -338,55 +338,57 @@ public class FXMLTableViewController implements Initializable{
 
 		String bookLine[] = bookArea.getText().split("\\r?\\n");
 		for (int i = 0; i < bookLine.length; i++) {
-			aux = i;
-			while (!bookLine[i].contains(".")) {
-				aux = aux + 1;
-				if (aux < bookLine.length) {
-					bookLine[i] = bookLine[i] + bookLine[aux];
+			if (!(bookLine[i].charAt(6) == '*')) {
+				aux = i;
+				while (!bookLine[i].contains(".")) {
+					aux = aux + 1;
+					if (aux < bookLine.length) {
+						bookLine[i] = bookLine[i] + bookLine[aux];
+					}
 				}
-			}
-			if (bookLine[i].contains(" PIC")) {
-				if (bookLine[i].contains(")V9")) {
-					campoAtual = processDecimal(bookLine[i]);
-				} else {
-					if (bookLine[i].contains("9(")) {
-						if (bookLine[i].contains("VALUE")) {
-							campoAtual = processNumericValue(bookLine[i]);
-						} else
-							campoAtual = processNumeric(bookLine[i]);
+				if (bookLine[i].contains(" PIC")) {
+					if (bookLine[i].contains(")V9")) {
+						campoAtual = processDecimal(bookLine[i]);
 					} else {
-						if (bookLine[i].contains("VALUE"))
-							campoAtual = processStringValue(bookLine[i]);
-						else
-							campoAtual = processString(bookLine[i]);
-					}
-				}
-
-				if (occursCampo != null) {
-					if (campoAtual.getNivel().compareTo(occursCampo.getNivel()) > 0)
-						occursCampo.getListOccurs().get(0).add(campoAtual);
-				} else {
-					occursCampo = null;
-					listCampos.add(campoAtual);
-				}
-				i = aux;
-			} else {
-				if (bookLine[i].contains("OCCURS")) {
-					if (bookLine[i].contains("."))
-						occursCampo = processOccursLine(bookLine[i]);
-					else {
-						int j = i;
-						String toProcess = new String();
-						while (!bookLine[j].contains(".")) {
-							toProcess = toProcess + bookLine[j];
-							j++;
+						if (bookLine[i].contains("9(")) {
+							if (bookLine[i].contains("VALUE")) {
+								campoAtual = processNumericValue(bookLine[i]);
+							} else
+								campoAtual = processNumeric(bookLine[i]);
+						} else {
+							if (bookLine[i].contains("VALUE"))
+								campoAtual = processStringValue(bookLine[i]);
+							else
+								campoAtual = processString(bookLine[i]);
 						}
-						toProcess = toProcess + bookLine[j];
-						occursCampo = processOccursLine(toProcess);
-						i = j;
 					}
+
+					if (occursCampo != null) {
+						if (campoAtual.getNivel().compareTo(occursCampo.getNivel()) > 0)
+							occursCampo.getListOccurs().get(0).add(campoAtual);
+					} else {
+						occursCampo = null;
+						listCampos.add(campoAtual);
+					}
+					i = aux;
+				} else {
+					if (bookLine[i].contains("OCCURS")) {
+						if (bookLine[i].contains("."))
+							occursCampo = processOccursLine(bookLine[i]);
+						else {
+							int j = i;
+							String toProcess = new String();
+							while (!bookLine[j].contains(".")) {
+								toProcess = toProcess + bookLine[j];
+								j++;
+							}
+							toProcess = toProcess + bookLine[j];
+							occursCampo = processOccursLine(toProcess);
+							i = j;
+						}
+					}
+					i = aux;
 				}
-				i = aux;
 			}
 		}
 
