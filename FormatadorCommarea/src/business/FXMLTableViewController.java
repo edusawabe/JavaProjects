@@ -330,50 +330,54 @@ public class FXMLTableViewController implements Initializable{
      * Commarea Processing Methods
      * ======================================================================================================
      */
-	private void process(){
+	private void process() {
 		listCampos = new LinkedList<Campo>();
 		Campo occursCampo = null;
 		Campo campoAtual;
+		int aux = 0;
 
 		String bookLine[] = bookArea.getText().split("\\r?\\n");
-		for(int i = 0; i < bookLine.length; i++) {
-			if(bookLine[i].contains(" PIC")){
-				if(bookLine[i].contains(")V9")){
-					campoAtual = processDecimal(bookLine[i]);
+		for (int i = 0; i < bookLine.length; i++) {
+			aux = i;
+			while (!bookLine[i].contains(".")) {
+				aux = aux + 1;
+				if (aux < bookLine.length) {
+					bookLine[i] = bookLine[i] + bookLine[aux];
 				}
-				else{
-					if(bookLine[i].contains("9(")){
-						if(bookLine[i].contains("VALUE")){
+			}
+			if (bookLine[i].contains(" PIC")) {
+				if (bookLine[i].contains(")V9")) {
+					campoAtual = processDecimal(bookLine[i]);
+				} else {
+					if (bookLine[i].contains("9(")) {
+						if (bookLine[i].contains("VALUE")) {
 							campoAtual = processNumericValue(bookLine[i]);
-						}
-						else
+						} else
 							campoAtual = processNumeric(bookLine[i]);
-					}
-					else{
-						if(bookLine[i].contains("VALUE"))
+					} else {
+						if (bookLine[i].contains("VALUE"))
 							campoAtual = processStringValue(bookLine[i]);
 						else
 							campoAtual = processString(bookLine[i]);
 					}
 				}
 
-				if (occursCampo != null){
-					if(campoAtual.getNivel().compareTo(occursCampo.getNivel()) > 0)
+				if (occursCampo != null) {
+					if (campoAtual.getNivel().compareTo(occursCampo.getNivel()) > 0)
 						occursCampo.getListOccurs().get(0).add(campoAtual);
-				}
-				else{
+				} else {
 					occursCampo = null;
 					listCampos.add(campoAtual);
 				}
-			}
-			else
-				if (bookLine[i].contains("OCCURS")){
+				i = aux;
+			} else {
+				if (bookLine[i].contains("OCCURS")) {
 					if (bookLine[i].contains("."))
 						occursCampo = processOccursLine(bookLine[i]);
-					else{
+					else {
 						int j = i;
 						String toProcess = new String();
-						while(!bookLine[j].contains(".")){
+						while (!bookLine[j].contains(".")) {
 							toProcess = toProcess + bookLine[j];
 							j++;
 						}
@@ -382,6 +386,8 @@ public class FXMLTableViewController implements Initializable{
 						i = j;
 					}
 				}
+				i = aux;
+			}
 		}
 
 	}
@@ -394,15 +400,15 @@ public class FXMLTableViewController implements Initializable{
 		int posOccurs = line.indexOf("OCCURS");
 		int posTo = line.indexOf("TO");
 		int posTimes = line.indexOf("TIMES");
-		int posDeppendingON = line.indexOf("DEPPENDING ON");
+		int posDependingON = line.indexOf("DEPENDING ON");
 		if (posTo > 0)
 			c.setTimes(Integer.parseInt(line.substring(posTo + 3, posTimes -1).replaceAll(" ", "")));
 		else{
 			c.setTimes(Integer.parseInt(line.substring(posOccurs + 7, posTimes -1).replaceAll(" ", "")));
 		}
-		if (posDeppendingON > 0){
-			c.setDeppendingOn(line.substring(posDeppendingON + 13, posPonto).replaceAll(" ", ""));
-			setCampoDeppendingOnValue(c.getDeppendingOn());
+		if (posDependingON > 0){
+			c.setDependingOn(line.substring(posDependingON + 13, posPonto).replaceAll(" ", ""));
+			setCampoDependingOnValue(c.getDependingOn());
 			hasOccurs = true;
 		}
 		else
@@ -593,7 +599,7 @@ public class FXMLTableViewController implements Initializable{
 		int pos = 0;
 		for (Campo campo : listCampos) {
 			if(campo.isOccurs()){
-				if (campo.getDeppendingOn() == null || campo.getDeppendingOn().isEmpty()) {
+				if (campo.getDependingOn() == null || campo.getDependingOn().isEmpty()) {
 					for (int i = 0; i < campo.getTimes(); i++) {
 						if(i > 0){
 							campo.getListOccurs().add(new LinkedList<Campo>());
@@ -614,7 +620,7 @@ public class FXMLTableViewController implements Initializable{
 					if (commArea == null)
 						size = campo.getTimes();
 					else
-						size = getDeppendingOnValue(campo.getDeppendingOn(), commArea);
+						size = getDependingOnValue(campo.getDependingOn(), commArea);
 					for (int i = 0; i < size; i++) {
 						if(i > 0){
 							campo.getListOccurs().add(new LinkedList<Campo>());
@@ -638,18 +644,18 @@ public class FXMLTableViewController implements Initializable{
 		}
 	}
 
-	private int setCampoDeppendingOnValue(String deppendingOn){
+	private int setCampoDependingOnValue(String dependingOn){
 		for (Campo campo : listCampos) {
-			if (campo.getNome().equals(deppendingOn)){
+			if (campo.getNome().equals(dependingOn)){
 				campo.setDependingOnField(true);
 			}
 		}
 		return 0;
 	}
 
-	private int getDeppendingOnValue(String deppendingOn, String commArea){
+	private int getDependingOnValue(String dependingOn, String commArea){
 		for (Campo campo : listCampos) {
-			if (campo.getNome().equals(deppendingOn)){
+			if (campo.getNome().equals(dependingOn)){
 				campo.setDependingOnField(true);
 				return (Integer.parseInt(commArea.substring(campo.getPos(), campo.getPos() + campo.getTam())));
 			}
@@ -671,14 +677,14 @@ public class FXMLTableViewController implements Initializable{
 			}
 			else{
 				int size = 0;
-				if(campo.getDeppendingOn() == null){
+				if(campo.getDependingOn() == null){
 					size = campo.getListOccurs().size();
 				}
 				else{
-					if (campo.getDeppendingOn().isEmpty())
+					if (campo.getDependingOn().isEmpty())
 						size = campo.getListOccurs().size();
 					else
-						size = getDeppendingOnValue(campo.getDeppendingOn(),commArea);
+						size = getDependingOnValue(campo.getDependingOn(),commArea);
 				}
 				for (int i = 0; i < size; i++) {
 					LinkedList<Campo> listItem = campo.getListOccurs().get(i);
@@ -698,10 +704,10 @@ public class FXMLTableViewController implements Initializable{
 	private void generateTable(){
 		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
 		commAreaList.clear();
-		boolean dependingOn;
+		boolean dependingOn = false;
 
 		for (Campo campo : listCampos) {
-			if (campo.getDeppendingOn() == null)
+			if (campo.getDependingOn() == null)
 				dependingOn = false;
 			if(!campo.isOccurs()){
 				ListItem item = new ListItem(campo.getNivel() + " - " + campo.getNome(), "", "");
@@ -714,10 +720,10 @@ public class FXMLTableViewController implements Initializable{
 			}
 			else{
 				int size = 0;
-				if (campo.getDeppendingOn() == null)
+				if (campo.getDependingOn() == null)
 					size = campo.getListOccurs().size();
 				else{
-					if (campo.getDeppendingOn().isEmpty())
+					if (campo.getDependingOn().isEmpty())
 						size = campo.getListOccurs().size();
 					else
 						size = 0;
@@ -747,7 +753,7 @@ public class FXMLTableViewController implements Initializable{
 		for (Campo campo : listCampos) {
 			if(campo.isOccurs()){
 				for (int i = 0; i < commAreaList.size(); i++) {
-					if(commAreaList.get(i).getKey().contains(campo.getDeppendingOn())){
+					if(commAreaList.get(i).getKey().contains(campo.getDependingOn())){
 						size = Integer.parseInt(((MaskTextField)commAreaList.get(i).getValue()).getText());
 					}
 				}
@@ -757,7 +763,10 @@ public class FXMLTableViewController implements Initializable{
 						ListItem item = new ListItem("   " + listCampo.getNivel() + " - " + listCampo.getNome(), "", "");
 						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
 						item.setMask(listCampo.getMask());
-						commAreaList.add(new Pair<String, Object>(item.getCampo(), new MaskTextField("",item.getMask(),campo.isDependingOnField())));
+						if (listCampo.getValor() != null)
+							commAreaList.add(new Pair<String, Object>(item.getCampo(), new MaskTextField(listCampo.getValor(),item.getMask(),campo.isDependingOnField())));
+						else
+							commAreaList.add(new Pair<String, Object>(item.getCampo(), new MaskTextField("",item.getMask(),campo.isDependingOnField())));
 					}
 				}
 			}
@@ -949,7 +958,7 @@ public class FXMLTableViewController implements Initializable{
 						 +"              15 RFINWJ6S-S-VTOT-SDO-LIB          PIC 9(015)V99.        \n"
 						 +"              15 RFINWJ6S-S-QTDE-PARCELAS         PIC 9(003).           \n"
 						 +"              15 RFINWJ6S-S-LIST OCCURS 0 TO 60 TIMES                   \n"
-						 +"                 DEPPENDING ON RFINWJ6S-S-QTDE-PARCELAS.                \n"
+						 +"                 DEPENDING ON RFINWJ6S-S-QTDE-PARCELAS.                \n"
 						 + "                20 RFINWJ6S-S-DATA-PARCELA       PIC X(010).           \n"
 						 + "                20 RFINWJ6S-S-DATA-AMORTIZACAO   PIC X(010).           \n"
 				);

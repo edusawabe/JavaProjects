@@ -35,12 +35,12 @@ import javafx.util.Callback;
 import javafx.util.Pair;
 import model.Campo;
 import model.ListItem;
-import model.PairKeyFactory;
-import model.PairValueCell;
-import model.PairValueFactory;
 import util.HashMapHexAscii;
 import util.Util;
 import view.MaskTextField;
+import view.PairKeyFactory;
+import view.PairValueCell;
+import view.PairValueFactory;
 
 public class FXMLTableViewController implements Initializable{
     @FXML private TableView<Pair<String,Object>> tableView;
@@ -402,6 +402,7 @@ public class FXMLTableViewController implements Initializable{
 		}
 		if (posDeppendingON > 0){
 			c.setDeppendingOn(line.substring(posDeppendingON + 13, posPonto).replaceAll(" ", ""));
+			setCampoDeppendingOnValue(c.getDeppendingOn());
 			hasOccurs = true;
 		}
 		else
@@ -637,10 +638,21 @@ public class FXMLTableViewController implements Initializable{
 		}
 	}
 
+	private int setCampoDeppendingOnValue(String deppendingOn){
+		for (Campo campo : listCampos) {
+			if (campo.getNome().equals(deppendingOn)){
+				campo.setDependingOnField(true);
+			}
+		}
+		return 0;
+	}
+
 	private int getDeppendingOnValue(String deppendingOn, String commArea){
 		for (Campo campo : listCampos) {
-			if (campo.getNome().equals(deppendingOn))
+			if (campo.getNome().equals(deppendingOn)){
+				campo.setDependingOnField(true);
 				return (Integer.parseInt(commArea.substring(campo.getPos(), campo.getPos() + campo.getTam())));
+			}
 		}
 		return 0;
 	}
@@ -686,16 +698,19 @@ public class FXMLTableViewController implements Initializable{
 	private void generateTable(){
 		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
 		commAreaList.clear();
+		boolean dependingOn;
 
 		for (Campo campo : listCampos) {
+			if (campo.getDeppendingOn() == null)
+				dependingOn = false;
 			if(!campo.isOccurs()){
 				ListItem item = new ListItem(campo.getNivel() + " - " + campo.getNome(), "", "");
 				item.setCampo(campo.getNivel() + " - " + campo.getNome() + " - " + campo.getType());
 				item.setMask(campo.getMask());
 				if (campo.getValor() != null)
-					commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField(campo.getValor(),item.getMask())));
+					commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField(campo.getValor(),item.getMask(),campo.isDependingOnField())));
 				else
-					commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField("",item.getMask())));
+					commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField("",item.getMask(),campo.isDependingOnField())));
 			}
 			else{
 				int size = 0;
@@ -714,9 +729,9 @@ public class FXMLTableViewController implements Initializable{
 						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
 						item.setMask(listCampo.getMask());
 						if (campo.getValor() != null)
-							commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField(campo.getValor(),item.getMask())));
+							commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField(campo.getValor(),item.getMask(),campo.isDependingOnField())));
 						else
-							commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField("",item.getMask())));
+							commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField("",item.getMask(),campo.isDependingOnField())));
 					}
 				}
 			}
@@ -742,7 +757,7 @@ public class FXMLTableViewController implements Initializable{
 						ListItem item = new ListItem("   " + listCampo.getNivel() + " - " + listCampo.getNome(), "", "");
 						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
 						item.setMask(listCampo.getMask());
-						commAreaList.add(new Pair<String, Object>(item.getCampo(), new MaskTextField("",item.getMask())));
+						commAreaList.add(new Pair<String, Object>(item.getCampo(), new MaskTextField("",item.getMask(),campo.isDependingOnField())));
 					}
 				}
 			}

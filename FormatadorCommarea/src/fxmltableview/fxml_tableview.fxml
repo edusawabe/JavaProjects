@@ -31,87 +31,89 @@
          </columnResizePolicy>
      </TableView>
       <BorderPane GridPane.rowIndex="1">
-         <left>
-            <BorderPane BorderPane.alignment="CENTER">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <padding>
-                  <Insets right="5.0" />
-               </padding>
-               <center>
-                  <VBox BorderPane.alignment="CENTER">
+         <top>
+            <SplitPane dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <items>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <HBox prefHeight="25.0" prefWidth="464.0">
-                           <children>
-                              <Label alignment="CENTER" prefHeight="25.0" prefWidth="27.0" text="Book" HBox.hgrow="NEVER" />
-                              <TextField fx:id="tfbookFile" editable="false" prefHeight="25.0" prefWidth="374.0" promptText="Bookw">
-                                 <HBox.margin>
-                                    <Insets bottom="5.0" left="5.0" />
-                                 </HBox.margin>
-                              </TextField>
-                              <Button fx:id="bookSelectButton" mnemonicParsing="false" onAction="#openBookFile" prefHeight="25.0" prefWidth="51.0" text="Abrir">
-                                 <HBox.margin>
-                                    <Insets left="5.0" />
-                                 </HBox.margin>
-                              </Button>
-                           </children>
-                        </HBox>
-                        <TextArea fx:id="bookArea" prefHeight="168.0" prefWidth="335.0" VBox.vgrow="ALWAYS" />
+                        <BorderPane AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <center>
+                              <VBox BorderPane.alignment="CENTER">
+                                 <children>
+                                    <HBox prefHeight="25.0" prefWidth="464.0">
+                                       <children>
+                                          <Label alignment="CENTER" prefHeight="25.0" prefWidth="27.0" text="Book" HBox.hgrow="NEVER" />
+                                          <TextField fx:id="tfbookFile" editable="false" prefHeight="25.0" prefWidth="358.0" promptText="Bookw">
+                                             <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" />
+                                             </HBox.margin>
+                                          </TextField>
+                                          <Button fx:id="bookSelectButton" mnemonicParsing="false" onAction="#openBookFile" prefHeight="25.0" prefWidth="51.0" text="Abrir">
+                                             <HBox.margin>
+                                                <Insets left="5.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                       </children>
+                                    </HBox>
+                                    <TextArea fx:id="bookArea" VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
+                           </center>
+                        </BorderPane>
                      </children>
-                  </VBox>
-               </center>
-               <BorderPane.margin>
-                  <Insets />
-               </BorderPane.margin>
-            </BorderPane>
-         </left>
-         <center>
-            <BorderPane BorderPane.alignment="CENTER">
-               <top>
-                  <GridPane hgap="5.0" vgap="5.0" BorderPane.alignment="CENTER">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <Label prefHeight="17.0" prefWidth="178.0" text="CommArea" />
-                        <Label prefHeight="17.0" prefWidth="72.0" text="Tipo:" GridPane.rowIndex="1" />
-                        <RadioButton fx:id="entradaRadio" mnemonicParsing="false" onAction="#entradaSelected" text="Entrada" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <RadioButton fx:id="saidaRadio" mnemonicParsing="false" onAction="#saidaSelected" text="Saída" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        <RadioButton fx:id="glogRadio" mnemonicParsing="false" onAction="#glogSelected" text="GLOG" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                        <RadioButton fx:id="yy03Radio" mnemonicParsing="false" onAction="#yy03Selected" text="YY03" GridPane.rowIndex="2" />
-                        <RadioButton fx:id="textoRadio" mnemonicParsing="false" onAction="#textoSelected" text="Texto" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                        <RadioButton fx:id="yy06Radio" mnemonicParsing="false" onAction="#yy06Selected" text="YY06" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Button fx:id="extrairButton" mnemonicParsing="false" onAction="#extrairBookAction" prefHeight="25.0" prefWidth="112.0" text="Extr. Book" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
-                        <Button fx:id="processButton" mnemonicParsing="false" onAction="#extrairSaidaAction" prefHeight="25.0" prefWidth="105.0" text="Extrair Saída" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
-                        <Button fx:id="gerarAreaButton" mnemonicParsing="false" onAction="#generateCommArea" prefHeight="25.0" prefWidth="101.0" text="Gerar Área" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
-                        <Button fx:id="gerarOccursButton" mnemonicParsing="false" onAction="#generateOccursTable" prefHeight="25.0" prefWidth="103.0" text="Gerar Occurs" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
-                        <MaskTextField fx:id="fluxoField" GridPane.columnIndex="3" />
-                        <Label prefHeight="17.0" prefWidth="101.0" text="Fluxo:" GridPane.columnIndex="2" />
+                        <BorderPane AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                           <top>
+                              <GridPane hgap="5.0" vgap="5.0" BorderPane.alignment="CENTER">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label prefHeight="17.0" prefWidth="178.0" text="CommArea" />
+                                    <Label prefHeight="17.0" prefWidth="72.0" text="Tipo:" GridPane.rowIndex="1" />
+                                    <RadioButton fx:id="entradaRadio" mnemonicParsing="false" onAction="#entradaSelected" text="Entrada" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <RadioButton fx:id="saidaRadio" mnemonicParsing="false" onAction="#saidaSelected" text="Saída" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                    <RadioButton fx:id="glogRadio" mnemonicParsing="false" onAction="#glogSelected" text="GLOG" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                    <RadioButton fx:id="yy03Radio" mnemonicParsing="false" onAction="#yy03Selected" text="YY03" GridPane.rowIndex="2" />
+                                    <RadioButton fx:id="textoRadio" mnemonicParsing="false" onAction="#textoSelected" text="Texto" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                                    <RadioButton fx:id="yy06Radio" mnemonicParsing="false" onAction="#yy06Selected" text="YY06" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Button fx:id="extrairButton" mnemonicParsing="false" onAction="#extrairBookAction" prefHeight="25.0" prefWidth="112.0" text="Extr. Book" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+                                    <Button fx:id="processButton" mnemonicParsing="false" onAction="#extrairSaidaAction" prefHeight="25.0" prefWidth="105.0" text="Extrair Saída" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+                                    <Button fx:id="gerarAreaButton" mnemonicParsing="false" onAction="#generateCommArea" prefHeight="25.0" prefWidth="101.0" text="Gerar Área" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+                                    <Button fx:id="gerarOccursButton" mnemonicParsing="false" onAction="#generateOccursTable" prefHeight="25.0" prefWidth="103.0" text="Gerar Occurs" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+                                    <MaskTextField fx:id="fluxoField" GridPane.columnIndex="3" />
+                                    <Label prefHeight="17.0" prefWidth="101.0" text="Fluxo:" GridPane.columnIndex="2" />
+                                 </children>
+                              </GridPane>
+                           </top>
+                           <bottom>
+                              <TextArea fx:id="commArea" BorderPane.alignment="CENTER">
+                                 <BorderPane.margin>
+                                    <Insets top="5.0" />
+                                 </BorderPane.margin>
+                              </TextArea>
+                           </bottom>
+                        </BorderPane>
                      </children>
-                  </GridPane>
-               </top>
-               <bottom>
-                  <TextArea fx:id="commArea" BorderPane.alignment="CENTER">
-                     <BorderPane.margin>
-                        <Insets top="5.0" />
-                     </BorderPane.margin></TextArea>
-               </bottom>
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </BorderPane>
-         </center>
+                  </AnchorPane>
+               </items>
+            </SplitPane>
+         </top>
       </BorderPane>
    </children>
    <columnConstraints>

@@ -3,6 +3,7 @@ package model;
 public class MyValue {
 	private String valor;
 	private String mask;
+	private boolean dependingOn;
 
 	public MyValue(){
 		this.valor = new String();
@@ -25,6 +26,14 @@ public class MyValue {
 	}
 	public void setMask(String mask) {
 		this.mask = mask;
+	}
+
+	public boolean isDependingOn() {
+		return dependingOn;
+	}
+
+	public void setDependingOn(boolean dependingOn) {
+		this.dependingOn = dependingOn;
 	}
 
 }

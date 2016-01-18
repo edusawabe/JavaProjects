@@ -57,6 +57,7 @@ public class MaskTextField extends TextField {
 
     private String mask;
     private String informedMask;
+    private boolean dependingOn;
     private ArrayList<String> patterns;
 
     public MaskTextField() {
@@ -69,10 +70,11 @@ public class MaskTextField extends TextField {
         patterns = new ArrayList<String>();
     }
 
-    public MaskTextField(String text, String mask) {
+    public MaskTextField(String text, String mask, boolean dependingOn) {
         super(text);
         patterns = new ArrayList<String>();
         informedMask = mask;
+        this.dependingOn = dependingOn;
         setMask(mask);
     }
 
@@ -219,6 +221,14 @@ public class MaskTextField extends TextField {
 
 	public void setInformedMask(String informedMask) {
 		this.informedMask = informedMask;
+	}
+
+	public boolean isDependingOn() {
+		return dependingOn;
+	}
+
+	public void setDependingOn(boolean dependingOn) {
+		this.dependingOn = dependingOn;
 	}
 
 }

@@ -13,6 +13,14 @@ public class Campo{
 	private String valor;
 	private LinkedList<LinkedList<Campo>> listOccurs;
 	private String type;
+	private boolean dependingOnField;
+
+	public Campo(){
+		tam = 0;
+		pos = 0;
+		occurs = false;
+		dependingOnField = false;
+	}
 
 	public LinkedList<LinkedList<Campo>> newListOccurs(){
 		listOccurs = new LinkedList<LinkedList<Campo>>();
@@ -128,5 +136,13 @@ public class Campo{
 			}
 		return mask;
 
+	}
+
+	public boolean isDependingOnField() {
+		return dependingOnField;
+	}
+
+	public void setDependingOnField(boolean dependingOnField) {
+		this.dependingOnField = dependingOnField;
 	}
 }
