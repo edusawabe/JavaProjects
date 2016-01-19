@@ -50,7 +50,7 @@ public class FXMLTableViewController implements Initializable{
     @FXML private TextField tfbookFile;
     @FXML private Button bookSelectButton;
     @FXML private MaskTextField fluxoField;
-    @FXML private TextArea bookArea;
+    @FXML private TextArea bookArea; 
     @FXML private TextArea commArea;
 		  private LinkedList<Campo> listCampos;
 	@FXML private RadioButton entradaRadio;
@@ -127,6 +127,34 @@ public class FXMLTableViewController implements Initializable{
      * Actions
      * ======================================================================================================
      */
+	@FXML
+	protected void gerarAreaPorGlog(ActionEvent event) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Erro");
+		alert.setHeaderText("Campos Obrigatórios Não Preenchidos");
+
+		if (!yy03Radio.isSelected() && !yy06Radio.isSelected()){
+			if (alert.getContentText().isEmpty())
+				alert.setContentText("Favor Selecionar o tipo de Área");
+			else
+				alert.setContentText(alert.getContentText() + "\nFavor Selecionar o tipo de Área");
+		}
+		if (yy06Radio.isSelected() && fluxoField.getText().isEmpty()){
+			if (alert.getContentText().isEmpty())
+				alert.setContentText("Favor Preencher o Fluxo");
+			else
+				alert.setContentText(alert.getContentText() + "\nFavor Preencher o Fluxo");
+		}
+		if (alert.getContentText().isEmpty()) {
+			if(yy03Radio.isSelected())
+				commArea.setText(breakLinesYY03(getCommareaByHex()));
+			if(yy06Radio.isSelected())
+				commArea.setText(breakLinesYY06(getCommareaByHex()));
+		}
+		else{
+			alert.show();
+		}
+	}
 
 	@FXML
 	protected void openBookFile(ActionEvent event) {
@@ -532,7 +560,7 @@ public class FXMLTableViewController implements Initializable{
 		return c;
 	}
 
-	private void processGlog(){
+	private String getCommareaByHex(){
 		String line[] = commArea.getText().split("\\r?\\n");
 		String subLine[];
 		String commArea = new String();
@@ -547,8 +575,13 @@ public class FXMLTableViewController implements Initializable{
 				commArea = commArea + " " + processGlogFinalLine(subLine[1]);
 
 		}
-		calculateFieldPosition(convertHextoText(commArea));
-		generateCommAreaTable(convertHextoText(commArea));
+		return convertHextoText(commArea);
+	}
+
+	private void processGlog(){
+		String commArea = getCommareaByHex();
+		calculateFieldPosition(commArea);
+		generateCommAreaTable(commArea);
 		/*for (Iterator<Campo> iterator = listCampos.iterator(); iterator.hasNext();) {
 			Campo campo = (Campo) iterator.next();
 			System.out.println(campo.getNivel() + " - " + campo.getNome() + " - " + campo.getTam() + " - "
@@ -706,11 +739,8 @@ public class FXMLTableViewController implements Initializable{
 	private void generateTable(){
 		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
 		commAreaList.clear();
-		boolean dependingOn = false;
 
 		for (Campo campo : listCampos) {
-			if (campo.getDependingOn() == null)
-				dependingOn = false;
 			if(!campo.isOccurs()){
 				ListItem item = new ListItem(campo.getNivel() + " - " + campo.getNome(), "", "");
 				item.setCampo(campo.getNivel() + " - " + campo.getNome() + " - " + campo.getType());
@@ -788,21 +818,7 @@ public class FXMLTableViewController implements Initializable{
 
 	private String generateCommAreaYY06(){
 		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
-		String fluxo;
-		int commAreaSize;
-		String sCommAreaSize = new String();
-		int begin = 0;
-		int end = 0;
-		int aux;
 		String area;
-
-		if (fluxoField.getText() != null)
-			fluxo = fluxoField.getText();
-		else
-			fluxo = "RFINIAAR";
-
-		if (fluxo.isEmpty())
-			fluxo = "RFINIAAR";
 
 		String enteredArea = new String();
 
@@ -812,6 +828,27 @@ public class FXMLTableViewController implements Initializable{
 			else
 				enteredArea = enteredArea + Util.completeSpaces(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
 		}
+
+		area = breakLinesYY06(enteredArea);
+
+		return area;
+	}
+
+	private String breakLinesYY06(String enteredArea){
+		String sCommAreaSize = new String(), area;
+		int commAreaSize;
+		String fluxo;
+		int begin = 0;
+		int end = 0;
+		int aux;
+
+		if (fluxoField.getText() != null)
+			fluxo = fluxoField.getText();
+		else
+			fluxo = "RFINIAAR";
+
+		if (fluxo.isEmpty())
+			fluxo = "RFINIAAR";
 
 		commAreaSize = Integer.parseInt(enteredArea.substring(8, 13)) + 271;
 		sCommAreaSize = sCommAreaSize + commAreaSize;
@@ -844,21 +881,9 @@ public class FXMLTableViewController implements Initializable{
 
 	private String generateCommAreaYY03(){
 		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
-		String fluxo;
 		int commAreaSize;
 		String sCommAreaSize = new String();
-		int begin = 0;
-		int end = 0;
-		int aux;
 		String area;
-
-		if (fluxoField.getText() != null)
-			fluxo = fluxoField.getText();
-		else
-			fluxo = "RFINIAAR";
-
-		if (fluxo.isEmpty())
-			fluxo = "RFINIAAR";
 
 		String enteredArea = new String();
 
@@ -873,7 +898,16 @@ public class FXMLTableViewController implements Initializable{
 		sCommAreaSize = sCommAreaSize + commAreaSize;
 		sCommAreaSize = Util.completeZeros(sCommAreaSize, 5);
 
-		area = "";
+		area = breakLinesYY03(enteredArea);
+
+		return area;
+	}
+
+	private String breakLinesYY03(String enteredArea){
+		int begin = 0;
+		int end = 0;
+		int aux;
+		String area = new String();
 
 		for (int i = 0; i < (enteredArea.length()); i++) {
 			begin = (70 * i);
@@ -889,6 +923,7 @@ public class FXMLTableViewController implements Initializable{
 
 		return area;
 	}
+
     /*
      * ======================================================================================================
      * END - Commarea Processing Methods

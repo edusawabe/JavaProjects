@@ -9,7 +9,7 @@ public class Campo{
 	private String nivel;
 	private boolean occurs;
 	private int times;
-	private String deppendingOn;
+	private String dependingOn;
 	private String valor;
 	private LinkedList<LinkedList<Campo>> listOccurs;
 	private String type;
@@ -85,12 +85,12 @@ public class Campo{
 		this.valor = valor;
 	}
 
-	public String getDeppendingOn() {
-		return deppendingOn;
+	public String getDependingOn() {
+		return dependingOn;
 	}
 
-	public void setDeppendingOn(String deppendingOn) {
-		this.deppendingOn = deppendingOn;
+	public void setDependingOn(String dependingOn) {
+		this.dependingOn = dependingOn;
 	}
 
 	public LinkedList<LinkedList<Campo>> getListOccurs() {
@@ -103,7 +103,7 @@ public class Campo{
 
 	public Campo clone(){
 		Campo retClone = new Campo();
-		retClone.setDeppendingOn(deppendingOn);
+		retClone.setDependingOn(dependingOn);
 		retClone.setListOccurs(listOccurs);
 		retClone.setNivel(nivel);
 		retClone.setNome(nome);
