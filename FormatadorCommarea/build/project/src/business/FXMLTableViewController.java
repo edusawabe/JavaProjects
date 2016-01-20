@@ -50,7 +50,7 @@ public class FXMLTableViewController implements Initializable{
     @FXML private TextField tfbookFile;
     @FXML private Button bookSelectButton;
     @FXML private MaskTextField fluxoField;
-    @FXML private TextArea bookArea;
+    @FXML private TextArea bookArea; 
     @FXML private TextArea commArea;
 		  private LinkedList<Campo> listCampos;
 	@FXML private RadioButton entradaRadio;

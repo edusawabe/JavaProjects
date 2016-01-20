@@ -42,7 +42,7 @@ public class FXMLTableView extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Gerador Commarea 1.0");
+        primaryStage.setTitle("Gerador Commarea 1.1");
         Pane myPane = (Pane)FXMLLoader.load(getClass().getResource("fxml_tableview.fxml"));
         Scene myScene = new Scene(myPane);
         primaryStage.setScene(myScene);
