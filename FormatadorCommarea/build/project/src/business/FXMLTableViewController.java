@@ -50,7 +50,7 @@ public class FXMLTableViewController implements Initializable{
     @FXML private TextField tfbookFile;
     @FXML private Button bookSelectButton;
     @FXML private MaskTextField fluxoField;
-    @FXML private TextArea bookArea; 
+    @FXML private TextArea bookArea;
     @FXML private TextArea commArea;
 		  private LinkedList<Campo> listCampos;
 	@FXML private RadioButton entradaRadio;
@@ -394,6 +394,10 @@ public class FXMLTableViewController implements Initializable{
 					if (occursCampo != null) {
 						if (campoAtual.getNivel().compareTo(occursCampo.getNivel()) > 0)
 							occursCampo.getListOccurs().get(0).add(campoAtual);
+						else {
+							occursCampo = null;
+							listCampos.add(campoAtual);
+							}
 					} else {
 						occursCampo = null;
 						listCampos.add(campoAtual);
@@ -565,15 +569,17 @@ public class FXMLTableViewController implements Initializable{
 		String subLine[];
 		String commArea = new String();
 		for (int i = 0; i < line.length; i++) {
-			subLine = line[i].split(": ");
-			if (subLine[1].length() == 81)
-				if (commArea.isEmpty())
-					commArea = commArea + subLine[1].substring(0, 59);
+			if (line[i].contains(":")) {
+				subLine = line[i].split(": ");
+				if (subLine[1].length() > 80)
+					if (commArea.isEmpty())
+						commArea = commArea + subLine[1].substring(0, 59);
+					else
+						commArea = commArea + " " + subLine[1].substring(0, 59);
 				else
-					commArea = commArea + " " + subLine[1].substring(0, 59);
-			else
-				commArea = commArea + " " + processGlogFinalLine(subLine[1]);
+					commArea = commArea + " " + processGlogFinalLine(subLine[1]);
 
+			}
 		}
 		return convertHextoText(commArea);
 	}
@@ -752,6 +758,7 @@ public class FXMLTableViewController implements Initializable{
 			}
 			else{
 				int size = 0;
+				commAreaList.add(new Pair<String, Object>(campo.getNome(),new MaskTextField(campo.getValor(),"",false)));
 				if (campo.getDependingOn() == null)
 					size = campo.getListOccurs().size();
 				else{
@@ -776,11 +783,31 @@ public class FXMLTableViewController implements Initializable{
 		}
 	}
 
+	private int getDependingOnListIndex(ObservableList<Pair<String,Object>> commAreaList){
+		int index = 0;
+		String campoOccurs = new String();
+		for (Campo campo : listCampos){
+			if(campo.getListOccurs() != null){
+				campoOccurs = campo.getNome();
+			}
+		}
+
+		for (int i = 0; i < commAreaList.size(); i++) {
+			if (commAreaList.get(i).getKey().equals(campoOccurs)){
+					index = i;
+					break;
+			}
+		}
+		return index;
+	}
+
 	@FXML
 	private void generateOccursTable(ActionEvent event){
 		gerarAreaButton.setDisable(false);
+		gerarOccursButton.setDisable(true);
 		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
-
+		int index = getDependingOnListIndex(commAreaList);
+		commAreaList.remove(index);
 		int size = 0;
 		for (Campo campo : listCampos) {
 			if(campo.isOccurs()){
@@ -796,9 +823,9 @@ public class FXMLTableViewController implements Initializable{
 						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
 						item.setMask(listCampo.getMask());
 						if (listCampo.getValor() != null)
-							commAreaList.add(new Pair<String, Object>(item.getCampo(), new MaskTextField(listCampo.getValor(),item.getMask(),campo.isDependingOnField())));
+							commAreaList.add(index + i,new Pair<String, Object>(item.getCampo(), new MaskTextField(listCampo.getValor(),item.getMask(),campo.isDependingOnField())));
 						else
-							commAreaList.add(new Pair<String, Object>(item.getCampo(), new MaskTextField("",item.getMask(),campo.isDependingOnField())));
+							commAreaList.add(index + i, new Pair<String, Object>(item.getCampo(), new MaskTextField("",item.getMask(),campo.isDependingOnField())));
 					}
 				}
 			}
@@ -998,6 +1025,7 @@ public class FXMLTableViewController implements Initializable{
 						 +"                 DEPENDING ON RFINWJ6S-S-QTDE-PARCELAS.                \n"
 						 + "                20 RFINWJ6S-S-DATA-PARCELA       PIC X(010).           \n"
 						 + "                20 RFINWJ6S-S-DATA-AMORTIZACAO   PIC X(010).           \n"
+						 +"              15 RFINWJ6S-S-VTOT                  PIC 9(015)V99.        \n"
 				);
 
 		commArea.setText(
