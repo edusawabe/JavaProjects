@@ -607,14 +607,12 @@ public class FXMLTableViewController implements Initializable{
 
 	private String processGlogFinalLine(String line){
 		String ret = new String();
-		ret = "" + line.charAt(0);
-		ret = ret + line.charAt(1);
-		int i = 2;
+		int i = 0;
 
 		while (i < line.length()) {
-			if (line.charAt(i) == ' '){
-				ret = ret + " " + line.charAt(i + 1) + line.charAt(i + 2);
-				i = i + 3;
+			if (line.charAt(i + 2) == ' '){
+				ret = ret + " " + line.charAt(i) + line.charAt(i + 1);
+				i = i + 2;
 			}
 			else
 				break;
@@ -717,25 +715,28 @@ public class FXMLTableViewController implements Initializable{
 				commAreaList.add(new Pair<String, Object>(item.getCampo(), new String(campo.getValor())));
 			}
 			else{
-				int size = 0;
-				if(campo.getDependingOn() == null){
-					size = campo.getListOccurs().size();
-				}
-				else{
-					if (campo.getDependingOn().isEmpty())
+				if (campo.getTam() > 0){
+					int size = 0;
+					if (campo.getDependingOn() == null) {
 						size = campo.getListOccurs().size();
-					else
-						size = getDependingOnValue(campo.getDependingOn(),commArea);
-				}
-				for (int i = 0; i < size; i++) {
-					LinkedList<Campo> listItem = campo.getListOccurs().get(i);
-					for(Campo listCampo : listItem){
-						ListItem item = new ListItem();
-						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
-						item.setValor(commArea.substring(listCampo.getPos(), listCampo.getPos() + listCampo.getTam()));
-						listCampo.setValor(commArea.substring(listCampo.getPos(), listCampo.getPos()));
-						item.setMask(listCampo.getMask());
-						commAreaList.add(new Pair<String, Object>(item.getCampo(),new String(item.getValor())));
+					} else {
+						if (campo.getDependingOn().isEmpty())
+							size = campo.getListOccurs().size();
+						else
+							size = getDependingOnValue(campo.getDependingOn(), commArea);
+					}
+					for (int i = 0; i < size; i++) {
+						LinkedList<Campo> listItem = campo.getListOccurs().get(i);
+						for (Campo listCampo : listItem) {
+							ListItem item = new ListItem();
+							item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")"
+									+ " - " + listCampo.getType());
+							item.setValor(
+									commArea.substring(listCampo.getPos(), listCampo.getPos() + listCampo.getTam()));
+							listCampo.setValor(commArea.substring(listCampo.getPos(), listCampo.getPos()));
+							item.setMask(listCampo.getMask());
+							commAreaList.add(new Pair<String, Object>(item.getCampo(), new String(item.getValor())));
+						}
 					}
 				}
 			}
@@ -757,26 +758,28 @@ public class FXMLTableViewController implements Initializable{
 					commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField("",item.getMask(),campo.isDependingOnField())));
 			}
 			else{
-				int size = 0;
-				commAreaList.add(new Pair<String, Object>(campo.getNome(),new MaskTextField(campo.getValor(),"",false)));
-				if (campo.getDependingOn() == null)
-					size = campo.getListOccurs().size();
-				else{
-					if (campo.getDependingOn().isEmpty())
+				if (campo.getTam() > 0){
+					int size = 0;
+					commAreaList.add(new Pair<String, Object>(campo.getNome(),new MaskTextField(campo.getValor(),"",false)));
+					if (campo.getDependingOn() == null)
 						size = campo.getListOccurs().size();
-					else
-						size = 0;
-				}
-				for (int i = 0; i < size; i++) {
-					LinkedList<Campo> listItem = campo.getListOccurs().get(i);
-					for(Campo listCampo : listItem){
-						ListItem item = new ListItem("   " + listCampo.getNivel() + " - " + listCampo.getNome(), "", "");
-						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
-						item.setMask(listCampo.getMask());
-						if (campo.getValor() != null)
-							commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField(campo.getValor(),item.getMask(),campo.isDependingOnField())));
+					else{
+						if (campo.getDependingOn().isEmpty())
+							size = campo.getListOccurs().size();
 						else
-							commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField("",item.getMask(),campo.isDependingOnField())));
+							size = 0;
+					}
+					for (int i = 0; i < size; i++) {
+						LinkedList<Campo> listItem = campo.getListOccurs().get(i);
+						for(Campo listCampo : listItem){
+							ListItem item = new ListItem("   " + listCampo.getNivel() + " - " + listCampo.getNome(), "", "");
+							item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
+							item.setMask(listCampo.getMask());
+							if (campo.getValor() != null)
+								commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField(campo.getValor(),item.getMask(),campo.isDependingOnField())));
+							else
+								commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField("",item.getMask(),campo.isDependingOnField())));
+						}
 					}
 				}
 			}
@@ -807,6 +810,7 @@ public class FXMLTableViewController implements Initializable{
 		gerarOccursButton.setDisable(true);
 		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
 		int index = getDependingOnListIndex(commAreaList);
+		int addedOccurs = 0;
 		commAreaList.remove(index);
 		int size = 0;
 		for (Campo campo : listCampos) {
@@ -823,9 +827,10 @@ public class FXMLTableViewController implements Initializable{
 						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
 						item.setMask(listCampo.getMask());
 						if (listCampo.getValor() != null)
-							commAreaList.add(index + i,new Pair<String, Object>(item.getCampo(), new MaskTextField(listCampo.getValor(),item.getMask(),campo.isDependingOnField())));
+							commAreaList.add(index + addedOccurs,new Pair<String, Object>(item.getCampo(), new MaskTextField(listCampo.getValor(),item.getMask(),campo.isDependingOnField())));
 						else
-							commAreaList.add(index + i, new Pair<String, Object>(item.getCampo(), new MaskTextField("",item.getMask(),campo.isDependingOnField())));
+							commAreaList.add(index + addedOccurs, new Pair<String, Object>(item.getCampo(), new MaskTextField("",item.getMask(),campo.isDependingOnField())));
+						addedOccurs++;
 					}
 				}
 			}
@@ -850,10 +855,12 @@ public class FXMLTableViewController implements Initializable{
 		String enteredArea = new String();
 
 		for (int i = 0; i < commAreaList.size(); i++) {
-			if (((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().contains("N"))
-				enteredArea = enteredArea + Util.completeZeros(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
-			else
-				enteredArea = enteredArea + Util.completeSpaces(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
+			if (!(((MaskTextField) commAreaList.get(i).getValue()).getText() == null)) {
+				if (((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().contains("N"))
+					enteredArea = enteredArea + Util.completeZeros(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
+				else
+					enteredArea = enteredArea + Util.completeSpaces(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
+			}
 		}
 
 		area = breakLinesYY06(enteredArea);
@@ -915,10 +922,16 @@ public class FXMLTableViewController implements Initializable{
 		String enteredArea = new String();
 
 		for (int i = 0; i < commAreaList.size(); i++) {
-			if (((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().contains("N"))
-				enteredArea = enteredArea + Util.completeZeros(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
-			else
-				enteredArea = enteredArea + Util.completeSpaces(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
+			if (!(((MaskTextField) commAreaList.get(i).getValue()).getText() == null)) {
+				if (((MaskTextField) commAreaList.get(i).getValue()).getInformedMask().contains("N"))
+					enteredArea = enteredArea
+							+ Util.completeZeros(((MaskTextField) commAreaList.get(i).getValue()).getText(),
+									((MaskTextField) commAreaList.get(i).getValue()).getInformedMask().length());
+				else
+					enteredArea = enteredArea
+							+ Util.completeSpaces(((MaskTextField) commAreaList.get(i).getValue()).getText(),
+									((MaskTextField) commAreaList.get(i).getValue()).getInformedMask().length());
+			}
 		}
 
 		commAreaSize = Integer.parseInt(enteredArea.substring(8, 13)) + 271;

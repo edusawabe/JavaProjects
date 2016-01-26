@@ -607,14 +607,12 @@ public class FXMLTableViewController implements Initializable{
 
 	private String processGlogFinalLine(String line){
 		String ret = new String();
-		ret = "" + line.charAt(0);
-		ret = ret + line.charAt(1);
-		int i = 2;
+		int i = 0;
 
 		while (i < line.length()) {
-			if (line.charAt(i) == ' '){
-				ret = ret + " " + line.charAt(i + 1) + line.charAt(i + 2);
-				i = i + 3;
+			if (line.charAt(i + 2) == ' '){
+				ret = ret + " " + line.charAt(i) + line.charAt(i + 1);
+				i = i + 2;
 			}
 			else
 				break;
@@ -718,30 +716,36 @@ public class FXMLTableViewController implements Initializable{
 			}
 			else{
 				int size = 0;
-				if(campo.getDependingOn() == null){
+				if (campo.getDependingOn() == null) {
 					size = campo.getListOccurs().size();
-				}
-				else{
+				} else {
 					if (campo.getDependingOn().isEmpty())
 						size = campo.getListOccurs().size();
 					else
-						size = getDependingOnValue(campo.getDependingOn(),commArea);
+						size = getDependingOnValue(campo.getDependingOn(), commArea);
 				}
 				for (int i = 0; i < size; i++) {
 					LinkedList<Campo> listItem = campo.getListOccurs().get(i);
-					for(Campo listCampo : listItem){
+					for (Campo listCampo : listItem) {
 						ListItem item = new ListItem();
-						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
+						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - "
+								+ listCampo.getType());
 						item.setValor(commArea.substring(listCampo.getPos(), listCampo.getPos() + listCampo.getTam()));
 						listCampo.setValor(commArea.substring(listCampo.getPos(), listCampo.getPos()));
 						item.setMask(listCampo.getMask());
-						commAreaList.add(new Pair<String, Object>(item.getCampo(),new String(item.getValor())));
+						commAreaList.add(new Pair<String, Object>(item.getCampo(), new String(item.getValor())));
 					}
 				}
 			}
 		}
 	}
 
+	/**
+	 *
+	 */
+	/**
+	 *
+	 */
 	private void generateTable(){
 		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
 		commAreaList.clear();
@@ -758,10 +762,11 @@ public class FXMLTableViewController implements Initializable{
 			}
 			else{
 				int size = 0;
-				commAreaList.add(new Pair<String, Object>(campo.getNome(),new MaskTextField(campo.getValor(),"",false)));
+//				commAreaList
+//						.add(new Pair<String, Object>(campo.getNome(), new MaskTextField(campo.getValor(), "", false)));
 				if (campo.getDependingOn() == null)
 					size = campo.getListOccurs().size();
-				else{
+				else {
 					if (campo.getDependingOn().isEmpty())
 						size = campo.getListOccurs().size();
 					else
@@ -769,14 +774,18 @@ public class FXMLTableViewController implements Initializable{
 				}
 				for (int i = 0; i < size; i++) {
 					LinkedList<Campo> listItem = campo.getListOccurs().get(i);
-					for(Campo listCampo : listItem){
-						ListItem item = new ListItem("   " + listCampo.getNivel() + " - " + listCampo.getNome(), "", "");
-						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
+					for (Campo listCampo : listItem) {
+						ListItem item = new ListItem("   " + listCampo.getNivel() + " - " + listCampo.getNome(), "",
+								"");
+						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - "
+								+ listCampo.getType());
 						item.setMask(listCampo.getMask());
 						if (campo.getValor() != null)
-							commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField(campo.getValor(),item.getMask(),campo.isDependingOnField())));
+							commAreaList.add(new Pair<String, Object>(item.getCampo(),
+									new MaskTextField(campo.getValor(), item.getMask(), campo.isDependingOnField())));
 						else
-							commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField("",item.getMask(),campo.isDependingOnField())));
+							commAreaList.add(new Pair<String, Object>(item.getCampo(),
+									new MaskTextField("", item.getMask(), campo.isDependingOnField())));
 					}
 				}
 			}
@@ -807,6 +816,7 @@ public class FXMLTableViewController implements Initializable{
 		gerarOccursButton.setDisable(true);
 		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
 		int index = getDependingOnListIndex(commAreaList);
+		int addedOccurs = 0;
 		commAreaList.remove(index);
 		int size = 0;
 		for (Campo campo : listCampos) {
@@ -823,9 +833,10 @@ public class FXMLTableViewController implements Initializable{
 						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
 						item.setMask(listCampo.getMask());
 						if (listCampo.getValor() != null)
-							commAreaList.add(index + i,new Pair<String, Object>(item.getCampo(), new MaskTextField(listCampo.getValor(),item.getMask(),campo.isDependingOnField())));
+							commAreaList.add(index + addedOccurs,new Pair<String, Object>(item.getCampo(), new MaskTextField(listCampo.getValor(),item.getMask(),campo.isDependingOnField())));
 						else
-							commAreaList.add(index + i, new Pair<String, Object>(item.getCampo(), new MaskTextField("",item.getMask(),campo.isDependingOnField())));
+							commAreaList.add(index + addedOccurs, new Pair<String, Object>(item.getCampo(), new MaskTextField("",item.getMask(),campo.isDependingOnField())));
+						addedOccurs++;
 					}
 				}
 			}
@@ -850,10 +861,12 @@ public class FXMLTableViewController implements Initializable{
 		String enteredArea = new String();
 
 		for (int i = 0; i < commAreaList.size(); i++) {
-			if (((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().contains("N"))
-				enteredArea = enteredArea + Util.completeZeros(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
-			else
-				enteredArea = enteredArea + Util.completeSpaces(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
+			if (!(((MaskTextField) commAreaList.get(i).getValue()).getText() == null)) {
+				if (((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().contains("N"))
+					enteredArea = enteredArea + Util.completeZeros(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
+				else
+					enteredArea = enteredArea + Util.completeSpaces(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
+			}
 		}
 
 		area = breakLinesYY06(enteredArea);
@@ -915,10 +928,16 @@ public class FXMLTableViewController implements Initializable{
 		String enteredArea = new String();
 
 		for (int i = 0; i < commAreaList.size(); i++) {
-			if (((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().contains("N"))
-				enteredArea = enteredArea + Util.completeZeros(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
-			else
-				enteredArea = enteredArea + Util.completeSpaces(((MaskTextField)commAreaList.get(i).getValue()).getText(), ((MaskTextField)commAreaList.get(i).getValue()).getInformedMask().length());
+			if (!(((MaskTextField) commAreaList.get(i).getValue()).getText() == null)) {
+				if (((MaskTextField) commAreaList.get(i).getValue()).getInformedMask().contains("N"))
+					enteredArea = enteredArea
+							+ Util.completeZeros(((MaskTextField) commAreaList.get(i).getValue()).getText(),
+									((MaskTextField) commAreaList.get(i).getValue()).getInformedMask().length());
+				else
+					enteredArea = enteredArea
+							+ Util.completeSpaces(((MaskTextField) commAreaList.get(i).getValue()).getText(),
+									((MaskTextField) commAreaList.get(i).getValue()).getInformedMask().length());
+			}
 		}
 
 		commAreaSize = Integer.parseInt(enteredArea.substring(8, 13)) + 271;
@@ -1021,11 +1040,16 @@ public class FXMLTableViewController implements Initializable{
 						 +"              15 RFINWJ6S-S-DVALDD-RESU-SOLTC     PIC X(010).           \n"
 						 +"              15 RFINWJ6S-S-VTOT-SDO-LIB          PIC 9(015)V99.        \n"
 						 +"              15 RFINWJ6S-S-QTDE-PARCELAS         PIC 9(003).           \n"
-						 +"              15 RFINWJ6S-S-LIST OCCURS 0 TO 60 TIMES                   \n"
-						 +"                 DEPENDING ON RFINWJ6S-S-QTDE-PARCELAS.                \n"
+//						 +"              15 RFINWJ6S-S-LIST OCCURS 0 TO 60 TIMES                   \n"
+//						 +"                 DEPENDING ON RFINWJ6S-S-QTDE-PARCELAS.                \n"
+						 +"              15 RFINWJ6S-S-LIST OCCURS 3 TIMES.                        \n"
 						 + "                20 RFINWJ6S-S-DATA-PARCELA       PIC X(010).           \n"
 						 + "                20 RFINWJ6S-S-DATA-AMORTIZACAO   PIC X(010).           \n"
 						 +"              15 RFINWJ6S-S-VTOT                  PIC 9(015)V99.        \n"
+						 +"              15 RFINWJ6S-S-LIST2 OCCURS 3 TIMES.                        \n"
+						 + "                20 RFINWJ6S-S-DATA-PARCELA2       PIC X(010).           \n"
+						 + "                20 RFINWJ6S-S-DATA-AMORTIZACAO2   PIC X(010).           \n"
+						 +"              15 RFINWJ6S-S-VTOT2                  PIC 9(015)V99.        \n"
 				);
 
 		commArea.setText(
