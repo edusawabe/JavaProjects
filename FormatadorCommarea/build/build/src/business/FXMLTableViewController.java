@@ -715,34 +715,37 @@ public class FXMLTableViewController implements Initializable{
 				commAreaList.add(new Pair<String, Object>(item.getCampo(), new String(campo.getValor())));
 			}
 			else{
-				if (campo.getTam() > 0){
-					int size = 0;
-					if (campo.getDependingOn() == null) {
+				int size = 0;
+				if (campo.getDependingOn() == null) {
+					size = campo.getListOccurs().size();
+				} else {
+					if (campo.getDependingOn().isEmpty())
 						size = campo.getListOccurs().size();
-					} else {
-						if (campo.getDependingOn().isEmpty())
-							size = campo.getListOccurs().size();
-						else
-							size = getDependingOnValue(campo.getDependingOn(), commArea);
-					}
-					for (int i = 0; i < size; i++) {
-						LinkedList<Campo> listItem = campo.getListOccurs().get(i);
-						for (Campo listCampo : listItem) {
-							ListItem item = new ListItem();
-							item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")"
-									+ " - " + listCampo.getType());
-							item.setValor(
-									commArea.substring(listCampo.getPos(), listCampo.getPos() + listCampo.getTam()));
-							listCampo.setValor(commArea.substring(listCampo.getPos(), listCampo.getPos()));
-							item.setMask(listCampo.getMask());
-							commAreaList.add(new Pair<String, Object>(item.getCampo(), new String(item.getValor())));
-						}
+					else
+						size = getDependingOnValue(campo.getDependingOn(), commArea);
+				}
+				for (int i = 0; i < size; i++) {
+					LinkedList<Campo> listItem = campo.getListOccurs().get(i);
+					for (Campo listCampo : listItem) {
+						ListItem item = new ListItem();
+						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - "
+								+ listCampo.getType());
+						item.setValor(commArea.substring(listCampo.getPos(), listCampo.getPos() + listCampo.getTam()));
+						listCampo.setValor(commArea.substring(listCampo.getPos(), listCampo.getPos()));
+						item.setMask(listCampo.getMask());
+						commAreaList.add(new Pair<String, Object>(item.getCampo(), new String(item.getValor())));
 					}
 				}
 			}
 		}
 	}
 
+	/**
+	 *
+	 */
+	/**
+	 *
+	 */
 	private void generateTable(){
 		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
 		commAreaList.clear();
@@ -758,28 +761,31 @@ public class FXMLTableViewController implements Initializable{
 					commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField("",item.getMask(),campo.isDependingOnField())));
 			}
 			else{
-				if (campo.getTam() > 0){
-					int size = 0;
-					commAreaList.add(new Pair<String, Object>(campo.getNome(),new MaskTextField(campo.getValor(),"",false)));
-					if (campo.getDependingOn() == null)
+				int size = 0;
+//				commAreaList
+//						.add(new Pair<String, Object>(campo.getNome(), new MaskTextField(campo.getValor(), "", false)));
+				if (campo.getDependingOn() == null)
+					size = campo.getListOccurs().size();
+				else {
+					if (campo.getDependingOn().isEmpty())
 						size = campo.getListOccurs().size();
-					else{
-						if (campo.getDependingOn().isEmpty())
-							size = campo.getListOccurs().size();
+					else
+						size = 0;
+				}
+				for (int i = 0; i < size; i++) {
+					LinkedList<Campo> listItem = campo.getListOccurs().get(i);
+					for (Campo listCampo : listItem) {
+						ListItem item = new ListItem("   " + listCampo.getNivel() + " - " + listCampo.getNome(), "",
+								"");
+						item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - "
+								+ listCampo.getType());
+						item.setMask(listCampo.getMask());
+						if (campo.getValor() != null)
+							commAreaList.add(new Pair<String, Object>(item.getCampo(),
+									new MaskTextField(campo.getValor(), item.getMask(), campo.isDependingOnField())));
 						else
-							size = 0;
-					}
-					for (int i = 0; i < size; i++) {
-						LinkedList<Campo> listItem = campo.getListOccurs().get(i);
-						for(Campo listCampo : listItem){
-							ListItem item = new ListItem("   " + listCampo.getNivel() + " - " + listCampo.getNome(), "", "");
-							item.setCampo("   " + listCampo.getNivel() + " - " + listCampo.getNome() + "(" + i + ")" + " - " + listCampo.getType());
-							item.setMask(listCampo.getMask());
-							if (campo.getValor() != null)
-								commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField(campo.getValor(),item.getMask(),campo.isDependingOnField())));
-							else
-								commAreaList.add(new Pair<String, Object>(item.getCampo(),new MaskTextField("",item.getMask(),campo.isDependingOnField())));
-						}
+							commAreaList.add(new Pair<String, Object>(item.getCampo(),
+									new MaskTextField("", item.getMask(), campo.isDependingOnField())));
 					}
 				}
 			}
@@ -1034,11 +1040,16 @@ public class FXMLTableViewController implements Initializable{
 						 +"              15 RFINWJ6S-S-DVALDD-RESU-SOLTC     PIC X(010).           \n"
 						 +"              15 RFINWJ6S-S-VTOT-SDO-LIB          PIC 9(015)V99.        \n"
 						 +"              15 RFINWJ6S-S-QTDE-PARCELAS         PIC 9(003).           \n"
-						 +"              15 RFINWJ6S-S-LIST OCCURS 0 TO 60 TIMES                   \n"
-						 +"                 DEPENDING ON RFINWJ6S-S-QTDE-PARCELAS.                \n"
+//						 +"              15 RFINWJ6S-S-LIST OCCURS 0 TO 60 TIMES                   \n"
+//						 +"                 DEPENDING ON RFINWJ6S-S-QTDE-PARCELAS.                \n"
+						 +"              15 RFINWJ6S-S-LIST OCCURS 3 TIMES.                        \n"
 						 + "                20 RFINWJ6S-S-DATA-PARCELA       PIC X(010).           \n"
 						 + "                20 RFINWJ6S-S-DATA-AMORTIZACAO   PIC X(010).           \n"
 						 +"              15 RFINWJ6S-S-VTOT                  PIC 9(015)V99.        \n"
+						 +"              15 RFINWJ6S-S-LIST2 OCCURS 3 TIMES.                        \n"
+						 + "                20 RFINWJ6S-S-DATA-PARCELA2       PIC X(010).           \n"
+						 + "                20 RFINWJ6S-S-DATA-AMORTIZACAO2   PIC X(010).           \n"
+						 +"              15 RFINWJ6S-S-VTOT2                  PIC 9(015)V99.        \n"
 				);
 
 		commArea.setText(
