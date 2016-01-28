@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import view.*?>
 <?import java.lang.*?>
 <?import javafx.collections.*?>
@@ -46,7 +47,7 @@
                                     <HBox prefHeight="25.0" prefWidth="464.0">
                                        <children>
                                           <Label alignment="CENTER" prefHeight="25.0" prefWidth="27.0" text="Book" HBox.hgrow="NEVER" />
-                                          <TextField fx:id="tfbookFile" editable="false" prefHeight="25.0" prefWidth="358.0" promptText="Bookw">
+                                          <TextField fx:id="tfbookFile" editable="false" prefHeight="25.0" prefWidth="225.0" promptText="Bookw">
                                              <HBox.margin>
                                                 <Insets bottom="5.0" left="5.0" />
                                              </HBox.margin>
@@ -54,6 +55,11 @@
                                           <Button fx:id="bookSelectButton" mnemonicParsing="false" onAction="#openBookFile" prefHeight="25.0" prefWidth="51.0" text="Abrir">
                                              <HBox.margin>
                                                 <Insets left="5.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                          <Button  mnemonicParsing="false" onAction="#insereBookRFINW00W" prefHeight="25.0" prefWidth="113.0" text="Incuir RFINW00W">
+                                             <HBox.margin>
+                                                <Insets left="10.0" />
                                              </HBox.margin>
                                           </Button>
                                        </children>
@@ -84,7 +90,10 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <Label prefHeight="17.0" prefWidth="178.0" text="CommArea" />
+                                    <Label prefHeight="17.0" prefWidth="178.0" text="CommArea">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font></Label>
                                     <Label prefHeight="17.0" prefWidth="72.0" text="Tipo:" GridPane.rowIndex="1" />
                                     <RadioButton fx:id="entradaRadio" mnemonicParsing="false" onAction="#entradaSelected" text="Entrada" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                     <RadioButton fx:id="saidaRadio" mnemonicParsing="false" onAction="#saidaSelected" text="Saída" GridPane.columnIndex="3" GridPane.rowIndex="1" />

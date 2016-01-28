@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <anttasks:AntTask xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:anttasks="http://org.eclipse.fx.ide.jdt/1.0" buildDirectory="${project}/build">
   <deploy packagingFormat="exe">
-    <application name="teste" mainclass="fxmltableview.FXMLTableView" version="2.0"/>
+    <application name="teste" mainclass="fxmltableview.FXMLTableView" version="2.2"/>
     <info title="Formatador Commarea" vendor="Edu"/>
   </deploy>
   <signjar/>

@@ -35,6 +35,7 @@ import javafx.util.Callback;
 import javafx.util.Pair;
 import model.Campo;
 import model.ListItem;
+import util.ConfigManager;
 import util.HashMapHexAscii;
 import util.Util;
 import view.MaskTextField;
@@ -65,6 +66,7 @@ public class FXMLTableViewController implements Initializable{
 	@FXML private Button gerarOccursButton;
 	      private boolean development;
 	      private boolean hasOccurs;
+	      private ConfigManager configManager;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -76,6 +78,13 @@ public class FXMLTableViewController implements Initializable{
 
 	@SuppressWarnings("unchecked")
 	private void initComponents() {
+		configManager = new ConfigManager();
+		configManager.setConfigFile(new File("./config.txt"));
+		String lastDir = configManager.getLastDir(configManager.openConfigFile());
+		if (lastDir == null){
+			lastDir = "C:\\E!SuperCopia";
+		}
+		configManager.saveLastDir(true, lastDir);
 		hasOccurs = false;
 		if (development)
 			initializeAreas();
@@ -128,6 +137,11 @@ public class FXMLTableViewController implements Initializable{
      * ======================================================================================================
      */
 	@FXML
+	protected void insereBookRFINW00W(ActionEvent event) {
+		inputReturnBook();
+	}
+
+	@FXML
 	protected void gerarAreaPorGlog(ActionEvent event) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Erro");
@@ -163,6 +177,7 @@ public class FXMLTableViewController implements Initializable{
 		String line;
 		String book = new String();
 		FileChooser fch = new FileChooser();
+		fch.setInitialDirectory(configManager.getLastDirFile());
 		File file = fch.showOpenDialog(((Node)event.getSource()).getScene().getWindow());
 		tfbookFile.setText(file.getAbsolutePath());
 		try {
@@ -175,7 +190,7 @@ public class FXMLTableViewController implements Initializable{
 			}
 			bookArea.setText(book);
 			reader.close();
-
+			configManager.saveLastDir(false, file.getParentFile().getPath());
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -822,7 +837,7 @@ public class FXMLTableViewController implements Initializable{
 		for (Campo campo : listCampos) {
 			if(campo.isOccurs()){
 				for (int i = 0; i < commAreaList.size(); i++) {
-					if(commAreaList.get(i).getKey().contains(campo.getDependingOn())){
+					if(isDependingOnField(commAreaList.get(i).getKey().split(" "), campo.getDependingOn())){
 						size = Integer.parseInt(((MaskTextField)commAreaList.get(i).getValue()).getText());
 					}
 				}
@@ -1040,13 +1055,15 @@ public class FXMLTableViewController implements Initializable{
 						 +"              15 RFINWJ6S-S-DVALDD-RESU-SOLTC     PIC X(010).           \n"
 						 +"              15 RFINWJ6S-S-VTOT-SDO-LIB          PIC 9(015)V99.        \n"
 						 +"              15 RFINWJ6S-S-QTDE-PARCELAS         PIC 9(003).           \n"
-//						 +"              15 RFINWJ6S-S-LIST OCCURS 0 TO 60 TIMES                   \n"
-//						 +"                 DEPENDING ON RFINWJ6S-S-QTDE-PARCELAS.                \n"
-						 +"              15 RFINWJ6S-S-LIST OCCURS 3 TIMES.                        \n"
+						 +"              15 RFINWJ6S-S-LIST OCCURS 0 TO 60 TIMES                   \n"
+						 +"                 DEPENDING ON RFINWJ6S-S-QTDE-PARCELAS.                \n"
+//						 +"              15 RFINWJ6S-S-LIST OCCURS 3 TIMES.                        \n"
 						 + "                20 RFINWJ6S-S-DATA-PARCELA       PIC X(010).           \n"
 						 + "                20 RFINWJ6S-S-DATA-AMORTIZACAO   PIC X(010).           \n"
 						 +"              15 RFINWJ6S-S-VTOT                  PIC 9(015)V99.        \n"
 						 +"              15 RFINWJ6S-S-LIST2 OCCURS 3 TIMES.                        \n"
+//						 +"              15 RFINWJ6S-S-LIST OCCURS 0 TO 60 TIMES                   \n"
+//						 +"                 DEPENDING ON RFINWJ6S-S-QTDE-PARCELAS.                \n"
 						 + "                20 RFINWJ6S-S-DATA-PARCELA2       PIC X(010).           \n"
 						 + "                20 RFINWJ6S-S-DATA-AMORTIZACAO2   PIC X(010).           \n"
 						 +"              15 RFINWJ6S-S-VTOT2                  PIC 9(015)V99.        \n"
@@ -1083,6 +1100,31 @@ public class FXMLTableViewController implements Initializable{
 						  + "00000: F2 4B F2 F0 F1 F5 40 40 40 40 40 40 40 40 40 40 40 40 40 40  2.2015              \n"
 						  + "00000: 40 40 40 40 40 40            "
 						   );
+	}
+
+	private void inputReturnBook(){
+		bookArea.setText(
+				      "       05 RFINW00W-HEADER.                                          \n"
+					 +"          10 RFINW00W-COD-LAYOUT   PIC X(008)      VALUE 'RFINW00W'.\n"
+					 +"          10 RFINW00W-TAM-LAYOUT   PIC 9(005)      VALUE 00527.     \n"
+					 +"       05 RFINW00W-REGISTRO.                                        \n"
+					 +"          10 RFINW00W-BLOCO-RETORNO.                                \n"
+					 +"             15 RFINW00W-COD-RETORNO               PIC 9(002).      \n"
+					 +"             15 RFINW00W-COD-ERRO                  PIC X(004).      \n"
+					 +"             15 RFINW00W-COD-MENSAGEM              PIC X(008).      \n"
+					 +"             15 RFINW00W-MEN-PARAMETRO             PIC X(500).      \n"
+					 + bookArea.getText()
+			);
+
+		commArea.setText("");
+	}
+
+	private boolean isDependingOnField(String[] field, String dependingOnField){
+		for (int i = 0; i < field.length; i++) {
+			if(field[i].equals(dependingOnField))
+				return true;
+		}
+		return false;
 	}
 
 }
