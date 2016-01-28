@@ -388,6 +388,8 @@ public class FXMLTableViewController implements Initializable{
 					if (aux < bookLine.length) {
 						bookLine[i] = bookLine[i] + bookLine[aux];
 					}
+					else
+						break;
 				}
 				if (bookLine[i].contains(" PIC")) {
 					if (bookLine[i].contains(")V9")) {
@@ -460,8 +462,10 @@ public class FXMLTableViewController implements Initializable{
 			setCampoDependingOnValue(c.getDependingOn());
 			hasOccurs = true;
 		}
-		else
-			hasOccurs = false;
+		else{
+			if (!hasOccurs)
+				hasOccurs = false;
+		}
 		listCampos.add(c);
 		getNomeNivelCampo(line,c);
 		return c;
@@ -777,15 +781,16 @@ public class FXMLTableViewController implements Initializable{
 			}
 			else{
 				int size = 0;
-//				commAreaList
-//						.add(new Pair<String, Object>(campo.getNome(), new MaskTextField(campo.getValor(), "", false)));
 				if (campo.getDependingOn() == null)
 					size = campo.getListOccurs().size();
 				else {
 					if (campo.getDependingOn().isEmpty())
 						size = campo.getListOccurs().size();
-					else
+					else {
+						commAreaList.add(new Pair<String, Object>(campo.getNome(),
+								new MaskTextField(campo.getValor(), "", false)));
 						size = 0;
+					}
 				}
 				for (int i = 0; i < size; i++) {
 					LinkedList<Campo> listItem = campo.getListOccurs().get(i);
@@ -811,8 +816,9 @@ public class FXMLTableViewController implements Initializable{
 		int index = 0;
 		String campoOccurs = new String();
 		for (Campo campo : listCampos){
-			if(campo.getListOccurs() != null){
+			if(campo.getListOccurs() != null && campo.getDependingOn() != null){
 				campoOccurs = campo.getNome();
+				break;
 			}
 		}
 
@@ -835,10 +841,11 @@ public class FXMLTableViewController implements Initializable{
 		commAreaList.remove(index);
 		int size = 0;
 		for (Campo campo : listCampos) {
-			if(campo.isOccurs()){
+			if(campo.isOccurs() && campo.getDependingOn() != null){
 				for (int i = 0; i < commAreaList.size(); i++) {
 					if(isDependingOnField(commAreaList.get(i).getKey().split(" "), campo.getDependingOn())){
 						size = Integer.parseInt(((MaskTextField)commAreaList.get(i).getValue()).getText());
+						break;
 					}
 				}
 				for (int i = 0; i < size; i++) {

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="FormatadorCommarea-2.2.jnlp">
+  <information>
+    <title>FormatadorCommarea</title>
+    <vendor>Edu</vendor>
+    <description>Formatador Commarea</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="FormatadorCommarea-2.2.jar" size="26787" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="0" height="0" main-class="fxmltableview.FXMLTableView"  name="Formatador Commarea" />
+  <update check="background"/>
+</jnlp>
