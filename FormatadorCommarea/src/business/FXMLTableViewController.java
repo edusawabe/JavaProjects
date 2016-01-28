@@ -35,6 +35,7 @@ import javafx.util.Callback;
 import javafx.util.Pair;
 import model.Campo;
 import model.ListItem;
+import util.ConfigManager;
 import util.HashMapHexAscii;
 import util.Util;
 import view.MaskTextField;
@@ -65,6 +66,7 @@ public class FXMLTableViewController implements Initializable{
 	@FXML private Button gerarOccursButton;
 	      private boolean development;
 	      private boolean hasOccurs;
+	      private ConfigManager configManager;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -76,6 +78,13 @@ public class FXMLTableViewController implements Initializable{
 
 	@SuppressWarnings("unchecked")
 	private void initComponents() {
+		configManager = new ConfigManager();
+		configManager.setConfigFile(new File("./config.txt"));
+		String lastDir = configManager.getLastDir(configManager.openConfigFile());
+		if (lastDir == null){
+			lastDir = "C:\\E!SuperCopia";
+		}
+		configManager.saveLastDir(true, lastDir);
 		hasOccurs = false;
 		if (development)
 			initializeAreas();
@@ -168,6 +177,7 @@ public class FXMLTableViewController implements Initializable{
 		String line;
 		String book = new String();
 		FileChooser fch = new FileChooser();
+		fch.setInitialDirectory(configManager.getLastDirFile());
 		File file = fch.showOpenDialog(((Node)event.getSource()).getScene().getWindow());
 		tfbookFile.setText(file.getAbsolutePath());
 		try {
@@ -180,7 +190,7 @@ public class FXMLTableViewController implements Initializable{
 			}
 			bookArea.setText(book);
 			reader.close();
-
+			configManager.saveLastDir(false, file.getParentFile().getPath());
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
