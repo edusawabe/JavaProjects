@@ -122,7 +122,7 @@
 			updatemode="background" >
 
 			<fx:platform basedir="${java.home}"/>
-			<fx:info title="FormatadorCommarea" vendor="Edu"/>
+			<fx:info title="FormatadorCommarea-2.2" vendor="Edu"/>
 
 			<fx:application refId="fxApplication"/>
 			<fx:resources refid="appRes"/>
