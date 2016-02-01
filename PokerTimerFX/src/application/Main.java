@@ -12,8 +12,9 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("PokerTimerFX.fxml"));
-			Scene scene = new Scene(root,1024,433);
+			Scene scene = new Scene(root,1024,600);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			//scene.getStylesheets().add(getClass().getResource("applicationBlack.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Poker Timer 2.0");
 			primaryStage.show();
