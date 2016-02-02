@@ -21,6 +21,7 @@ import javax.swing.JList;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
+import model.Player;
 
 /**
  *

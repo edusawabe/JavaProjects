@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PokerTimerFXController">
+<AnchorPane prefHeight="600.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PokerTimerFXController">
    <children>
       <VBox prefHeight="345.0" prefWidth="326.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
@@ -35,22 +35,22 @@
                               <Font name="System Bold" size="40.0" />
                            </font>
                         </Label>
-                        <Label fx:id="smallAtual" prefHeight="25.0" prefWidth="185.0" styleClass="blindsLabels" stylesheets="@application.css" text="10.000" GridPane.rowIndex="1">
+                        <Label fx:id="smallAtual" prefHeight="25.0" prefWidth="185.0" styleClass="blindsLabels" stylesheets="@application.css" text="10" GridPane.rowIndex="1">
                            <font>
                               <Font name="System Bold" size="34.0" />
                            </font>
                         </Label>
-                        <Label fx:id="bigAtual" prefHeight="17.0" prefWidth="185.0" styleClass="blindsLabels" stylesheets="@application.css" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Label fx:id="bigAtual" prefHeight="17.0" prefWidth="185.0" styleClass="blindsLabels" stylesheets="@application.css" text="20" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <font>
                               <Font name="System Bold" size="34.0" />
                            </font>
                         </Label>
-                        <Label fx:id="lbAnteAtual" prefHeight="17.0" prefWidth="185.0" styleClass="blindsLabels" stylesheets="@application.css" text="Label" GridPane.rowIndex="2">
+                        <Label fx:id="lbAnteAtual" prefHeight="17.0" prefWidth="185.0" styleClass="blindsLabels" stylesheets="@application.css" text="" GridPane.rowIndex="2">
                            <font>
                               <Font name="System Bold" size="34.0" />
                            </font>
                         </Label>
-                        <Label fx:id="valorAnteAtual" prefHeight="17.0" prefWidth="185.0" styleClass="blindsLabels" stylesheets="@application.css" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label fx:id="valorAnteAtual" prefHeight="17.0" prefWidth="185.0" styleClass="blindsLabels" stylesheets="@application.css" text="" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <font>
                               <Font name="System Bold" size="34.0" />
                            </font>
@@ -60,22 +60,22 @@
                               <Font name="System Bold" size="40.0" />
                            </font>
                         </Label>
-                        <Label fx:id="bigSeguinte" prefHeight="17.0" prefWidth="185.0" styleClass="blindsLabels" stylesheets="@application.css" text="Label" GridPane.rowIndex="5">
+                        <Label fx:id="bigSeguinte" prefHeight="17.0" prefWidth="185.0" styleClass="blindsLabels" stylesheets="@application.css" text="40" GridPane.rowIndex="5">
                            <font>
                               <Font name="System Bold" size="34.0" />
                            </font>
                         </Label>
-                        <Label fx:id="smallSeguinte" prefHeight="17.0" prefWidth="185.0" styleClass="blindsLabels" stylesheets="@application.css" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                        <Label fx:id="smallSeguinte" prefHeight="17.0" prefWidth="185.0" styleClass="blindsLabels" stylesheets="@application.css" text="20" GridPane.columnIndex="1" GridPane.rowIndex="5">
                            <font>
                               <Font name="System Bold" size="34.0" />
                            </font>
                         </Label>
-                        <Label fx:id="lbAnteSeguinte" prefHeight="17.0" prefWidth="185.0" styleClass="blindsLabels" stylesheets="@application.css" text="Label" GridPane.rowIndex="6">
+                        <Label fx:id="lbAnteSeguinte" prefHeight="17.0" prefWidth="185.0" styleClass="blindsLabels" stylesheets="@application.css" text="" GridPane.rowIndex="6">
                            <font>
                               <Font name="System Bold" size="34.0" />
                            </font>
                         </Label>
-                        <Label fx:id="valorAnteSeguinte" prefHeight="17.0" prefWidth="185.0" styleClass="blindsLabels" stylesheets="@application.css" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                        <Label fx:id="valorAnteSeguinte" prefHeight="17.0" prefWidth="185.0" styleClass="blindsLabels" stylesheets="@application.css" text="" GridPane.columnIndex="1" GridPane.rowIndex="6">
                            <font>
                               <Font name="System Bold" size="34.0" />
                            </font>
@@ -84,17 +84,26 @@
                   </GridPane>
                   <VBox prefHeight="280.0" prefWidth="336.0">
                      <children>
-                        <ProgressBar fx:id="timerBar" prefHeight="134.0" prefWidth="329.0" progress="0.0">
-                           <padding>
-                              <Insets bottom="10.0" />
-                           </padding>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                           <effect>
-                              <Blend mode="DARKEN" />
-                           </effect>
-                        </ProgressBar>
+                        <StackPane prefHeight="150.0" prefWidth="200.0">
+                           <children>
+                              <ProgressBar fx:id="timerBar" prefHeight="136.0" prefWidth="329.0" progress="0.0">
+                                 <padding>
+                                    <Insets bottom="10.0" />
+                                 </padding>
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                                 <effect>
+                                    <Blend mode="DARKEN" />
+                                 </effect>
+                              </ProgressBar>
+                              <Label fx:id="lbTimer" alignment="CENTER" prefHeight="58.0" prefWidth="340.0" text="20:00">
+                                 <font>
+                                    <Font name="System Bold" size="100.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </StackPane>
                         <GridPane>
                           <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -116,7 +125,7 @@
                                     <Insets right="10.0" />
                                  </GridPane.margin>
                               </Button>
-                              <Button fx:id="btPlay" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="|&gt;" GridPane.columnIndex="2">
+                              <Button fx:id="btPlay" onAction="#play" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="|&gt;" GridPane.columnIndex="2">
                                  <GridPane.margin>
                                     <Insets right="10.0" />
                                  </GridPane.margin>
@@ -166,7 +175,7 @@
                                  </VBox.margin></TextField>
                               <HBox prefHeight="100.0" prefWidth="200.0">
                                  <children>
-                                    <Button fx:id="btExcluirJogador" onAction="#removerJogador" mnemonicParsing="false" prefHeight="25.0" prefWidth="73.0" text="Excluir">
+                                    <Button fx:id="btExcluirJogador" mnemonicParsing="false" onAction="#removerJogador" prefHeight="25.0" prefWidth="73.0" text="Excluir">
                                        <HBox.margin>
                                           <Insets right="5.0" />
                                        </HBox.margin>
