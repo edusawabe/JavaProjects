@@ -1,5 +1,6 @@
 package application;
 
+import javafx.scene.layout.Pane;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -11,8 +12,8 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("PokerTimerFX.fxml"));
-			Scene scene = new Scene(root,1024,600);
+			Pane myPane = (Pane)FXMLLoader.load(getClass().getResource("PokerTimerFX.fxml"));
+			Scene scene = new Scene(myPane,1024,600);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			//scene.getStylesheets().add(getClass().getResource("applicationBlack.css").toExternalForm());
 			primaryStage.setScene(scene);
