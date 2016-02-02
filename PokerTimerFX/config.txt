@@ -1,0 +1,28 @@
+#Jogadores
+Alan Tremori de Almeida;alan.tremori@capgemini.com
+Andre Vieira de Camargo;andre.vieira@capgemini.com
+Daniel Porto;dcporto@gmail.com
+Denis Vinicius Pimentel;denis.goncalves@softtek.com
+Eduardo Takeshi Sawabe;edusawabe@gmail.com
+Gustavo Schunck;gutosk@gmail.com
+Humberto;humberto@smartconn.com.br
+Humberto Reichi Junior;4253.humberto@bradesco.com.br
+Jackson Cravo; 
+Jhones Gil Ferreira;jhones.ferreira@capgemini.com
+Joni Pinto;jonijunior@gmail.com
+José Ribamar Junior;junior.rib@usp.br
+Julio Cesar Paula de Oliveira;julio.oliveira@capgemini.com
+Marcel Cravo Conti;marcel.conti@capgemini.com
+Nei Dias;nei@smartconn.com.br
+Nivaldo Custodio;4840.custodio@bradesco.com.br
+Orlando Conti;orlando@amenizaseguros.com.br
+Rafael Gelin Detter;rafael.detter@capgemini.com
+Ramon Cravo;ramon80@gmail.com
+Ricardo de Cassia Ferreira;ricardo.ferreira@capgemini.com
+Sandro Gomes;samorsil1010@gmail.com
+Thiago Gagetti Grillo;thiago.grillo@capgemini.com
+Vinicius Serafim Pereira da Silva;vinicius.silva@capgemini.com
+Tiago Silva (Detter); 
+Paulo Morais; 
+Vagner (Ribamar); 
+Thiago Scorza (Marcel); 
