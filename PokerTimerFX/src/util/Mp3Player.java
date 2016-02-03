@@ -21,9 +21,7 @@ import javax.sound.sampled.Clip;
 public class Mp3Player extends Thread {
 
     private URL url;
-    private MediaLocator mediaLocator;
-    private MediaPlayer playMP3;
-    private Player audioPlayer;
+
 
     public Mp3Player(URL mp3) {
         this.url = mp3;
