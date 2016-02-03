@@ -17,10 +17,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.util.Callback;
 import javafx.util.Duration;
 import model.Player;
 import model.Round;
@@ -294,6 +297,15 @@ public class PokerTimerFXController implements Initializable{
 		roundManager = new RoundManager();
 		roundManager.setRoundList(roundList);
 		roundManager.setRoundListValues();
+
+		listRodadas.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+			@Override
+			public ListCell<String> call(ListView<String> param) {
+				return new MyListCell();
+			}
+		});
+
+
 		for (int i = 0; i < roundList.size(); i++) {
 			oListrRodadas.add(roundList.get(i).getRoundName());
 		}
@@ -640,4 +652,23 @@ public class PokerTimerFXController implements Initializable{
          player = new Mp3Player(PokerTimerFXController.class.getResource("sounds/emergency003.wav"));
         player.start();
     }
+
+	 public class MyListCell extends ListCell<String> {
+
+	     public MyListCell() {
+	     }
+
+	     @Override protected void updateItem(String item, boolean empty) {
+	         // calling super here is very important - don't skip this!
+	         super.updateItem(item, empty);
+	         // change the text fill based on whether it is positive (green)
+	         // or negative (red). If the cell is selected, the text will
+	         // always be white (so that it can be read against the blue
+	         // background), and if the value is zero, we'll make it black.
+	         if (super.getText() != null) {
+	        	 if (super.getText().equals("BREAK"))
+	             setTextFill(Color.RED);
+	         }
+	     }
+	 }
 }

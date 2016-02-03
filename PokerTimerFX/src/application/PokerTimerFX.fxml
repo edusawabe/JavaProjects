@@ -153,7 +153,7 @@
                   </VBox>
                   <HBox prefHeight="100.0" />
                   <BorderPane prefHeight="200.0" />
-                  <ListView fx:id="listRodadas" prefHeight="280.0" prefWidth="287.0" />
+                  <ListView fx:id="listRodadas" prefHeight="280.0" prefWidth="287.0" styleClass="list-cell" stylesheets="@application.css" />
                </children>
             </HBox>
             <HBox prefHeight="430.0" prefWidth="1004.0">
