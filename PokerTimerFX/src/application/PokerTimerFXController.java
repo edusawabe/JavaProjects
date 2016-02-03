@@ -21,6 +21,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
@@ -298,13 +299,14 @@ public class PokerTimerFXController implements Initializable{
 		roundManager.setRoundList(roundList);
 		roundManager.setRoundListValues();
 
+		//listRodadas.setCellFactory(TextFieldListCell.forListView());
+
 		listRodadas.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
 			@Override
 			public ListCell<String> call(ListView<String> param) {
 				return new MyListCell();
 			}
 		});
-
 
 		for (int i = 0; i < roundList.size(); i++) {
 			oListrRodadas.add(roundList.get(i).getRoundName());
@@ -385,8 +387,7 @@ public class PokerTimerFXController implements Initializable{
         currentSecond = 0;
         breakSeconds = 0;
 
-        timerBar.setStyle("-fx-text-box-border: #6699ff");
-        timerBar.setStyle("-fx-control-inner-background: #6699ff");
+        timerBar.setStyle("-fx-accent: #6699ff");
 
         if (roundList.get(listRodadas.getSelectionModel().getSelectedIndex()).isBreakRound()) {
             minutes = Constants.MAX_MINUTES_BREAK;
@@ -425,8 +426,8 @@ public class PokerTimerFXController implements Initializable{
 				} else {
 					currentRound++;
 					listRodadas.getSelectionModel().select(currentRound);
-					timerBar.setStyle("-fx-text-box-border: #6699ff");
-					timerBar.setStyle("-fx-control-inner-background: #6699ff");
+					timerBar.setStyle("-fx-accent: #6699ff");
+
 					if (roundList.get(listRodadas.getSelectionModel().getSelectedIndex()).isBreakRound()) {
 						minutes = Constants.MAX_MINUTES_BREAK;
 						seconds = 0;
@@ -442,8 +443,7 @@ public class PokerTimerFXController implements Initializable{
 				seconds--;
 				currentSecond = currentSecond + 1;
 				if (seconds < 31) {
-					timerBar.setStyle("-fx-text-box-border: ##ff4d4d");
-					timerBar.setStyle("-fx-control-inner-background: ##ff4d4d");
+					timerBar.setStyle("-fx-accent: #ff4d4d");
 				}
 			}
 			if (minutes < 10) {
@@ -461,7 +461,11 @@ public class PokerTimerFXController implements Initializable{
 			}
 			setBreakTime();
 		}
-		timerBar.setProgress((maxRound - (maxRound - currentSecond))/maxRound);
+		double dMax, dcurr;
+		dMax = maxRound;
+		dcurr = currentSecond;
+
+		timerBar.setProgress((dMax - (dMax - dcurr))/dMax);
 
 		atualizarEstatisticas();
 	}
@@ -516,6 +520,8 @@ public class PokerTimerFXController implements Initializable{
     }
 
 	private void setCurrentRound(){
+		currentRound = listRodadas.getSelectionModel().getSelectedIndex();
+
         if (roundList.get(currentRound).getBigBlind() != 0)
             bigAtual.setText("" + roundList.get(currentRound).getBigBlind());
         else
@@ -665,9 +671,10 @@ public class PokerTimerFXController implements Initializable{
 	         // or negative (red). If the cell is selected, the text will
 	         // always be white (so that it can be read against the blue
 	         // background), and if the value is zero, we'll make it black.
-	         if (super.getText() != null) {
-	        	 if (super.getText().equals("BREAK"))
-	             setTextFill(Color.RED);
+	         if (item != null) {
+	        	 if (item.equals("BREAK"))
+	        		 setTextFill(Color.RED);
+	        	 super.setText(item);
 	         }
 	     }
 	 }
