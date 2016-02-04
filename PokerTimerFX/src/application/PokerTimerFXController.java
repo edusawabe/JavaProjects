@@ -139,6 +139,7 @@ public class PokerTimerFXController implements Initializable{
 		//oListJogadores = listJogadores.getItems();
 		addJogadorLista(tfJogador.getText());
 		listJogadores.setItems(oListJogadores);
+		configManager.addPlayer(tfJogador.getText());
 	}
 
 	@FXML
@@ -286,7 +287,8 @@ public class PokerTimerFXController implements Initializable{
 	public void initialize(URL location, ResourceBundle resources) {
 		//ConfigManager obtem a lista de jogadores cadastrados
 		configManager = new ConfigManager();
-		configManager.readFile(listJogadores, "./config.txt");
+		configManager.setConfigFileName("./config.txt");
+		configManager.readFile(listJogadores);
 		LinkedList<Player> lp = configManager.getListPlayer();
 		for (int i = 0; i < lp.size(); i++) {
 			addJogadorLista(lp.get(i).getPlayerName());
