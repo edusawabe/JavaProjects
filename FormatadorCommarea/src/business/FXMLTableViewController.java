@@ -596,7 +596,7 @@ public class FXMLTableViewController implements Initializable{
 		for (int i = 0; i < line.length; i++) {
 			if (line[i].contains(":")) {
 				subLine = line[i].split(": ");
-				if (subLine[1].length() > 80)
+				if (i < (line.length-1))
 					if (commArea.isEmpty())
 						commArea = commArea + subLine[1].substring(0, 59);
 					else
@@ -635,12 +635,14 @@ public class FXMLTableViewController implements Initializable{
 		int i = 0;
 
 		while (i < line.length()) {
-			if (line.charAt(i + 2) == ' '){
-				ret = ret + " " + line.charAt(i) + line.charAt(i + 1);
-				i = i + 2;
+			if((i + 1) < line.length()){
+				if ((line.charAt(i + 1) != ' ') && (line.charAt(i + 1) != '\n')){
+					ret = ret + " " + line.charAt(i) + line.charAt(i + 1);
+					i = i + 3;
+				}
+				else
+					break;
 			}
-			else
-				break;
 		}
 		return ret;
 	}

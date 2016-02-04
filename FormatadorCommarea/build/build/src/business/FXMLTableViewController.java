@@ -23,6 +23,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -64,6 +65,7 @@ public class FXMLTableViewController implements Initializable{
 	@FXML private Button gerarAreaButton;
 	@FXML private Button processButton;
 	@FXML private Button gerarOccursButton;
+	@FXML private CheckBox incluirFinal;
 	      private boolean development;
 	      private boolean hasOccurs;
 	      private ConfigManager configManager;
@@ -173,7 +175,8 @@ public class FXMLTableViewController implements Initializable{
 	@FXML
 	protected void openBookFile(ActionEvent event) {
 		commArea.setText("");
-		bookArea.setText("");
+		if (!incluirFinal.isSelected())
+			bookArea.setText("");
 		String line;
 		String book = new String();
 		FileChooser fch = new FileChooser();
@@ -188,7 +191,10 @@ public class FXMLTableViewController implements Initializable{
 					book = book + line + "\n";
 				line = reader.readLine();
 			}
-			bookArea.setText(book);
+			if (incluirFinal.isSelected())
+				bookArea.setText(bookArea.getText() + book);
+			else
+				bookArea.setText(book);
 			reader.close();
 			configManager.saveLastDir(false, file.getParentFile().getPath());
 		} catch (FileNotFoundException e) {
@@ -631,7 +637,7 @@ public class FXMLTableViewController implements Initializable{
 		while (i < line.length()) {
 			if (line.charAt(i + 2) == ' '){
 				ret = ret + " " + line.charAt(i) + line.charAt(i + 1);
-				i = i + 2;
+				i = i + 3;
 			}
 			else
 				break;

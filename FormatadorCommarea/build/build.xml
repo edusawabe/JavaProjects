@@ -82,7 +82,7 @@
 
 
 		<fx:resources id="appRes">
-			<fx:fileset dir="dist" includes="FormatadorCommarea-2.2.jar"/>
+			<fx:fileset dir="dist" includes="FormatadorCommarea-2.4.jar"/>
 			<fx:fileset dir="dist" includes="libs/*"/>
 		</fx:resources>
 
@@ -95,7 +95,7 @@
 
 
 
-		<fx:jar destfile="dist/FormatadorCommarea-2.2.jar">
+		<fx:jar destfile="dist/FormatadorCommarea.jar">
 			<fx:application refid="fxApplication"/>
 			<fileset dir="build/classes">
 			</fileset>
@@ -104,7 +104,7 @@
 			<manifest>
 				<attribute name="Implementation-Vendor" value="Edu"/>
 				<attribute name="Implementation-Title" value="Formatador Commarea"/>
-				<attribute name="Implementation-Version" value="2.2"/>
+				<attribute name="Implementation-Version" value="2.4"/>
 				<attribute name="JavaFX-Feature-Proxy" value="None"/>
 			</manifest>
 		</fx:jar>
@@ -118,11 +118,11 @@
 			includeDT="false"
 			offlineAllowed="true"
 			outdir="${basedir}/deploy"
-			outfile="FormatadorCommarea-2.2" nativeBundles="exe"
+			outfile="FormatadorCommarea-2.4" nativeBundles="exe"
 			updatemode="background" >
 
 			<fx:platform basedir="${java.home}"/>
-			<fx:info title="FormatadorCommarea-2.2" vendor="Edu"/>
+			<fx:info title="FormatadorCommarea - 2.4" vendor="Edu"/>
 
 			<fx:application refId="fxApplication"/>
 			<fx:resources refid="appRes"/>
