@@ -9,7 +9,7 @@ public class PairValueCell extends TableCell<Pair<String, Object>, Object> {
     protected void updateItem(Object item, boolean empty) {
         super.updateItem(item, empty);
 
-        this.setStyle("-fx-background-color:white");
+        //this.setStyle("-fx-background-color:white");
         if (item != null) {
             if (item instanceof String) {
                 setText((String) item);

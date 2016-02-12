@@ -18,10 +18,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
@@ -32,6 +36,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Pair;
 import model.Campo;
@@ -66,6 +71,8 @@ public class FXMLTableViewController implements Initializable{
 	@FXML private Button processButton;
 	@FXML private Button gerarOccursButton;
 	@FXML private CheckBox incluirFinal;
+	@FXML private TextCommAreaController txtController;
+	      private TextArea txtArea;
 	      private boolean development;
 	      private boolean hasOccurs;
 	      private ConfigManager configManager;
@@ -349,6 +356,41 @@ public class FXMLTableViewController implements Initializable{
     	}
     }
 
+    @FXML
+    private void abrirTXT(ActionEvent event){
+    	Stage primaryStage = new Stage();
+    	//obtem Loader
+    	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TextCommArea.fxml"));
+		try {
+			//carrega o loader
+			Pane myPane = (Pane) fxmlLoader.load();
+			//obtem as informações da tabela
+			ObservableList<Pair<String,Object>> oList = this.tableView.getItems();
+
+			//prepara o texto a ser inserido na area de texto da nova janela
+			String text = new String();
+			Pair<String, Object> item;
+			for (int i = 0; i < oList.size(); i++) {
+				item = oList.get(i);
+				text = text + item.getKey() + "\t" +(String)item.getValue() + "\n";
+			}
+
+			//definindo a nova janela
+			Scene scene = new Scene(myPane);
+			primaryStage.setScene(scene);
+			primaryStage.setTitle("Commarea em TXT");
+
+			//obtem o controller da nova janela
+			txtController =  fxmlLoader.<TextCommAreaController>getController();
+
+			//inclui as informações do texto a abre a janela nova
+			txtController.setText(text);
+			primaryStage.show();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+    }
+
 	private void setRadiosSaida() {
     		entradaRadio.setSelected(false);
     		yy03Radio.setSelected(false);
@@ -594,9 +636,9 @@ public class FXMLTableViewController implements Initializable{
 		String subLine[];
 		String commArea = new String();
 		for (int i = 0; i < line.length; i++) {
-			if (line[i].contains(":")) {
+			if ((line[i].charAt(5) == (':')) && (!(line[i].substring(0, 5).equals("Grupo")))) {
 				subLine = line[i].split(": ");
-				if (subLine[1].length() > 80)
+				if (i < (line.length-1))
 					if (commArea.isEmpty())
 						commArea = commArea + subLine[1].substring(0, 59);
 					else
@@ -635,12 +677,14 @@ public class FXMLTableViewController implements Initializable{
 		int i = 0;
 
 		while (i < line.length()) {
-			if (line.charAt(i + 2) == ' '){
-				ret = ret + " " + line.charAt(i) + line.charAt(i + 1);
-				i = i + 3;
+			if((i + 1) < line.length()){
+				if ((line.charAt(i + 1) != ' ') && (line.charAt(i + 1) != '\n')){
+					ret = ret + " " + line.charAt(i) + line.charAt(i + 1);
+					i = i + 3;
+				}
+				else
+					break;
 			}
-			else
-				break;
 		}
 		return ret;
 	}
@@ -1054,7 +1098,7 @@ public class FXMLTableViewController implements Initializable{
 						 +"              15 RFINWJ6S-S-IESTAG-REPAS-FINAN    PIC X(060).           \n"
 						 +"              15 RFINWJ6S-S-CSIT-REPAS-FINAN      PIC 9(003).           \n"
 						 +"              15 RFINWJ6S-S-NCARAC-PROG-REPAS     PIC 9(005).           \n"
-						 +"              15 RFINWJ6S-S-CREPAS-CSCIO-BCO      PIC X(001).           \n"
+						 +"              15 RFINWJ6S-S-CREPAS-CSCIO-BCO      PIC X(001).           )\n"
 						 +"              15 RFINWJ6S-S-CCNPJ-FORNC           PIC 9(014).           \n"
 						 +"              15 RFINWJ6S-S-IPSSOA-REPAS-FINAN    PIC X(080).           \n"
 						 +"              15 RFINWJ6S-S-CCNPJ-FABR            PIC 9(014).           \n"
