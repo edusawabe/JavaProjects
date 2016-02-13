@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -28,6 +29,8 @@ import javax.swing.JList;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
+import model.Etapa;
+import model.JogadorConfigFile;
 import model.Player;
 import model.ResultadoRodada;
 
@@ -50,6 +53,7 @@ public class ConfigManager {
 	public void readFile(ListView<String> jltJogando){
         File confgFile  = new File(configFileName);
         BufferedReader reader;
+        String[] results;
         listPlayer = new LinkedList<>();
         try {
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(confgFile),"Cp1252"));
@@ -60,49 +64,15 @@ public class ConfigManager {
                 if (line == null)
                     break;
                 while (!line.contains("#Jogadores")){
-                    String[] lineSplit;
-                    lineSplit = line.split(";");
+                    JogadorConfigFile j = new JogadorConfigFile();
+                    j.parseFileLine(line);
                     Player p = new Player();
-                    p.setPlayerMail(lineSplit[1]);
-                    p.setPlayerName(lineSplit[0]);
-                    LinkedList<ResultadoRodada> listResultado = new LinkedList<ResultadoRodada>();
-                    ResultadoRodada r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12;
-                    r1 = new ResultadoRodada();
-                    r1.getResultadoFromFileLine(lineSplit[2]);
-                    listResultado.add(r1);
-                    r2 = new ResultadoRodada();
-                    r2.getResultadoFromFileLine(lineSplit[3]);
-                    listResultado.add(r2);
-                    r3 = new ResultadoRodada();
-                    r3.getResultadoFromFileLine(lineSplit[4]);
-                    listResultado.add(r3);
-                    r4 = new ResultadoRodada();
-                    r4.getResultadoFromFileLine(lineSplit[5]);
-                    listResultado.add(r4);
-                    r5 = new ResultadoRodada();
-                    r5.getResultadoFromFileLine(lineSplit[6]);
-                    listResultado.add(r5);
-                    r6 = new ResultadoRodada();
-                    r6.getResultadoFromFileLine(lineSplit[7]);
-                    listResultado.add(r6);
-                    r7 = new ResultadoRodada();
-                    r7.getResultadoFromFileLine(lineSplit[8]);
-                    listResultado.add(r7);
-                    r8 = new ResultadoRodada();
-                    r8.getResultadoFromFileLine(lineSplit[9]);
-                    listResultado.add(r8);
-                    r9 = new ResultadoRodada();
-                    r9.getResultadoFromFileLine(lineSplit[10]);
-                    listResultado.add(r9);
-                    r10 = new ResultadoRodada();
-                    r10.getResultadoFromFileLine(lineSplit[11]);
-                    listResultado.add(r10);
-                    r11 = new ResultadoRodada();
-                    r11.getResultadoFromFileLine(lineSplit[12]);
-                    listResultado.add(r11);
-                    r12 = new ResultadoRodada();
-                    r12.getResultadoFromFileLine(lineSplit[13]);
-                    listResultado.add(r12);
+                    p.setPlayerName(j.getNome());
+                    p.setPlayerMail(j.getEmail());
+                    results = j.getResults();
+                    for (int i = 0; i < results.length; i++) {
+                    	p.getResultados().add(new ResultadoRodada(results[i]));
+					}
                     listPlayer.add(p);
                     ((ObservableList<String>) jltJogando.getItems()).add(p.getPlayerName());
                     line = reader.readLine();
@@ -163,7 +133,82 @@ public class ConfigManager {
         }
 	}
 
-    public String getMailList(){
+	public void updatePlayersResult(ObservableList<String> oListFora, ObservableList<String> oListRebuys, double total1l
+			, double total2l, double total3l, double total4l, double total5l){
+		File confgFile  = new File(configFileName);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss");
+		Date date = new Date();
+		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
+		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(5, 6));
+		String[] configBackup = configFileName.split("\\.t");
+        BufferedReader reader;
+        BufferedWriter writer;
+        BufferedWriter writer2;
+        int cont = 0;
+        LinkedList<Player> lPlayer = new LinkedList<Player>();
+        JogadorConfigFile j = new JogadorConfigFile();
+        String[] results;
+        try {
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(confgFile),"Cp1252"));
+            String line = reader.readLine();
+            String readLines = new String();
+            String backupLine = new String();
+            while (line != null) {
+				backupLine += line + "\n";
+				readLines += readLines + "\n";
+				if (line.equals("#Jogadores")) {
+					readLines += readLines + "\n";
+					line = reader.readLine();
+					while (line != null && (!line.equals("#Jogadores"))) {
+						j.parseFileLine(line);
+						Player p = new Player();
+						p.setPlayerName(j.getNome());
+						p.setPlayerMail(j.getEmail());
+						results = j.getResults();
+						for (int i = 0; i < results.length; i++) {
+							ResultadoRodada r = new ResultadoRodada();
+							r.getResultadoFromFileLine(results[i]);
+						}
+						line = reader.readLine();
+					}
+				}
+			}
+            reader.close();
+            writer = new BufferedWriter(new FileWriter(confgFile));
+            writer2 = new BufferedWriter(new FileWriter(configBackup[0] + dateFormat.format(date) + ".txt"));
+            writer.write(readLines);
+            writer.flush();
+            writer.close();
+            writer2.write(backupLine);
+            writer2.flush();
+            writer2.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+	}
+
+	/*
+	 * Pontos = A + B + C + D
+			A: Pontos pela posição inversa:
+				( 3 * qtde de jogadores ) – ( 3 * (posição-1) )
+			B: Pontos pelo prêmio recebido
+				( 0,6 * prêmio recebido em dinheiro )
+			C: Cada um dos 8 jogadores da mesa final ganha 20 pontos
+			D: Cada Rebuy realizado vale -15 pontos
+	 */
+	private double getPontuacaoJogadorEtapa(int qtdJogadores, int rebuys, int pos, double premio){
+		double resultado = 0;
+		resultado = ((3 * qtdJogadores) + (3 * (pos - 1)));
+		if (pos > 9)
+			resultado = resultado + 20.00;
+		resultado = resultado + (premio * 0.6);
+		resultado = resultado + (rebuys * (-15.00));
+		return resultado;
+	}
+
+	public String getMailList(){
         String ret = new String();
 
         for (int i = 0; i < listPlayer.size()-1; i++) {

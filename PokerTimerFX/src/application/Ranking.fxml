@@ -6,28 +6,29 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.RankingController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.RankingController">
    <children>
-      <BorderPane layoutX="-249.0" prefHeight="356.0" prefWidth="449.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane layoutX="-249.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-            <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <ScrollPane BorderPane.alignment="CENTER">
                <content>
-                  <TableView prefHeight="528.0" prefWidth="904.0">
+                  <TableView fx:id="tRanking" prefHeight="800.0" prefWidth="2000.0">
                     <columns>
-                      <TableColumn prefWidth="112.0" text="Jogador" />
-                      <TableColumn prefWidth="48.0" text="Jan" />
-                        <TableColumn prefWidth="48.0" text="Fev" />
-                        <TableColumn prefWidth="48.0" text="Mar" />
-                        <TableColumn prefWidth="48.0" text="Abr" />
-                        <TableColumn prefWidth="48.0" text="Mai" />
-                        <TableColumn prefWidth="48.0" text="Jun" />
-                        <TableColumn prefWidth="48.0" text="Jul" />
-                        <TableColumn prefWidth="48.0" text="Ago" />
-                        <TableColumn prefWidth="48.0" text="Set" />
-                        <TableColumn prefWidth="48.0" text="Out" />
-                        <TableColumn prefWidth="48.0" text="Nov" />
-                        <TableColumn prefWidth="48.0" text="Dez" />
-                        <TableColumn prefWidth="212.0" text="Total" />
+                      <TableColumn fx:id="cJogador" prefWidth="200.0" text="Jogador" />
+                      <TableColumn fx:id="cResultado1" prefWidth="60.0" text="Jan" />
+                        <TableColumn fx:id="cResultado2" prefWidth="60.0" text="Fev" />
+                        <TableColumn fx:id="cResultado3" prefWidth="60.0" text="Mar" />
+                        <TableColumn fx:id="cResultado4" prefWidth="60.0" text="Abr" />
+                        <TableColumn fx:id="cResultado5" prefWidth="60.0" text="Mai" />
+                        <TableColumn fx:id="cResultado6" prefWidth="60.0" text="Jun" />
+                        <TableColumn fx:id="cResultado7" prefWidth="60.0" text="Jul" />
+                        <TableColumn fx:id="cResultado8" prefWidth="60.0" text="Ago" />
+                        <TableColumn fx:id="cResultado9" prefWidth="60.0" text="Set" />
+                        <TableColumn fx:id="cResultado10" prefWidth="60.0" text="Out" />
+                        <TableColumn fx:id="cResultado11" prefWidth="60.0" text="Nov" />
+                        <TableColumn fx:id="cResultado12" prefWidth="60.0" text="Dez" />
+                        <TableColumn fx:id="cResultado121" prefWidth="60.0" text="Total" />
+                        <TableColumn fx:id="cTotal" prefWidth="200.0" text="Resumo" />
                     </columns>
                   </TableView>
                </content>

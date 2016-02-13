@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PokerTimerFXController">
+<AnchorPane prefHeight="600.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PokerTimerFXController">
    <children>
       <VBox prefHeight="345.0" prefWidth="326.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
@@ -289,7 +289,7 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
@@ -388,17 +388,20 @@
                                  </GridPane.margin>
                               </Label>
                            </children>
+                           <padding>
+                              <Insets bottom="10.0" />
+                           </padding>
                         </GridPane>
                      </center>
                      <bottom>
                         <HBox prefHeight="26.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                            <children>
-                              <Button fx:id="btEnviarResultados" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Enviar Resultados">
+                              <Button fx:id="btEnviarResultados" mnemonicParsing="false" onAction="#enviarResultados" prefHeight="25.0" prefWidth="150.0" text="Enviar Resultados">
                                  <HBox.margin>
                                     <Insets right="5.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button fx:id="btRanking" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Ranking">
+                              <Button fx:id="btRanking" mnemonicParsing="false" onAction="#loadRanking" prefHeight="25.0" prefWidth="150.0" text="Ranking">
                                  <HBox.margin>
                                     <Insets left="5.0" />
                                  </HBox.margin>

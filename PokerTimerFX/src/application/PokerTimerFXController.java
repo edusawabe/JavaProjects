@@ -1,6 +1,8 @@
 package application;
 
 import java.net.URL;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
@@ -8,11 +10,12 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -21,12 +24,14 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import model.Etapa;
 import model.Player;
+import model.RankingLine;
 import model.Round;
 import util.Constants;
 import util.Mp3Player;
@@ -128,11 +133,78 @@ public class PokerTimerFXController implements Initializable{
     private LinkedList<Round> roundList;
     private RoundManager roundManager;
     private Timeline timeLine;
-
+    private double total1l = 0;
+    private double total2l = 0;
+    private double total3l = 0;
+    private double total4l = 0;
+    private double total5l = 0;
 	public PokerTimerFXController() {
 
 	}
 
+	@FXML
+	private void enviarResultados(Event evt){
+		Etapa e = new Etapa();
+		Date d = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		e.setDate(df.format(d));
+		for (int i = 0; i < listFora.getItems().size(); i++) {
+			e.addJogador(listFora.getItems().get(i));
+		}
+		configManager.addEtapa(e);
+	}
+
+	@FXML
+	private void loadRanking(Event evt){
+		LinkedList<Player> lPlayer = configManager.getListPlayer();
+    	Stage primaryStage = new Stage();
+    	ObservableList<RankingLine> lRanking = FXCollections.observableArrayList();
+    	RankingController rankingController;
+
+    	//obtem Loader
+    	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Ranking.fxml"));
+		try {
+			//carrega o loader
+			Pane myPane = (Pane) fxmlLoader.load();
+
+			//prepara os dados do jogador e rodadas
+			for (int i = 0; i < lPlayer.size(); i++) {
+				Player p = lPlayer.get(i);
+				RankingLine r = new RankingLine();
+				r.setJogador(p.getPlayerName());
+				r.setResult1(p.getResultados().get(0).getColocacao());
+				r.setResult2(p.getResultados().get(1).getColocacao());
+				r.setResult3(p.getResultados().get(2).getColocacao());
+				r.setResult4(p.getResultados().get(3).getColocacao());
+				r.setResult5(p.getResultados().get(4).getColocacao());
+				r.setResult6(p.getResultados().get(5).getColocacao());
+				r.setResult7(p.getResultados().get(6).getColocacao());
+				r.setResult8(p.getResultados().get(7).getColocacao());
+				r.setResult9(p.getResultados().get(8).getColocacao());
+				r.setResult10(p.getResultados().get(9).getColocacao());
+				r.setResult11(p.getResultados().get(10).getColocacao());
+				r.setResult12(p.getResultados().get(11).getColocacao());
+				lRanking.add(r);
+
+			}
+
+			//definindo a nova janela
+			Scene scene = new Scene(myPane,900,600);
+			primaryStage.setScene(scene);
+			primaryStage.setTitle("Ranking Anual");
+
+			//obtem o controller da nova janela
+			rankingController =  fxmlLoader.<RankingController>getController();
+			rankingController.gettRanking().setItems(lRanking);
+
+			//inclui as informações do texto a abre a janela nova
+			rankingController.setListRanking(lRanking);
+			primaryStage.show();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 
 	@FXML
 	private void addJogador(Event evt){
@@ -588,12 +660,6 @@ public class PokerTimerFXController implements Initializable{
         double total3 = 0;
         double total4 = 0;
         double total5 = 0;
-
-        long total1l = 0;
-        long total2l = 0;
-        long total3l = 0;
-        long total4l = 0;
-        long total5l = 0;
 
         switch (totalJogadores){
             case 1:
