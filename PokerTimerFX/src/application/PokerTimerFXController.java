@@ -1,8 +1,6 @@
 package application;
 
 import java.net.URL;
-import java.util.Date;
-import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
@@ -29,7 +27,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import model.Etapa;
 import model.Player;
 import model.RankingLine;
 import model.Round;
@@ -144,14 +141,7 @@ public class PokerTimerFXController implements Initializable{
 
 	@FXML
 	private void enviarResultados(Event evt){
-		Etapa e = new Etapa();
-		Date d = new Date();
-		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		e.setDate(df.format(d));
-		for (int i = 0; i < listFora.getItems().size(); i++) {
-			e.addJogador(listFora.getItems().get(i));
-		}
-		configManager.addEtapa(e);
+		configManager.updatePlayersResult(oListFora, oListRebuys, total1l, total2l, total3l, total4l, total5l);
 	}
 
 	@FXML
@@ -712,7 +702,8 @@ public class PokerTimerFXController implements Initializable{
         statsPremio3.setText("R$ " + total3l);
         statsPremio4.setText("R$ " + total4l);
         statsPremio5.setText("R$ " + total5l);
-        statsMedia.setText("" + (((totalJogadores + totalRebuy) * 30)/totalJogando));
+        if (totalJogando > 0)
+        	statsMedia.setText("" + (((totalJogadores + totalRebuy) * 30)/totalJogando));
     }
 
     public void playCountdown() {

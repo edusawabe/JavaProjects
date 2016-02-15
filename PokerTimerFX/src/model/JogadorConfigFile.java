@@ -8,7 +8,7 @@ public class JogadorConfigFile {
 	public JogadorConfigFile() {
 		nome = new String();
 		email = new String();
-		results = new String[11];
+		results = new String[12];
 	}
 
 	public String getNome() {
@@ -45,7 +45,7 @@ public class JogadorConfigFile {
 		nome = splitline[0];
 		email = splitline[1];
 		if (results == null)
-			results = new String[11];
+			results = new String[12];
 		for (int i = 2; i < splitline.length; i++) {
 			results[i - 2] = splitline[i];
 		}

@@ -10,29 +10,23 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MultipleSelectionModel;
-import model.Etapa;
 import model.JogadorConfigFile;
 import model.Player;
 import model.ResultadoRodada;
+import util.Constants;
 
 /**
  *
@@ -91,7 +85,7 @@ public class ConfigManager {
     }
 
 	public void addPlayer(String player){
-		String complemento = "; ;0@0@0.00;0@0@0.00;0@0@0.00;0@0@0.00;0@0@0.00;0@0@0.00;0@0@0.00;0@0@0.00;0@0@0.00;0@0@0.00;0@0@0.00;0@0@0.00";
+		String complemento = "; ;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00";
 		File confgFile  = new File(configFileName);
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss");
 		Date date = new Date();
@@ -139,7 +133,9 @@ public class ConfigManager {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss");
 		Date date = new Date();
 		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
-		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(5, 6));
+		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(6, 7));
+		if(Constants.CURRENT_MONTH > 0)
+			mesEtapa = Constants.CURRENT_MONTH;
 		String[] configBackup = configFileName.split("\\.t");
         BufferedReader reader;
         BufferedWriter writer;
@@ -155,25 +151,79 @@ public class ConfigManager {
             String backupLine = new String();
             while (line != null) {
 				backupLine += line + "\n";
-				readLines += readLines + "\n";
-				if (line.equals("#Jogadores")) {
-					readLines += readLines + "\n";
+				readLines = readLines + line + "\n";
+				if(cont > 1){
 					line = reader.readLine();
-					while (line != null && (!line.equals("#Jogadores"))) {
+					if (line == null)
+						break;
+				}
+				if (line.equals("#Jogadores")) {
+					cont++;
+					line = reader.readLine();
+					while (line != null && (!line.equals("#Jogadores")) && cont < 2) {
 						j.parseFileLine(line);
 						Player p = new Player();
 						p.setPlayerName(j.getNome());
 						p.setPlayerMail(j.getEmail());
 						results = j.getResults();
+						int rebuys = 0, pos = 0;
+						for (int i = 0; i < oListRebuys.size(); i++) {
+							if(oListRebuys.get(i).equals(p.getPlayerName()))
+								rebuys++;
+						}
+						for (int i = 0; i < oListFora.size(); i++) {
+							if(oListFora.get(i).equals(p.getPlayerName())){
+								pos = oListFora.size() - i;
+								break;
+							}
+						}
 						for (int i = 0; i < results.length; i++) {
 							ResultadoRodada r = new ResultadoRodada();
 							r.getResultadoFromFileLine(results[i]);
+							if ((i+1) == mesEtapa){
+								r.setColocacao("" + pos);
+								r.setRebuys(rebuys);
+								switch (pos) {
+								case 1:
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos, total1l));
+									r.setPremiacao(total1l);
+									break;
+								case 2:
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos, total2l));
+									r.setPremiacao(total2l);
+									break;
+								case 3:
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos, total3l));
+									r.setPremiacao(total3l);
+									break;
+								case 4:
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos, total4l));
+									r.setPremiacao(total4l);
+									break;
+								case 5:
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos, total5l));
+									r.setPremiacao(total5l);
+									break;
+								default:
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos, 0.00));
+									r.setPremiacao(0.00);
+									break;
+								}
+								results[mesEtapa -1] = r.getResultLine();
+							}
+							else
+								if ((i+1) >  mesEtapa)
+									break;
 						}
+						readLines = readLines + j.generateFileLine() + "\n";
 						line = reader.readLine();
+						if(!line.equals("#Jogadores"))
+							backupLine += line + "\n";
 					}
 				}
 			}
             reader.close();
+
             writer = new BufferedWriter(new FileWriter(confgFile));
             writer2 = new BufferedWriter(new FileWriter(configBackup[0] + dateFormat.format(date) + ".txt"));
             writer.write(readLines);
@@ -200,11 +250,13 @@ public class ConfigManager {
 	 */
 	private double getPontuacaoJogadorEtapa(int qtdJogadores, int rebuys, int pos, double premio){
 		double resultado = 0;
-		resultado = ((3 * qtdJogadores) + (3 * (pos - 1)));
-		if (pos > 9)
-			resultado = resultado + 20.00;
-		resultado = resultado + (premio * 0.6);
-		resultado = resultado + (rebuys * (-15.00));
+		if (pos > 0){
+			resultado = ((3 * qtdJogadores) + (3 * (pos - 1)));
+			if (pos > 9)
+				resultado = resultado + 20.00;
+			resultado = resultado + (premio * 0.6);
+			resultado = resultado + (rebuys * (-15.00));
+		}
 		return resultado;
 	}
 
