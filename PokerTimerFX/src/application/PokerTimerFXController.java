@@ -146,7 +146,9 @@ public class PokerTimerFXController implements Initializable{
 
 	@FXML
 	private void loadRanking(Event evt){
+		configManager.getPlayers();
 		LinkedList<Player> lPlayer = configManager.getListPlayer();
+		LinkedList<Player> lOrderedPlayer = new LinkedList<Player>();
     	Stage primaryStage = new Stage();
     	ObservableList<RankingLine> lRanking = FXCollections.observableArrayList();
     	RankingController rankingController;
@@ -160,6 +162,27 @@ public class PokerTimerFXController implements Initializable{
 			//prepara os dados do jogador e rodadas
 			for (int i = 0; i < lPlayer.size(); i++) {
 				Player p = lPlayer.get(i);
+				p.updatePontuacaoTotal();
+				if(lOrderedPlayer.isEmpty())
+					lOrderedPlayer.add(p);
+				else {
+					for (int j = 0; j < lOrderedPlayer.size(); j++) {
+						if(lOrderedPlayer.get(j).getPontuacaoTotal() < p.getPontuacaoTotal()){
+							lOrderedPlayer.add(j, p);
+							break;
+						}
+						else
+							if(lOrderedPlayer.get(j).getPontuacaoTotal() == p.getPontuacaoTotal()){
+								lOrderedPlayer.add(p);
+								break;
+							}
+					}
+				}
+			}
+
+			//Adiciona os jogadores ordenados na lista de Ranking
+			for (int i = 0; i < lOrderedPlayer.size(); i++) {
+				Player p = lOrderedPlayer.get(i);
 				RankingLine r = new RankingLine();
 				r.setJogador(p.getPlayerName());
 				r.setResult1(p.getResultados().get(0).getColocacao());
@@ -175,7 +198,6 @@ public class PokerTimerFXController implements Initializable{
 				r.setResult11(p.getResultados().get(10).getColocacao());
 				r.setResult12(p.getResultados().get(11).getColocacao());
 				lRanking.add(r);
-
 			}
 
 			//definindo a nova janela

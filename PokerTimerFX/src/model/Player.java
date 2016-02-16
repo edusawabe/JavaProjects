@@ -15,23 +15,11 @@ public class Player {
     private String playerName;
     private String playerMail;
     private ArrayList<ResultadoRodada> resultados;
-    private int pontuacaoTotal;
+    private double pontuacaoTotal;
     private int posicaoAtual;
 
     public Player() {
     	resultados = new ArrayList<ResultadoRodada>();
-    	resultados.add(new ResultadoRodada());
-    	resultados.add(new ResultadoRodada());
-    	resultados.add(new ResultadoRodada());
-    	resultados.add(new ResultadoRodada());
-    	resultados.add(new ResultadoRodada());
-    	resultados.add(new ResultadoRodada());
-    	resultados.add(new ResultadoRodada());
-    	resultados.add(new ResultadoRodada());
-    	resultados.add(new ResultadoRodada());
-    	resultados.add(new ResultadoRodada());
-    	resultados.add(new ResultadoRodada());
-    	resultados.add(new ResultadoRodada());
 	}
 
     /**
@@ -70,11 +58,11 @@ public class Player {
 		this.resultados = resultados;
 	}
 
-	public int getPontuacaoTotal() {
+	public double getPontuacaoTotal() {
 		return pontuacaoTotal;
 	}
 
-	public void setPontuacaoTotal(int pontuacaoTotal) {
+	public void setPontuacaoTotal(double pontuacaoTotal) {
 		this.pontuacaoTotal = pontuacaoTotal;
 	}
 
@@ -84,5 +72,13 @@ public class Player {
 
 	public void setPosicaoAtual(int posicaoAtual) {
 		this.posicaoAtual = posicaoAtual;
+	}
+
+	public void updatePontuacaoTotal() {
+		pontuacaoTotal = 0;
+
+		for (int i = 0; i < resultados.size(); i++) {
+			pontuacaoTotal = pontuacaoTotal + resultados.get(i).getPontuacaoEtapa();
+		}
 	}
 }

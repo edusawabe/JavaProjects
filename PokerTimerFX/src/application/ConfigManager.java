@@ -84,6 +84,45 @@ public class ConfigManager {
         }
     }
 
+	public void getPlayers(){
+        File confgFile  = new File(configFileName);
+        BufferedReader reader;
+        String[] results;
+        listPlayer = new LinkedList<Player>();
+        try {
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(confgFile),"Cp1252"));
+            String line = reader.readLine();
+            while (line != null) {
+                if (line.equals("#Jogadores"))
+                    line = reader.readLine();
+                if (line == null)
+                    break;
+                while (!line.contains("#Jogadores")){
+                    JogadorConfigFile j = new JogadorConfigFile();
+                    j.parseFileLine(line);
+                    Player p = new Player();
+                    p.setPlayerName(j.getNome());
+                    p.setPlayerMail(j.getEmail());
+                    results = j.getResults();
+                    for (int i = 0; i < results.length; i++) {
+                    	p.getResultados().add(new ResultadoRodada(results[i]));
+					}
+                    listPlayer.add(p);
+                    line = reader.readLine();
+                    if (line == null)
+                        break;
+                }
+                reader.close();
+                return;
+            }
+            reader.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+	}
+
 	public void addPlayer(String player){
 		String complemento = "; ;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00;0@0@0.00@0.00";
 		File confgFile  = new File(configFileName);
