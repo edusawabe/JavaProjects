@@ -197,6 +197,7 @@ public class PokerTimerFXController implements Initializable{
 				r.setResult10(p.getResultados().get(9).getColocacao());
 				r.setResult11(p.getResultados().get(10).getColocacao());
 				r.setResult12(p.getResultados().get(11).getColocacao());
+				r.setTotal("" + p.getPontuacaoTotal());
 				lRanking.add(r);
 			}
 

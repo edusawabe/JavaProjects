@@ -27,6 +27,7 @@ import model.JogadorConfigFile;
 import model.Player;
 import model.ResultadoRodada;
 import util.Constants;
+import util.Util;
 
 /**
  *
@@ -220,7 +221,7 @@ public class ConfigManager {
 							ResultadoRodada r = new ResultadoRodada();
 							r.getResultadoFromFileLine(results[i]);
 							if ((i+1) == mesEtapa){
-								r.setColocacao("" + pos);
+								r.setColocacao(Util.completeZeros(pos, 1));
 								r.setRebuys(rebuys);
 								switch (pos) {
 								case 1:
@@ -290,8 +291,8 @@ public class ConfigManager {
 	private double getPontuacaoJogadorEtapa(int qtdJogadores, int rebuys, int pos, double premio){
 		double resultado = 0;
 		if (pos > 0){
-			resultado = ((3 * qtdJogadores) + (3 * (pos - 1)));
-			if (pos > 9)
+			resultado = ((3 * qtdJogadores) - (3 * (pos - 1)));
+			if (pos < 9)
 				resultado = resultado + 20.00;
 			resultado = resultado + (premio * 0.6);
 			resultado = resultado + (rebuys * (-15.00));
