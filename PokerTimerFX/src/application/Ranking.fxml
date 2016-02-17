@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.RankingController">
+<AnchorPane prefHeight="700.0" prefWidth="1278.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.RankingController">
    <children>
       <BorderPane layoutX="-249.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -27,19 +27,17 @@
                         <TableColumn fx:id="cResultado10" prefWidth="60.0" text="Out" />
                         <TableColumn fx:id="cResultado11" prefWidth="60.0" text="Nov" />
                         <TableColumn fx:id="cResultado12" prefWidth="60.0" text="Dez" />
-                        <TableColumn fx:id="cResultado121" prefWidth="60.0" text="Total" />
-                        <TableColumn fx:id="cTotal" prefWidth="200.0" text="Resumo" />
+                        <TableColumn fx:id="cTotal" text="Total" />
+                        <TableColumn fx:id="cTotalRebuys" prefWidth="63.0" text="Rebuys" />
+						<TableColumn fx:id="cTotalGanho" prefWidth="100.0" text="Total Ganho" />
+                        <TableColumn fx:id="cTotalGasto" prefWidth="100.0" text="Total Gasto" />
+                        <TableColumn fx:id="cSaldo" prefWidth="100.0" text="Saldo" />
                     </columns>
                   </TableView>
                </content>
             </ScrollPane>
          </center>
          <bottom>
-            <Button mnemonicParsing="false" text="Button" BorderPane.alignment="CENTER">
-               <BorderPane.margin>
-                  <Insets bottom="10.0" top="10.0" />
-               </BorderPane.margin>
-            </Button>
          </bottom>
       </BorderPane>
    </children>

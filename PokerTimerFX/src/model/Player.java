@@ -81,4 +81,23 @@ public class Player {
 			pontuacaoTotal = pontuacaoTotal + resultados.get(i).getPontuacaoEtapa();
 		}
 	}
+
+	public Resumo getResumo(){
+		Resumo resumo = new Resumo();
+		int rebuys = 0;
+		double totalGasto = 0, totalGanho = 0, saldo = 0;
+
+		for (int i = 0; i < resultados.size(); i++) {
+			rebuys = rebuys + resultados.get(i).getRebuys();
+			if ((!resultados.get(i).getColocacao().equals("00")) && (!resultados.get(i).getColocacao().equals("0")))
+				totalGasto = totalGasto + 15 + 30 + (30 * resultados.get(i).getRebuys());
+			totalGanho = totalGanho + resultados.get(i).getPremiacao();
+		}
+		saldo  = totalGanho - totalGasto;
+		resumo.setRebuys(rebuys);
+		resumo.setSaldo(saldo);
+		resumo.setTotalGanho(totalGanho);
+		resumo.setTotalGasto(totalGasto);
+		return resumo;
+	}
 }

@@ -29,6 +29,7 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import model.Player;
 import model.RankingLine;
+import model.Resumo;
 import model.Round;
 import util.Constants;
 import util.Mp3Player;
@@ -152,6 +153,7 @@ public class PokerTimerFXController implements Initializable{
     	Stage primaryStage = new Stage();
     	ObservableList<RankingLine> lRanking = FXCollections.observableArrayList();
     	RankingController rankingController;
+    	Resumo resumo = new Resumo();
 
     	//obtem Loader
     	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Ranking.fxml"));
@@ -185,19 +187,24 @@ public class PokerTimerFXController implements Initializable{
 				Player p = lOrderedPlayer.get(i);
 				RankingLine r = new RankingLine();
 				r.setJogador(p.getPlayerName());
-				r.setResult1(p.getResultados().get(0).getColocacao());
-				r.setResult2(p.getResultados().get(1).getColocacao());
-				r.setResult3(p.getResultados().get(2).getColocacao());
-				r.setResult4(p.getResultados().get(3).getColocacao());
-				r.setResult5(p.getResultados().get(4).getColocacao());
-				r.setResult6(p.getResultados().get(5).getColocacao());
-				r.setResult7(p.getResultados().get(6).getColocacao());
-				r.setResult8(p.getResultados().get(7).getColocacao());
-				r.setResult9(p.getResultados().get(8).getColocacao());
-				r.setResult10(p.getResultados().get(9).getColocacao());
-				r.setResult11(p.getResultados().get(10).getColocacao());
-				r.setResult12(p.getResultados().get(11).getColocacao());
+				r.setResult1(p.getResultados().get(0).getColocacao() + "/" + p.getResultados().get(0).getRebuys());
+				r.setResult2(p.getResultados().get(1).getColocacao() + "/" + p.getResultados().get(1).getRebuys());
+				r.setResult3(p.getResultados().get(2).getColocacao() + "/" + p.getResultados().get(2).getRebuys());
+				r.setResult4(p.getResultados().get(3).getColocacao() + "/" + p.getResultados().get(3).getRebuys());
+				r.setResult5(p.getResultados().get(4).getColocacao() + "/" + p.getResultados().get(4).getRebuys());
+				r.setResult6(p.getResultados().get(5).getColocacao() + "/" + p.getResultados().get(5).getRebuys());
+				r.setResult7(p.getResultados().get(6).getColocacao() + "/" + p.getResultados().get(6).getRebuys());
+				r.setResult8(p.getResultados().get(7).getColocacao() + "/" + p.getResultados().get(7).getRebuys());
+				r.setResult9(p.getResultados().get(8).getColocacao() + "/" + p.getResultados().get(8).getRebuys());
+				r.setResult10(p.getResultados().get(9).getColocacao() + "/" + p.getResultados().get(9).getRebuys());
+				r.setResult11(p.getResultados().get(10).getColocacao() + "/" + p.getResultados().get(10).getRebuys());
+				r.setResult12(p.getResultados().get(11).getColocacao() + "/" + p.getResultados().get(11).getRebuys());
+				resumo = p.getResumo();
 				r.setTotal("" + p.getPontuacaoTotal());
+				r.setTotalRebuys(""+resumo.getRebuys());
+				r.setTotalGanho("" + resumo.getTotalGanho());
+				r.setTotalGasto("-" + resumo.getTotalGasto());
+				r.setSaldo("" + resumo.getSaldo());
 				lRanking.add(r);
 			}
 

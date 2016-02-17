@@ -17,6 +17,10 @@ public class RankingLine {
 	private SimpleStringProperty result11;
 	private SimpleStringProperty result12;
 	private SimpleStringProperty total;
+	private SimpleStringProperty totalRebuys;
+	private SimpleStringProperty totalGasto;
+	private SimpleStringProperty totalGanho;
+	private SimpleStringProperty saldo;
 
 	public RankingLine() {
 		jogador = new SimpleStringProperty();
@@ -33,6 +37,10 @@ public class RankingLine {
 		result11 = new SimpleStringProperty();
 		result12 = new SimpleStringProperty();
 		total = new SimpleStringProperty();
+		totalRebuys = new SimpleStringProperty();
+		totalGasto = new SimpleStringProperty();
+		totalGanho = new SimpleStringProperty();
+		saldo = new SimpleStringProperty();
 	}
 
 	public String getJogador() {
@@ -119,5 +127,28 @@ public class RankingLine {
 	public void setTotal(String total) {
 		this.total.set(total);
 	}
-
+	public String getTotalRebuys() {
+		return totalRebuys.get();
+	}
+	public void setTotalRebuys(String totalRebuys) {
+		this.totalRebuys.set(totalRebuys);
+	}
+	public String getTotalGasto() {
+		return totalGasto.get();
+	}
+	public void setTotalGasto(String totalGasto) {
+		this.totalGasto.set(totalGasto);
+	}
+	public String getTotalGanho() {
+		return totalGanho.get();
+	}
+	public void setTotalGanho(String totalGanho) {
+		this.totalGanho.set(totalGanho);
+	}
+	public String getSaldo() {
+		return saldo.get();
+	}
+	public void setSaldo(String saldo) {
+		this.saldo.set(saldo);
+	}
 }
