@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PokerTimerFXController">
+<AnchorPane prefHeight="600.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PokerTimerFXController">
    <children>
       <VBox prefHeight="345.0" prefWidth="326.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
@@ -396,14 +396,19 @@
                      <bottom>
                         <HBox prefHeight="26.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                            <children>
-                              <Button fx:id="btEnviarResultados" mnemonicParsing="false" onAction="#enviarResultados" prefHeight="25.0" prefWidth="150.0" text="Enviar Resultados">
+                              <Button fx:id="btEnviarResultados" mnemonicParsing="false" onAction="#enviarResultados" prefHeight="25.0" prefWidth="128.0" text="Enviar Resultados">
                                  <HBox.margin>
                                     <Insets right="5.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button fx:id="btRanking" mnemonicParsing="false" onAction="#loadRanking" prefHeight="25.0" prefWidth="150.0" text="Ranking">
+                              <Button fx:id="btRanking" mnemonicParsing="false" onAction="#loadRanking" prefHeight="25.0" prefWidth="75.0" text="Ranking">
                                  <HBox.margin>
                                     <Insets left="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="76.0" text="Projeções">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
                                  </HBox.margin>
                               </Button>
                            </children>

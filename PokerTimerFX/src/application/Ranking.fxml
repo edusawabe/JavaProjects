@@ -15,18 +15,18 @@
                   <TableView fx:id="tRanking" prefHeight="800.0" prefWidth="2000.0">
                     <columns>
                       <TableColumn fx:id="cJogador" prefWidth="200.0" text="Jogador" />
-                      <TableColumn fx:id="cResultado1" prefWidth="60.0" text="Jan" />
-                        <TableColumn fx:id="cResultado2" prefWidth="60.0" text="Fev" />
-                        <TableColumn fx:id="cResultado3" prefWidth="60.0" text="Mar" />
-                        <TableColumn fx:id="cResultado4" prefWidth="60.0" text="Abr" />
-                        <TableColumn fx:id="cResultado5" prefWidth="60.0" text="Mai" />
-                        <TableColumn fx:id="cResultado6" prefWidth="60.0" text="Jun" />
-                        <TableColumn fx:id="cResultado7" prefWidth="60.0" text="Jul" />
-                        <TableColumn fx:id="cResultado8" prefWidth="60.0" text="Ago" />
-                        <TableColumn fx:id="cResultado9" prefWidth="60.0" text="Set" />
-                        <TableColumn fx:id="cResultado10" prefWidth="60.0" text="Out" />
-                        <TableColumn fx:id="cResultado11" prefWidth="60.0" text="Nov" />
-                        <TableColumn fx:id="cResultado12" prefWidth="60.0" text="Dez" />
+                      <TableColumn fx:id="cResultado1" prefWidth="80.0" text="Jan" />
+                        <TableColumn fx:id="cResultado2" prefWidth="80.0" text="Fev" />
+                        <TableColumn fx:id="cResultado3" prefWidth="80.0" text="Mar" />
+                        <TableColumn fx:id="cResultado4" prefWidth="80.0" text="Abr" />
+                        <TableColumn fx:id="cResultado5" prefWidth="80.0" text="Mai" />
+                        <TableColumn fx:id="cResultado6" prefWidth="80.0" text="Jun" />
+                        <TableColumn fx:id="cResultado7" prefWidth="80.0" text="Jul" />
+                        <TableColumn fx:id="cResultado8" prefWidth="80.0" text="Ago" />
+                        <TableColumn fx:id="cResultado9" prefWidth="80.0" text="Set" />
+                        <TableColumn fx:id="cResultado10" prefWidth="80.0" text="Out" />
+                        <TableColumn fx:id="cResultado11" prefWidth="80.0" text="Nov" />
+                        <TableColumn fx:id="cResultado12" prefWidth="80.0" text="Dez" />
                         <TableColumn fx:id="cTotal" text="Total" />
                         <TableColumn fx:id="cTotalRebuys" prefWidth="63.0" text="Rebuys" />
 						<TableColumn fx:id="cTotalGanho" prefWidth="100.0" text="Total Ganho" />
