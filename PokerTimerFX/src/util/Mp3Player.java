@@ -5,11 +5,8 @@
  */
 package util;
 
-import javax.media.*;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.media.bean.playerbean.MediaPlayer;
+
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;

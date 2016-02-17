@@ -244,6 +244,8 @@ public class PokerTimerFXController implements Initializable{
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@FXML
 	private void play(Event evt){
+		playCountdown();
+		playFinish();
 		if(!play){
 			play = true;
 			timeLine = new Timeline();
@@ -377,6 +379,7 @@ public class PokerTimerFXController implements Initializable{
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		playCountdown();
 		//ConfigManager obtem a lista de jogadores cadastrados
 		configManager = new ConfigManager();
 		configManager.setConfigFileName("./config.txt");
@@ -738,13 +741,13 @@ public class PokerTimerFXController implements Initializable{
 
     public void playCountdown() {
         Mp3Player player;
-        player = new Mp3Player(PokerTimerFXController.class.getResource("sounds"));
+        player = new Mp3Player(PokerTimerFXController.class.getResource("..//sounds//gate.wav"));
         player.start();
     }
 
     public void playFinish() {
         Mp3Player player;
-         player = new Mp3Player(PokerTimerFXController.class.getResource("sounds/emergency003.wav"));
+         player = new Mp3Player(PokerTimerFXController.class.getResource("..//sounds//emergency003.wav"));
         player.start();
     }
 
