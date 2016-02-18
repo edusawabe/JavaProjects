@@ -1,5 +1,8 @@
 package util;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public final class Util {
 
 	public static String completeZeros(int num, int qtdeCasas){
@@ -44,4 +47,11 @@ public final class Util {
 		}
 		return ret;
 	}
+
+	public static double arredondar(double valor) {
+		BigDecimal bd = new BigDecimal(valor);
+		bd = bd.setScale(2, RoundingMode.HALF_UP);
+		return (bd.doubleValue());
+	}
+
 }

@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -304,6 +305,7 @@ public class ConfigManager {
             String line = reader.readLine();
             String readLines = new String();
             String backupLine = new String();
+            double projecao = 0;
             while (line != null) {
 				backupLine += line + "\n";
 				readLines = readLines + line + "\n";
@@ -350,31 +352,37 @@ public class ConfigManager {
 									case 1:
 										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total1l));
 										r.setPremiacao(total1l);
-										pl.setProjecao1("" + r.getPontuacaoEtapa() + p.getPontuacaoTotal());
+										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
+										pl.setProjecao1("" + projecao);
 										break;
 									case 2:
 										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total2l));
 										r.setPremiacao(total2l);
-										pl.setProjecao2("" + r.getPontuacaoEtapa() + p.getPontuacaoTotal());
+										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
+										pl.setProjecao2("" + projecao);
 										break;
 									case 3:
 										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total3l));
 										r.setPremiacao(total3l);
-										pl.setProjecao3("" + r.getPontuacaoEtapa() + p.getPontuacaoTotal());
+										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
+										pl.setProjecao3("" + projecao);
 										break;
 									case 4:
 										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total4l));
 										r.setPremiacao(total4l);
-										pl.setProjecao4("" + r.getPontuacaoEtapa() + p.getPontuacaoTotal());
+										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
+										pl.setProjecao4("" + projecao);
 										break;
 									case 5:
 										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total5l));
 										r.setPremiacao(total5l);
-										pl.setProjecao5("" + r.getPontuacaoEtapa() + p.getPontuacaoTotal());
+										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
+										pl.setProjecao5(""+ projecao);
 										break;
 									default:
 										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, 0.00));
-										r.setPremiacao(0.00 + p.getPontuacaoTotal());
+										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
+										r.setPremiacao(0.00 + projecao);
 										break;
 									}
 									results[mesEtapa -1] = r.getResultLine();
