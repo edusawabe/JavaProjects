@@ -44,15 +44,15 @@ public class ProjecaoController implements Initializable{
 		public void initialize(URL location, ResourceBundle resources) {
 			listProjecaoLines =  FXCollections.observableArrayList();
 
-			cJogador.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("jogador"));
-			cAtual.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("atual"));
-			cNestaRodada.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("nestaRodada"));
-			cProjecao1.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("projecao1"));
-			cProjecao2.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("projecao2"));
-			cProjecao3.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("projecao3"));
-			cProjecao4.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("projecao4"));
-			cProjecao5.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("projecao5"));
-
+			cJogador.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("jogador"));
+			cAtual.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("atual"));
+			cNestaRodada.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("nestaRodada"));
+			cProjecao1.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao1"));
+			cProjecao2.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao2"));
+			cProjecao3.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao3"));
+			cProjecao4.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao4"));
+			cProjecao5.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao5"));
+			/*
 			tProjecao.setItems(listProjecaoLines);
 
 			ProjecaoLine r1 = new ProjecaoLine();
@@ -78,6 +78,23 @@ public class ProjecaoController implements Initializable{
 			r2.setprojecao5("5º");
 
 			listProjecaoLines.add(r2);
+			*/
+		}
+
+		public TableView<ProjecaoLine> gettProjecao() {
+			return tProjecao;
+		}
+
+		public void settProjecao(TableView<ProjecaoLine> tProjecao) {
+			this.tProjecao = tProjecao;
+		}
+
+		public ObservableList<ProjecaoLine> getListProjecaoLines() {
+			return listProjecaoLines;
+		}
+
+		public void setListProjecaoLines(ObservableList<ProjecaoLine> listProjecaoLines) {
+			this.listProjecaoLines = listProjecaoLines;
 		}
 
 }

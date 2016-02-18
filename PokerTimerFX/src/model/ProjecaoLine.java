@@ -29,46 +29,46 @@ public class ProjecaoLine {
 	public void setJogador(String jogador) {
 		this.jogador.set(jogador);
 	}
-	public String getatual() {
+	public String getAtual() {
 		return atual.get();
 	}
-	public void setatual(String atual) {
+	public void setAtual(String atual) {
 		this.atual.set(atual);
 	}
-	public String getnestaRodada() {
+	public String getNestaRodada() {
 		return nestaRodada.get();
 	}
-	public void setnestaRodada(String nestaRodada) {
+	public void setNestaRodada(String nestaRodada) {
 		this.nestaRodada.set(nestaRodada);
 	}
-	public String getprojecao1() {
+	public String getProjecao1() {
 		return projecao1.get();
 	}
-	public void setprojecao1(String projecao1) {
+	public void setProjecao1(String projecao1) {
 		this.projecao1.set(projecao1);
 	}
-	public String getprojecao2() {
+	public String getProjecao2() {
 		return projecao2.get();
 	}
-	public void setprojecao2(String projecao2) {
+	public void setProjecao2(String projecao2) {
 		this.projecao2.set(projecao2);
 	}
-	public String getprojecao3() {
+	public String getProjecao3() {
 		return projecao3.get();
 	}
-	public void setprojecao3(String projecao3) {
+	public void setProjecao3(String projecao3) {
 		this.projecao3.set(projecao3);
 	}
-	public String getprojecao4() {
+	public String getProjecao4() {
 		return projecao4.get();
 	}
-	public void setprojecao4(String projecao4) {
+	public void setProjecao4(String projecao4) {
 		this.projecao4.set(projecao4);
 	}
-	public String getprojecao5() {
+	public String getProjecao5() {
 		return projecao5.get();
 	}
-	public void setprojecao5(String projecao5) {
+	public void setProjecao5(String projecao5) {
 		this.projecao5.set(projecao5);
 	}
 }

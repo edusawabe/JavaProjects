@@ -15,16 +15,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import model.JogadorConfigFile;
 import model.Player;
+import model.ProjecaoLine;
 import model.ResultadoRodada;
 import util.Constants;
 import util.Util;
@@ -277,6 +280,125 @@ public class ConfigManager {
         } catch (IOException ex) {
             Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+	}
+
+	public ObservableList<ProjecaoLine> projetarResultado(ObservableList<String> oListRebuys, int totalJogadores, double total1l
+			, double total2l, double total3l, double total4l, double total5l){
+
+		ObservableList<ProjecaoLine> projecaoList = FXCollections.observableArrayList();
+		File confgFile  = new File(configFileName);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss");
+		Date date = new Date();
+		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
+		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(6, 7));
+		if(Constants.CURRENT_MONTH > 0)
+			mesEtapa = Constants.CURRENT_MONTH;
+		String[] configBackup = configFileName.split("\\.t");
+        BufferedReader reader;
+        int cont = 0;
+        LinkedList<Player> lPlayer = new LinkedList<Player>();
+        JogadorConfigFile j = new JogadorConfigFile();
+        String[] results;
+        try {
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(confgFile),"Cp1252"));
+            String line = reader.readLine();
+            String readLines = new String();
+            String backupLine = new String();
+            while (line != null) {
+				backupLine += line + "\n";
+				readLines = readLines + line + "\n";
+				if(cont > 1){
+					line = reader.readLine();
+					if (line == null)
+						break;
+				}
+				if (line.equals("#Jogadores")) {
+					cont++;
+					line = reader.readLine();
+					while (line != null && (!line.equals("#Jogadores")) && cont < 2) {
+						j.parseFileLine(line);
+						Player p = new Player();
+						p.setPlayerName(j.getNome());
+						p.setPlayerMail(j.getEmail());
+						results = j.getResults();
+						ArrayList<ResultadoRodada> aResults = new ArrayList<ResultadoRodada>();;
+						for (int i = 0; i < results.length; i++) {
+							aResults.add(new ResultadoRodada());
+							aResults.get(i).getResultadoFromFileLine(results[i]);
+						}
+						p.setResultados(aResults);
+						int rebuys = 0;
+						for (int i = 0; i < oListRebuys.size(); i++) {
+							if(oListRebuys.get(i).equals(p.getPlayerName()))
+								rebuys++;
+						}
+
+						for (int i = 0; i < results.length; i++) {
+							ResultadoRodada r = new ResultadoRodada();
+							ProjecaoLine pl = new ProjecaoLine();
+							pl.setJogador(j.getNome());
+							p.updatePontuacaoTotal();
+							pl.setAtual(""+p.getPontuacaoTotal());
+							pl.setNestaRodada("-");
+
+							r.getResultadoFromFileLine(results[i]);
+							if ((i+1) == mesEtapa){
+								for (int k = 0; k < 5; k++) {
+									r.setColocacao(Util.completeZeros(k+1, 1));
+									r.setRebuys(rebuys);
+									switch (k+1) {
+									case 1:
+										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total1l));
+										r.setPremiacao(total1l);
+										pl.setProjecao1("" + r.getPontuacaoEtapa() + p.getPontuacaoTotal());
+										break;
+									case 2:
+										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total2l));
+										r.setPremiacao(total2l);
+										pl.setProjecao2("" + r.getPontuacaoEtapa() + p.getPontuacaoTotal());
+										break;
+									case 3:
+										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total3l));
+										r.setPremiacao(total3l);
+										pl.setProjecao3("" + r.getPontuacaoEtapa() + p.getPontuacaoTotal());
+										break;
+									case 4:
+										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total4l));
+										r.setPremiacao(total4l);
+										pl.setProjecao4("" + r.getPontuacaoEtapa() + p.getPontuacaoTotal());
+										break;
+									case 5:
+										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total5l));
+										r.setPremiacao(total5l);
+										pl.setProjecao5("" + r.getPontuacaoEtapa() + p.getPontuacaoTotal());
+										break;
+									default:
+										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, 0.00));
+										r.setPremiacao(0.00 + p.getPontuacaoTotal());
+										break;
+									}
+									results[mesEtapa -1] = r.getResultLine();
+								}
+								projecaoList.add(pl);
+							}
+							else
+								if ((i+1) >  mesEtapa)
+									break;
+						}
+						readLines = readLines + j.generateFileLine() + "\n";
+						line = reader.readLine();
+						if(!line.equals("#Jogadores"))
+							backupLine += line + "\n";
+					}
+				}
+			}
+            reader.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return projecaoList;
 	}
 
 	/*

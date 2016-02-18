@@ -67,9 +67,6 @@ public class RankingController implements Initializable{
 	public void initialize(URL location, ResourceBundle resources) {
 		listRanking =  FXCollections.observableArrayList();
 
-		//tRanking.getColumns().addAll(cJogador,cResultado1, cResultado2, cResultado3, cResultado4
-		//		,cResultado5, cResultado6, cResultado7, cResultado8, cResultado9, cResultado10, cResultado11, cResultado12, cTotal);
-
 		cJogador.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("jogador"));
 		cResultado1.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("result1"));
 		cResultado2.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("result2"));
@@ -88,43 +85,7 @@ public class RankingController implements Initializable{
 		cTotalGasto.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("totalGasto"));
 		cTotalGanho.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("totalGanho"));
 		cSaldo.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("saldo"));
-
-/*		tRanking.setItems(listRanking);
-
-		RankingLine r1 = new RankingLine();
-		r1.setJogador("Teste1");
-		r1.setResult1("1\nR$ 480.00");
-		r1.setResult2("1\nR$ 480.00");
-		r1.setResult3("1\nR$ 480.00");
-		r1.setResult4("1\nR$ 480.00");
-		r1.setResult5("1\nR$ 480.00");
-		r1.setResult6("1\nR$ 480.00");
-		r1.setResult7("1\nR$ 480.00");
-		r1.setResult8("1\nR$ 480.00");
-		r1.setResult9("1\nR$ 480.00");
-		r1.setResult10("1\nR$ 480.00");
-		r1.setResult11("1\nR$ 480.00");
-		r1.setResult12("1\nR$ 480.00");
-		r1.setTotal("TOTAL ");
-		listRanking.add(r1);
-
-		RankingLine r2 = new RankingLine();
-		r2.setJogador("Teste1");
-		r2.setResult1("1\nR$ 480.00");
-		r2.setResult2("1\nR$ 480.00");
-		r2.setResult3("1\nR$ 480.00");
-		r2.setResult4("1\nR$ 480.00");
-		r2.setResult5("1\nR$ 480.00");
-		r2.setResult6("1\nR$ 480.00");
-		r2.setResult7("1\nR$ 480.00");
-		r2.setResult8("1\nR$ 480.00");
-		r2.setResult9("1\nR$ 480.00");
-		r2.setResult10("1\nR$ 480.00");
-		r2.setResult11("1\nR$ 480.00");
-		r2.setResult12("1\nR$ 480.00");
-		r2.setTotal("TOTAL ");
-		listRanking.add(r2);
-*/	}
+}
 
 	public ObservableList<RankingLine> getListRanking() {
 		return listRanking;

@@ -28,6 +28,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import model.Player;
+import model.ProjecaoLine;
 import model.RankingLine;
 import model.Resumo;
 import model.Round;
@@ -139,7 +140,40 @@ public class PokerTimerFXController implements Initializable{
 	public PokerTimerFXController() {
 
 	}
+	@FXML
+	private void abrirProjecao(Event evt){
+		configManager.getPlayers();
+		LinkedList<Player> lPlayer = configManager.getListPlayer();
+    	Stage primaryStage = new Stage();
+    	ObservableList<ProjecaoLine> lprojecaoLine = FXCollections.observableArrayList();
+    	ProjecaoController projecaoController = new ProjecaoController();
 
+    	//obtem Loader
+    	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Projecao.fxml"));
+		try {
+			//carrega o loader
+			Pane myPane = (Pane) fxmlLoader.load();
+
+			// definindo a nova janela
+			Scene scene = new Scene(myPane, 900, 600);
+			primaryStage.setScene(scene);
+			primaryStage.setTitle("Projeções");
+
+			lprojecaoLine = configManager.projetarResultado(oListRebuys,oListFora.size() + oListJogadores.size(), total1l, total2l, total3l, total4l, total5l);
+
+			// obtem o controller da nova janela
+			projecaoController = fxmlLoader.<ProjecaoController> getController();
+
+			// inclui as informações do texto a abre a janela nova
+			projecaoController.gettProjecao().setItems(lprojecaoLine);
+
+			projecaoController.setListProjecaoLines(lprojecaoLine);
+
+			primaryStage.show();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 	@FXML
 	private void enviarResultados(Event evt){
 		configManager.updatePlayersResult(oListFora, oListRebuys, total1l, total2l, total3l, total4l, total5l);
@@ -244,8 +278,6 @@ public class PokerTimerFXController implements Initializable{
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@FXML
 	private void play(Event evt){
-		playCountdown();
-		playFinish();
 		if(!play){
 			play = true;
 			timeLine = new Timeline();
@@ -379,7 +411,6 @@ public class PokerTimerFXController implements Initializable{
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		playCountdown();
 		//ConfigManager obtem a lista de jogadores cadastrados
 		configManager = new ConfigManager();
 		configManager.setConfigFileName("./config.txt");
@@ -747,7 +778,7 @@ public class PokerTimerFXController implements Initializable{
 
     public void playFinish() {
         Mp3Player player;
-         player = new Mp3Player(PokerTimerFXController.class.getResource("..//sounds//emergency003.wav"));
+         player = new Mp3Player(PokerTimerFXController.class.getResource("..//sounds//Warning Siren-SoundBible.com-898272278.wav"));
         player.start();
     }
 
