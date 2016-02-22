@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
+import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -159,7 +161,7 @@ public class PokerTimerFXController implements Initializable{
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Projeções");
 
-			lprojecaoLine = configManager.projetarResultado(oListRebuys,oListFora.size() + oListJogadores.size(), total1l, total2l, total3l, total4l, total5l);
+			lprojecaoLine = configManager.projetarResultado(oListRebuys, oListFora, oListFora.size() + oListJogadores.size(), total1l, total2l, total3l, total4l, total5l);
 
 			// obtem o controller da nova janela
 			projecaoController = fxmlLoader.<ProjecaoController> getController();
@@ -203,24 +205,35 @@ public class PokerTimerFXController implements Initializable{
 					lOrderedPlayer.add(p);
 				else {
 					for (int j = 0; j < lOrderedPlayer.size(); j++) {
-						if(lOrderedPlayer.get(j).getPontuacaoTotal() < p.getPontuacaoTotal()){
-							lOrderedPlayer.add(j, p);
+						if (p.getPontuacaoTotal() == 0) {
+							lOrderedPlayer.add(p);
 							break;
 						}
-						else
-							if(lOrderedPlayer.get(j).getPontuacaoTotal() == p.getPontuacaoTotal()){
+						if (lOrderedPlayer.get(j).getPontuacaoTotal() < p.getPontuacaoTotal()) {
+							lOrderedPlayer.add(j, p);
+							break;
+						} else {
+							if (lOrderedPlayer.get(j).getPontuacaoTotal() == p.getPontuacaoTotal()) {
 								lOrderedPlayer.add(p);
 								break;
 							}
+							if (p.getPontuacaoTotal() < 0 && lOrderedPlayer.get(j).getPontuacaoTotal() == 0) {
+								lOrderedPlayer.add(j, p);
+								break;
+							}
+						}
+
 					}
 				}
 			}
 
+			int pos = 0;
 			//Adiciona os jogadores ordenados na lista de Ranking
 			for (int i = 0; i < lOrderedPlayer.size(); i++) {
 				Player p = lOrderedPlayer.get(i);
+				pos = i + 1;
 				RankingLine r = new RankingLine();
-				r.setJogador(p.getPlayerName());
+				r.setJogador(util.Util.completeZeros(pos, 2) + "º - " + p.getPlayerName());
 				r.setResult1(p.getResultados().get(0).getColocacao() + "/" + p.getResultados().get(0).getRebuys() + "/" + p.getResultados().get(0).getPontuacaoEtapa());
 				r.setResult2(p.getResultados().get(1).getColocacao() + "/" + p.getResultados().get(1).getRebuys() + "/" + p.getResultados().get(1).getPontuacaoEtapa());
 				r.setResult3(p.getResultados().get(2).getColocacao() + "/" + p.getResultados().get(2).getRebuys() + "/" + p.getResultados().get(2).getPontuacaoEtapa());
@@ -236,9 +249,9 @@ public class PokerTimerFXController implements Initializable{
 				resumo = p.getResumo();
 				r.setTotal("" + p.getPontuacaoTotal());
 				r.setTotalRebuys(""+resumo.getRebuys());
-				r.setTotalGanho("" + resumo.getTotalGanho());
-				r.setTotalGasto("-" + resumo.getTotalGasto());
-				r.setSaldo("" + resumo.getSaldo());
+				r.setTotalGanho("R$ " + resumo.getTotalGanho());
+				r.setTotalGasto("R$ -" + resumo.getTotalGasto());
+				r.setSaldo("R$ " + resumo.getSaldo());
 				lRanking.add(r);
 			}
 
@@ -262,17 +275,33 @@ public class PokerTimerFXController implements Initializable{
 
 	@FXML
 	private void addJogador(Event evt){
-		//oListJogadores = listJogadores.getItems();
-		addJogadorLista(tfJogador.getText());
-		listJogadores.setItems(oListJogadores);
-		configManager.addPlayer(tfJogador.getText());
+		if (play) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Erro");
+			alert.setHeaderText("Torneio em Andamento");
+			alert.setContentText("Torneio Já Iniciado. Não é mais permitido adicionar jogadores.");
+			alert.show();
+		} else {
+			// oListJogadores = listJogadores.getItems();
+			addJogadorLista(tfJogador.getText());
+			listJogadores.setItems(oListJogadores);
+			configManager.addPlayer(tfJogador.getText());
+		}
 	}
 
 	@FXML
 	private void removerJogador(Event evt){
-		int i = listJogadores.getSelectionModel().getSelectedIndex();
-		oListJogadores.remove(i);
-		listJogadores.setItems(oListJogadores);
+		if (play) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Erro");
+			alert.setHeaderText("Torneio em Andamento");
+			alert.setContentText("Torneio Já Iniciado. Não é mais permitido excluir jogadores.");
+			alert.show();
+		} else {
+			int i = listJogadores.getSelectionModel().getSelectedIndex();
+			oListJogadores.remove(i);
+			listJogadores.setItems(oListJogadores);
+		}
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -446,8 +475,8 @@ public class PokerTimerFXController implements Initializable{
 
 		//Desabilita edição e seleção da lista de rodadas
 		listRodadas.setEditable(false);
-		listRodadas.setMouseTransparent(true);
-		listRodadas.setFocusTraversable(false);
+		//listRodadas.setMouseTransparent(true);
+		//listRodadas.setFocusTraversable(false);
 
 		//Define Demais Listas
 		listFora.setItems(oListFora);
@@ -462,7 +491,7 @@ public class PokerTimerFXController implements Initializable{
 	}
 
     public void setRound(){
-        if (roundList.get(currentRound).getBigBlind() != 0)
+    	if (roundList.get(currentRound).getBigBlind() != 0)
             bigAtual.setText("" + roundList.get(currentRound).getBigBlind());
         else
         	bigAtual.setText("");
@@ -570,7 +599,7 @@ public class PokerTimerFXController implements Initializable{
 			} else {
 				seconds--;
 				currentSecond = currentSecond + 1;
-				if (seconds < 31) {
+				if (minutes == 0 && seconds < 31) {
 					timerBar.setStyle("-fx-accent: #ff4d4d");
 				}
 			}
@@ -649,6 +678,9 @@ public class PokerTimerFXController implements Initializable{
 
 	private void setCurrentRound(){
 		currentRound = listRodadas.getSelectionModel().getSelectedIndex();
+		int round = (currentRound + 1)/5;
+    	if(roundList.get(currentRound).isBreakRound())
+    		oListRebuys.add("============= BREAK " + round + "===============");
 
         if (roundList.get(currentRound).getBigBlind() != 0)
             bigAtual.setText("" + roundList.get(currentRound).getBigBlind());
@@ -699,12 +731,18 @@ public class PokerTimerFXController implements Initializable{
         int totalRebuy = oListRebuys.size();
         int totalJogando = oListJogadores.size();
         int totalFora = oListFora.size();
+        double totalArrecadado = 0;
+
+
+        for (int i = 0; i < oListRebuys.size(); i++) {
+        	if (oListRebuys.get(i).contains("==="))
+        		totalRebuy--;
+		}
 
         statsJogando.setText("" + totalJogando  + "/" + totalJogadores);
         statsFora.setText("" +  totalFora +  "/" + totalJogadores);
         statsRebuys.setText("" + totalRebuy);
 
-        double totalArrecadado = 0;
         totalArrecadado = ((totalJogadores * Constants.BUY_IN_VALUE)
                 + (totalRebuy * Constants.REBUY_VALUE));
         statsTotalArrecadado.setText("R$ " + totalArrecadado);
@@ -767,7 +805,7 @@ public class PokerTimerFXController implements Initializable{
         statsPremio4.setText("R$ " + total4l);
         statsPremio5.setText("R$ " + total5l);
         if (totalJogando > 0)
-        	statsMedia.setText("" + (((totalJogadores + totalRebuy) * 30)/totalJogando));
+        	statsMedia.setText("" + (((totalJogadores + totalRebuy) * 3000)/totalJogando));
     }
 
     public void playCountdown() {
@@ -797,6 +835,8 @@ public class PokerTimerFXController implements Initializable{
 	         if (item != null) {
 	        	 if (item.equals("BREAK"))
 	        		 setTextFill(Color.RED);
+	        	 else
+	        		 setTextFill(Color.BLACK);
 	        	 super.setText(item);
 	         }
 	     }

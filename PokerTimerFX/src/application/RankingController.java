@@ -1,6 +1,8 @@
 package application;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -85,6 +87,62 @@ public class RankingController implements Initializable{
 		cTotalGasto.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("totalGasto"));
 		cTotalGanho.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("totalGanho"));
 		cSaldo.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("saldo"));
+		cResultado1.setVisible(false);
+		cResultado2.setVisible(false);
+		cResultado3.setVisible(false);
+		cResultado4.setVisible(false);
+		cResultado5.setVisible(false);
+		cResultado6.setVisible(false);
+		cResultado7.setVisible(false);
+		cResultado8.setVisible(false);
+		cResultado9.setVisible(false);
+		cResultado10.setVisible(false);
+		cResultado11.setVisible(false);
+		cResultado12.setVisible(false);
+		Date date = new Date();
+		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
+		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(6, 7));
+
+		switch (mesEtapa) {
+		case 1:
+
+			break;
+		case 2:
+
+			break;
+		case 3:
+
+			break;
+		case 4:
+
+			break;
+		case 5:
+
+			break;
+		case 6:
+
+			break;
+		case 7:
+
+			break;
+		case 8:
+
+			break;
+		case 9:
+
+			break;
+		case 10:
+
+			break;
+		case 11:
+
+			break;
+		case 12:
+
+			break;
+		default:
+			break;
+		}
 }
 
 	public ObservableList<RankingLine> getListRanking() {
