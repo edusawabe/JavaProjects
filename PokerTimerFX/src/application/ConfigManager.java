@@ -428,13 +428,18 @@ public class ConfigManager {
 					}
 				}
 			}
+            Double itemOrdenado;
+            Double itemLista;
+
 			for (int l = 0; l < projecaoList.size(); l++) {
 				if (l == 0) {
 					projecaoListOrdered.add(projecaoList.get(l));
 				}
 				else {
+					itemLista = new Double(projecaoList.get(l).getAtual());
 					for (int l2 = 0; l2 < projecaoListOrdered.size(); l2++) {
-						if (projecaoListOrdered.get(l2).getAtual().compareTo(projecaoList.get(l).getAtual()) <= 0) {
+						itemOrdenado = new Double(projecaoListOrdered.get(l2).getAtual());
+						if (itemOrdenado.compareTo(itemLista) <= 0) {
 							projecaoListOrdered.add(l2, projecaoList.get(l));
 							break;
 						} else {
@@ -443,9 +448,13 @@ public class ConfigManager {
 								projecaoListOrdered.add(l2, projecaoList.get(l));
 								break;
 							}
-							if (projecaoListOrdered.get(l2).getAtual().compareTo(projecaoList.get(l).getAtual()) > 0
+							if(itemLista.compareTo(new Double("0")) == 0) {
+								projecaoListOrdered.add(projecaoList.get(l));
+								break;
+							}
+							if (itemOrdenado.compareTo(itemLista) > 0
 									&& l2 == (projecaoListOrdered.size() - 1)) {
-								projecaoListOrdered.add(l2, projecaoList.get(l));
+								projecaoListOrdered.add(projecaoList.get(l));
 								break;
 							}
 						}
