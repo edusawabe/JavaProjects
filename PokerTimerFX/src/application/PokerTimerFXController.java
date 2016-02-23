@@ -209,18 +209,17 @@ public class PokerTimerFXController implements Initializable{
 							lOrderedPlayer.add(p);
 							break;
 						}
-						if (lOrderedPlayer.get(j).getPontuacaoTotal() < p.getPontuacaoTotal()) {
+						if (lOrderedPlayer.get(j).getPontuacaoTotal() <= p.getPontuacaoTotal()) {
 							lOrderedPlayer.add(j, p);
 							break;
 						} else {
-							if (lOrderedPlayer.get(j).getPontuacaoTotal() == p.getPontuacaoTotal()) {
-								lOrderedPlayer.add(p);
-								break;
-							}
 							if (p.getPontuacaoTotal() < 0 && lOrderedPlayer.get(j).getPontuacaoTotal() == 0) {
 								lOrderedPlayer.add(j, p);
 								break;
 							}
+							if(lOrderedPlayer.get(j).getPontuacaoTotal() > p.getPontuacaoTotal() && j == (lOrderedPlayer.size() - 1))
+								lOrderedPlayer.add((lOrderedPlayer.size()-1), p);
+
 						}
 
 					}

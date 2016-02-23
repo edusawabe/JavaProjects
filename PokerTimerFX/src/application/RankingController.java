@@ -103,45 +103,45 @@ public class RankingController implements Initializable{
 		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
 		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(6, 7));
 
-		switch (mesEtapa) {
-		case 1:
-
-			break;
-		case 2:
-
-			break;
-		case 3:
-
-			break;
-		case 4:
-
-			break;
-		case 5:
-
-			break;
-		case 6:
-
-			break;
-		case 7:
-
-			break;
-		case 8:
-
-			break;
-		case 9:
-
-			break;
-		case 10:
-
-			break;
-		case 11:
-
-			break;
-		case 12:
-
-			break;
-		default:
-			break;
+		for (int i = 0; i < mesEtapa; i++) {
+			switch (i+1) {
+			case 1:
+				cResultado1.setVisible(true);
+				break;
+			case 2:
+				cResultado2.setVisible(true);
+				break;
+			case 3:
+				cResultado3.setVisible(true);
+				break;
+			case 4:
+				cResultado4.setVisible(true);
+				break;
+			case 5:
+				cResultado5.setVisible(true);
+				break;
+			case 6:
+				cResultado6.setVisible(true);
+				break;
+			case 7:
+				cResultado7.setVisible(true);
+				break;
+			case 8:
+				cResultado8.setVisible(true);
+				break;
+			case 9:
+				cResultado9.setVisible(true);
+				break;
+			case 10:
+				cResultado10.setVisible(true);
+				break;
+			case 11:
+				cResultado11.setVisible(true);
+				break;
+			case 12:
+				cResultado12.setVisible(true);
+				break;
+			}
 		}
 }
 

@@ -287,6 +287,7 @@ public class ConfigManager {
 			, double total1l, double total2l, double total3l, double total4l, double total5l){
 
 		ObservableList<ProjecaoLine> projecaoList = FXCollections.observableArrayList();
+		ObservableList<ProjecaoLine> projecaoListOrdered = FXCollections.observableArrayList();
 		File confgFile  = new File(configFileName);
 		Date date = new Date();
 		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
@@ -321,13 +322,14 @@ public class ConfigManager {
 					line = reader.readLine();
 					while (line != null && (!line.equals("#Jogadores")) && cont < 2) {
 						posAtual = 0;
+						m = 0;
 						j.parseFileLine(line);
 						Player p = new Player();
 						p.setPlayerName(j.getNome());
 						p.setPlayerMail(j.getEmail());
 						results = j.getResults();
 						ArrayList<ResultadoRodada> aResults = new ArrayList<ResultadoRodada>();;
-						for (int i = (oListFora.size() - 1); i >= 0; i--) {
+						for (int i = 0; i < oListFora.size(); i++) {
 							if(oListFora.get(i).equals(p.getPlayerName()))
 								posAtual = totalJogadores - m;
 							m++;
@@ -352,7 +354,7 @@ public class ConfigManager {
 							ProjecaoLine pl = new ProjecaoLine();
 							pl.setJogador(j.getNome());
 							p.updatePontuacaoTotal();
-							pl.setAtual(""+p.getPontuacaoTotal());
+							pl.setAtual(Util.completeZerosDouble(p.getPontuacaoTotal(), 3));
 							r.getResultadoFromFileLine(results[i]);
 							if ((i+1) == mesEtapa){
 								for (int k = 0; k < 5; k++) {
@@ -363,57 +365,52 @@ public class ConfigManager {
 										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total1l));
 										r.setPremiacao(total1l);
 										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
-										pl.setProjecao1("" + projecao);
+										pl.setProjecao1(Util.completeZerosDouble(projecao, 3));
 										break;
 									case 2:
 										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total2l));
 										r.setPremiacao(total2l);
 										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
-										pl.setProjecao2("" + projecao);
+										pl.setProjecao2(Util.completeZerosDouble(projecao, 3));
 										break;
 									case 3:
 										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total3l));
 										r.setPremiacao(total3l);
 										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
-										pl.setProjecao3("" + projecao);
+										pl.setProjecao3(Util.completeZerosDouble(projecao, 3));
 										break;
 									case 4:
 										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total4l));
 										r.setPremiacao(total4l);
 										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
-										pl.setProjecao4("" + projecao);
+										pl.setProjecao4(Util.completeZerosDouble(projecao, 3));
 										break;
 									case 5:
 										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total5l));
 										r.setPremiacao(total5l);
 										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
-										pl.setProjecao5(""+ projecao);
-										break;
-									default:
-										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, 0.00));
-										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
-										r.setPremiacao(0.00 + projecao);
+										pl.setProjecao5(Util.completeZerosDouble(projecao, 3));
 										break;
 									}
 
 									switch (posAtual) {
 									case 1:
-										pl.setNestaRodada(posAtual + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total1l));
+										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total1l));
 										break;
 									case 2:
-										pl.setNestaRodada(posAtual + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total2l));
+										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total2l));
 										break;
 									case 3:
-										pl.setNestaRodada(posAtual + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total3l));
+										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total3l));
 										break;
 									case 4:
-										pl.setNestaRodada(posAtual + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total4l));
+										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total4l));
 										break;
 									case 5:
-										pl.setNestaRodada(posAtual + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total5l));
+										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total5l));
 										break;
 									default:
-										pl.setNestaRodada(posAtual + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, 0));
+										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, 0));
 										break;
 									}
 									results[mesEtapa -1] = r.getResultLine();
@@ -431,13 +428,37 @@ public class ConfigManager {
 					}
 				}
 			}
+			for (int l = 0; l < projecaoList.size(); l++) {
+				if (l == 0) {
+					projecaoListOrdered.add(projecaoList.get(l));
+				}
+				else {
+					for (int l2 = 0; l2 < projecaoListOrdered.size(); l2++) {
+						if (projecaoListOrdered.get(l2).getAtual().compareTo(projecaoList.get(l).getAtual()) <= 0) {
+							projecaoListOrdered.add(l2, projecaoList.get(l));
+							break;
+						} else {
+							if (Double.parseDouble(projecaoListOrdered.get(l2).getAtual()) == 0
+									&& Double.parseDouble(projecaoList.get(l).getAtual()) < 0) {
+								projecaoListOrdered.add(l2, projecaoList.get(l));
+								break;
+							}
+							if (projecaoListOrdered.get(l2).getAtual().compareTo(projecaoList.get(l).getAtual()) > 0
+									&& l2 == (projecaoListOrdered.size() - 1)) {
+								projecaoListOrdered.add(l2, projecaoList.get(l));
+								break;
+							}
+						}
+					}
+				}
+			}
             reader.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return projecaoList;
+        return projecaoListOrdered;
 	}
 
 	/*
