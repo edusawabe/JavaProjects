@@ -328,16 +328,16 @@ public class ConfigManager {
 						results = j.getResults();
 						ArrayList<ResultadoRodada> aResults = new ArrayList<ResultadoRodada>();;
 						for (int i = 0; i < oListFora.size(); i++) {
-							if(oListFora.get(i).equals(p.getPlayerName()))
+							if(oListFora.get(i).equals(p.getPlayerName())){
 								posAtual = totalJogadores - m;
-							m++;
-							if(i == 0)
 								break;
+							}
+							m++;
 						}
 						for (int i = 0; i < results.length; i++) {
 							aResults.add(new ResultadoRodada());
 							aResults.get(i).getResultadoFromFileLine(results[i]);
-							if (aResults.get(i).getColocacao() != "0" && aResults.get(i).getColocacao() != "00")
+							if (!aResults.get(i).getColocacao().equals("0") && !aResults.get(i).getColocacao().equals("00"))
 								qtdeJogadoresTotal++;
 						}
 						p.setResultados(aResults);
