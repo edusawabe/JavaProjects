@@ -1,6 +1,7 @@
 package application;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
@@ -32,6 +33,7 @@ import javafx.util.Duration;
 import model.Player;
 import model.ProjecaoLine;
 import model.RankingLine;
+import model.ResultadoRodada;
 import model.Resumo;
 import model.Round;
 import util.Constants;
@@ -150,6 +152,22 @@ public class PokerTimerFXController implements Initializable{
     	ObservableList<ProjecaoLine> lprojecaoLine = FXCollections.observableArrayList();
     	ProjecaoController projecaoController = new ProjecaoController();
 
+    	int totalJogadoresAno = 0;
+
+    	for (int i = 0; i < lPlayer.size(); i++) {
+    		ArrayList<ResultadoRodada> listResultados = lPlayer.get(i).getResultados();
+    		for (int j = 0; j < listResultados.size(); j++) {
+				if(!listResultados.get(j).getColocacao().equals("0") && !listResultados.get(j).getColocacao().equals("00"))
+					totalJogadoresAno++;
+    		}
+		}
+    	totalJogadoresAno = totalJogadoresAno + oListJogadores.size() + oListFora.size();
+
+    	double premioTotal = (totalJogadoresAno * 15);
+    	double premio1 = premioTotal * 0.6;
+    	double premio2 = premioTotal * 0.3;
+    	double premio3 = premioTotal * 0.1;
+
     	//obtem Loader
     	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Projecao.fxml"));
 		try {
@@ -170,6 +188,11 @@ public class PokerTimerFXController implements Initializable{
 			projecaoController.gettProjecao().setItems(lprojecaoLine);
 
 			projecaoController.setListProjecaoLines(lprojecaoLine);
+
+			projecaoController.getLabel1().setText("R$ "+ Math.round(premio1));
+			projecaoController.getLabel2().setText("R$ "+Math.round(premio2));
+			projecaoController.getLabel3().setText("R$ "+Math.round(premio3));
+			projecaoController.getLabelAnual().setText("R$ "+Math.round(premioTotal));
 
 			primaryStage.show();
 		} catch(Exception e) {
