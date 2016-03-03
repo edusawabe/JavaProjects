@@ -135,6 +135,8 @@ public class ConfigManager {
         BufferedReader reader;
         BufferedWriter writer;
         BufferedWriter writer2;
+        JogadorConfigFile j = new JogadorConfigFile();
+        boolean newPlayer = true;
         int cont = 0;
         try {
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(confgFile),"Cp1252"));
@@ -146,11 +148,15 @@ public class ConfigManager {
 				if (line.equals("#Jogadores"))
 					cont++;
 				if (cont == 2) {
-					readLines = readLines + player + complemento + "\n" + line + "\n";
+					if(newPlayer)
+						readLines = readLines + player + complemento + "\n" + line + "\n";
 					cont++;
-				}
-				else
+				} else {
+					j.parseFileLine(line);
+					if(j.getNome().equals(player))
+						newPlayer = false;
 					readLines += line + "\n";
+				}
 				line = reader.readLine();
 			}
             reader.close();

@@ -187,13 +187,14 @@
                         </ListView>
                      </center>
                      <bottom>
-                        <VBox prefHeight="7.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                        <VBox prefHeight="60.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                            <children>
-                              <TextField fx:id="tfJogador">
+                              <ComboBox fx:id="cbJogador" editable="true" prefHeight="50.0" prefWidth="251.0">
                                  <VBox.margin>
-                                    <Insets bottom="5.0" />
-                                 </VBox.margin></TextField>
-                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                              </ComboBox>
+                              <HBox prefWidth="200.0">
                                  <children>
                                     <Button fx:id="btExcluirJogador" mnemonicParsing="false" onAction="#removerJogador" prefHeight="25.0" prefWidth="112.0" text="Excluir">
                                        <HBox.margin>
