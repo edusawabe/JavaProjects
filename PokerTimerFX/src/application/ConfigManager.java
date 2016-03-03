@@ -504,7 +504,7 @@ public class ConfigManager {
 
         for (int i = 0; i < listPlayer.size()-1; i++) {
             Player get = listPlayer.get(i);
-            if (!(get.getPlayerMail().isEmpty() && getMailList().equals(" ")))
+            if (!get.getPlayerMail().isEmpty() && !getMailList().equals(" "))
                 ret = ret + get.getPlayerMail() + ";";
         }
 

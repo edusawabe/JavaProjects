@@ -14,7 +14,7 @@ public final class Constants {
     public Constants() {
     }
 
-    public static int MAX_MINUTES = 20;
+    public static int MAX_MINUTES = 1;
     public static int MAX_MINUTES_BREAK = 15;
     public static int MAX_ROUNDS = 28;
     public static double BUY_IN_VALUE = 30.00;

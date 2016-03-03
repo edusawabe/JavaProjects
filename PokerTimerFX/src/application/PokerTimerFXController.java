@@ -1,9 +1,14 @@
 package application;
 
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
+
+import javax.mail.MessagingException;
 
 import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
 
@@ -27,9 +32,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
@@ -40,6 +47,8 @@ import model.ResultadoRodada;
 import model.Resumo;
 import model.Round;
 import util.Constants;
+import util.MailResultContent;
+import util.MailSender;
 import util.Mp3Player;
 
 public class PokerTimerFXController implements Initializable{
@@ -205,9 +214,55 @@ public class PokerTimerFXController implements Initializable{
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * @param evt
+	 */
+	/**
+	 * @param evt
+	 */
 	@FXML
 	private void enviarResultados(Event evt){
 		configManager.updatePlayersResult(oListFora, oListRebuys, total1l, total2l, total3l, total4l, total5l);
+
+		MailResultContent mailContent = new MailResultContent();
+        mailContent.setArrecadado(statsTotalArrecadado.getText());
+        mailContent.setOuts(oListFora);
+        mailContent.setPlayers(oListJogadores);
+        mailContent.setPremio1(statsPremio1.getText());
+        mailContent.setPremio2(statsPremio2.getText());
+        mailContent.setPremio3(statsPremio3.getText());
+        mailContent.setPremio4(statsPremio4.getText());
+        mailContent.setPremio5(statsPremio5.getText());
+        mailContent.setRebuy(oListRebuys);
+        mailContent.setRoundFinal(oListrRodadas.get(listRodadas.getSelectionModel().getSelectedIndex()));
+        String msgHtml = mailContent.toStringCssHtml();
+        String msg = mailContent.toString();
+        MailSender sender = new MailSender();
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        String subject = "Resultados Etapa "+ dateFormat.format(date);
+
+		Alert alert = new Alert(AlertType.INFORMATION);
+		WebView webView = new WebView();
+		alert.setTitle("Resultados da Etapa");
+		alert.setHeaderText("Resultados da Etapa");
+		//alert.setContentText(msg);
+		webView.getEngine().loadContent(msgHtml);
+		webView.setPrefSize(800, 600);
+		alert.getDialogPane().setContent(webView);
+		TextArea t = new TextArea();
+		t.setText(msg);
+		//alert.getDialogPane().setContent(t);
+		alert.setWidth(800);
+		alert.setHeight(600);
+		alert.setResizable(true);
+		alert.show();
+        /*try {
+			sender.sendMail(subject, msgHtml, configManager.getMailList(), true);
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 	}
 
 	@FXML
@@ -431,6 +486,7 @@ public class PokerTimerFXController implements Initializable{
 			oListRebuys.add(oListJogadores.get(i));
 			atualizarEstatisticas();
 		}
+		listJogadores.requestFocus();
 	}
 
 	@FXML
@@ -447,6 +503,7 @@ public class PokerTimerFXController implements Initializable{
 			oListRebuys.remove(i);
 			atualizarEstatisticas();
 		}
+		listJogadores.requestFocus();
 	}
 
 	@FXML
@@ -464,6 +521,7 @@ public class PokerTimerFXController implements Initializable{
 			oListJogadores.remove(i);
 			atualizarEstatisticas();
 		}
+		listJogadores.requestFocus();
 	}
 
 	@FXML
@@ -481,6 +539,7 @@ public class PokerTimerFXController implements Initializable{
 			oListFora.remove(i);
 			atualizarEstatisticas();
 		}
+		listJogadores.requestFocus();
 	}
 
 	private void addJogadorLista(String jogador, ObservableList<String> l) {
@@ -876,13 +935,13 @@ public class PokerTimerFXController implements Initializable{
 
     public void playCountdown() {
         Mp3Player player;
-        player = new Mp3Player(PokerTimerFXController.class.getResource("..//sounds//gate.wav"));
+        player = new Mp3Player(PokerTimerFXController.class.getClassLoader().getResource("gate.wav"));
         player.start();
     }
 
     public void playFinish() {
         Mp3Player player;
-         player = new Mp3Player(PokerTimerFXController.class.getResource("..//sounds//Warning Siren-SoundBible.com-898272278.wav"));
+         player = new Mp3Player(PokerTimerFXController.class.getClassLoader().getResource("sounds//Warning Siren-SoundBible.com-898272278.wav"));
         player.start();
     }
 
