@@ -303,6 +303,8 @@ public class PokerTimerFXController implements Initializable{
 
 	@FXML
 	private void addJogador(Event evt){
+		int index = 0;
+
 		if (play) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Erro");
@@ -311,19 +313,32 @@ public class PokerTimerFXController implements Initializable{
 			alert.show();
 		} else {
 			// oListJogadores = listJogadores.getItems();
+			//Verifica se jogador já existe no combo ou é novo item (index < 0)
+			index = cbJogador.getItems().indexOf(cbJogador.editorProperty().get().getText());
 
-			cbJogador.getItems().indexOf(cbJogador.editorProperty().get().getText());
+			if (index < 0 && cbJogador.editorProperty().get().getText().isEmpty()) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Erro");
+				alert.setHeaderText("Jogador Inválido!");
+				alert.setContentText("Não é Permitido Incluir Jogador Sem Nome!");
+				alert.show();
+				return;
+			}
 
-			listJogadores.setItems(oListJogadores);
-			//configManager.addPlayer(cbJogador.getSelectionModel().getSelectedItem());
-			if (cbJogador.getItems().indexOf(cbJogador.editorProperty().get().getText()) > 0){
-				cbJogador.getItems().remove(cbJogador.getItems().indexOf(cbJogador.editorProperty().get().getText()));
-				addJogadorLista(cbJogador.getItems().get(cbJogador.getSelectionModel().getSelectedIndex()));
+			//Adiciona jogador no arquivo caso não exista
+			configManager.addPlayer(cbJogador.getSelectionModel().getSelectedItem());
+
+			//Se existe, remove jogador do combo e adiociona na lista de jogadores
+			//Senão apenas adiciona na lista de jogadores
+			if (index > 0){
+				addJogadorLista(cbJogador.getItems().get(index), oListJogadores);
+				cbJogador.getItems().remove(index);
 			}
 			else {
-				cbJogador.getItems().add(cbJogador.editorProperty().get().getText());
-				addJogadorLista(cbJogador.editorProperty().get().getText());
+				addJogadorLista(cbJogador.editorProperty().get().getText(), oListJogadores);
 			}
+			listJogadores.setItems(oListJogadores);
+			cbJogador.setItems(oListComboJogador);
 			cbJogador.editorProperty().get().setText("");
 		}
 	}
@@ -338,11 +353,16 @@ public class PokerTimerFXController implements Initializable{
 			alert.setContentText("Torneio Já Iniciado. Não é mais permitido excluir jogadores.");
 			alert.show();
 		} else {
+			//obtem indice do jogador e nome do jogador
 			int i = listJogadores.getSelectionModel().getSelectedIndex();
 			jogador = listJogadores.getItems().get(i);
+
+			//remove da lista de jogadores
 			oListJogadores.remove(i);
 			listJogadores.setItems(oListJogadores);
-			oListComboJogador.add(jogador);
+
+			//Adiciona na lista de jogadores do Combo ordenadamente
+			addJogadorLista(jogador, oListComboJogador);
 			cbJogador.getItems().setAll(oListComboJogador);
 		}
 	}
@@ -457,26 +477,26 @@ public class PokerTimerFXController implements Initializable{
 			alert.show();
 		}
 		else{
-			addJogadorLista(oListFora.get(i));
+			addJogadorLista(oListFora.get(i), oListJogadores);
 			oListFora.remove(i);
 			atualizarEstatisticas();
 		}
 	}
 
-	private void addJogadorLista(String jogador) {
+	private void addJogadorLista(String jogador, ObservableList<String> l) {
 		boolean added = false;
-		if(oListJogadores.size() == 0)
-			oListJogadores.add(jogador);
+		if(l.size() == 0)
+			l.add(jogador);
 		else{
-			for (int i = 0; i < oListJogadores.size(); i++) {
-				if (jogador.compareTo(oListJogadores.get(i)) < 0) {
-					oListJogadores.add(i, jogador);
+			for (int i = 0; i < l.size(); i++) {
+				if (jogador.compareTo(l.get(i)) < 0) {
+					l.add(i, jogador);
 					added = true;
 					break;
 				}
 			}
 			if(!added)
-				oListJogadores.add(jogador);
+				l.add(jogador);
 
 		}
 	}
@@ -489,7 +509,7 @@ public class PokerTimerFXController implements Initializable{
 		configManager.readFile(listJogadores);
 		LinkedList<Player> lp = configManager.getListPlayer();
 		for (int i = 0; i < lp.size(); i++) {
-			addJogadorLista(lp.get(i).getPlayerName());
+			addJogadorLista(lp.get(i).getPlayerName(),oListJogadores);
 		}
 
 		//Define a lista de rounds do Torneio

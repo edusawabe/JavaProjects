@@ -147,12 +147,14 @@ public class ConfigManager {
 				backupLine += line + "\n";
 				if (line.equals("#Jogadores"))
 					cont++;
+				else
+					j.parseFileLine(line);
+
 				if (cont == 2) {
 					if(newPlayer)
 						readLines = readLines + player + complemento + "\n" + line + "\n";
 					cont++;
 				} else {
-					j.parseFileLine(line);
 					if(j.getNome().equals(player))
 						newPlayer = false;
 					readLines += line + "\n";
@@ -160,14 +162,16 @@ public class ConfigManager {
 				line = reader.readLine();
 			}
             reader.close();
-            writer = new BufferedWriter(new FileWriter(confgFile));
-            writer2 = new BufferedWriter(new FileWriter(configBackup[0] + dateFormat.format(date) + ".txt"));
-            writer.write(readLines);
-            writer.flush();
-            writer.close();
-            writer2.write(backupLine);
-            writer2.flush();
-            writer2.close();
+			if (newPlayer) {
+				writer = new BufferedWriter(new FileWriter(confgFile));
+				writer2 = new BufferedWriter(new FileWriter(configBackup[0] + dateFormat.format(date) + ".txt"));
+				writer.write(readLines);
+				writer.flush();
+				writer.close();
+				writer2.write(backupLine);
+				writer2.flush();
+				writer2.close();
+			}
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -427,8 +431,8 @@ public class ConfigManager {
 						}
 						readLines = readLines + j.generateFileLine() + "\n";
 						line = reader.readLine();
-						if(!line.equals("#Jogadores"))
-							backupLine += line + "\n";
+						//if(!line.equals("#Jogadores"))
+						//	backupLine += line + "\n";
 					}
 				}
 			}
