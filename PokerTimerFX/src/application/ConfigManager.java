@@ -501,16 +501,13 @@ public class ConfigManager {
 
 	public String getMailList(){
         String ret = new String();
-
-        for (int i = 0; i < listPlayer.size()-1; i++) {
+        for (int i = 0; i < listPlayer.size(); i++) {
             Player get = listPlayer.get(i);
-            if (!get.getPlayerMail().isEmpty() && !getMailList().equals(" "))
-                ret = ret + get.getPlayerMail() + ";";
+            if (!(get.getPlayerMail().isEmpty()))
+            	if (!(get.getPlayerMail().equals(" ")))
+            		ret = ret + get.getPlayerMail() + ";";
         }
-
-        Player get = listPlayer.get(listPlayer.size()-1);
-        ret = ret + get.getPlayerMail();
-
+        ret = ret.substring(0, ret.length()-1);
         return ret;
     }
     /**

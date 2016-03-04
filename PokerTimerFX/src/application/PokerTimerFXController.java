@@ -34,8 +34,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -128,6 +131,10 @@ public class PokerTimerFXController implements Initializable{
 	private ComboBox<String> cbJogador;
 	@FXML
 	private Label lbTimer;
+	@FXML
+	private AnchorPane parent;
+	@FXML
+	private HBox painelInferior;
 
 	private ConfigManager configManager;
 	private ObservableList<String> oListJogadores = FXCollections.observableArrayList();
@@ -249,10 +256,11 @@ public class PokerTimerFXController implements Initializable{
 		//alert.setContentText(msg);
 		webView.getEngine().loadContent(msgHtml);
 		webView.setPrefSize(800, 600);
-		alert.getDialogPane().setContent(webView);
+		//alert.getDialogPane().setContent(webView);
 		TextArea t = new TextArea();
-		t.setText(msg);
-		//alert.getDialogPane().setContent(t);
+		t.setFont(new Font("Courrier New", 12));
+		t.setText(msg + "\n\n\n" + configManager.getMailList());
+		alert.getDialogPane().setContent(t);
 		alert.setWidth(800);
 		alert.setHeight(600);
 		alert.setResizable(true);
@@ -425,6 +433,7 @@ public class PokerTimerFXController implements Initializable{
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@FXML
 	private void play(Event evt){
+		playFinish();
 		if(!play){
 			play = true;
 			timeLine = new Timeline();
@@ -935,13 +944,13 @@ public class PokerTimerFXController implements Initializable{
 
     public void playCountdown() {
         Mp3Player player;
-        player = new Mp3Player(PokerTimerFXController.class.getClassLoader().getResource("gate.wav"));
+        player = new Mp3Player(PokerTimerFXController.class.getResource("gate.wav"));
         player.start();
     }
 
     public void playFinish() {
         Mp3Player player;
-         player = new Mp3Player(PokerTimerFXController.class.getClassLoader().getResource("sounds//Warning Siren-SoundBible.com-898272278.wav"));
+         player = new Mp3Player(PokerTimerFXController.class.getResource("Warning Siren-SoundBible.com-898272278.wav"));
         player.start();
     }
 
