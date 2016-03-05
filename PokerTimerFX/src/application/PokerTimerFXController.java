@@ -389,7 +389,7 @@ public class PokerTimerFXController implements Initializable{
 			}
 
 			//Adiciona jogador no arquivo caso não exista
-			configManager.addPlayer(cbJogador.getSelectionModel().getSelectedItem());
+			configManager.addPlayer(cbJogador.editorProperty().get().getText());
 
 			//Se existe, remove jogador do combo e adiociona na lista de jogadores
 			//Senão apenas adiciona na lista de jogadores
@@ -426,7 +426,7 @@ public class PokerTimerFXController implements Initializable{
 
 			//Adiciona na lista de jogadores do Combo ordenadamente
 			addJogadorLista(jogador, oListComboJogador);
-			cbJogador.getItems().setAll(oListComboJogador);
+			//cbJogador.getItems().setAll(oListComboJogador);
 		}
 	}
 
