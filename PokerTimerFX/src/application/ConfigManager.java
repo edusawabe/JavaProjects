@@ -475,6 +475,15 @@ public class ConfigManager {
         } catch (IOException ex) {
             Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        for (int k = 0; k < projecaoListOrdered.size(); k++) {
+        	int h = k+1;
+        	if(h < 10)
+        		projecaoListOrdered.get(k).setJogador("0" + h + "º - " + projecaoListOrdered.get(k).getJogador());
+        	else
+        		projecaoListOrdered.get(k).setJogador(h + "º - " + projecaoListOrdered.get(k).getJogador());
+		}
+
         return projecaoListOrdered;
 	}
 
