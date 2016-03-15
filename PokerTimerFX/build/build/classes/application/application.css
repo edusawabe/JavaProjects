@@ -1,13 +1,13 @@
 .blindsTitleLabels {
-	-fx-font: System 52px;
+	-fx-font: System 56px;
 	-fx-font-weight: bold;
-	-fx-font-size: 52px;
+	-fx-font-size: 56px;
 }
 
 .blindsLabels {
 	-fx-font: System;
 	-fx-font-weight: bold;
-	-fx-font-size: 50px;
+	-fx-font-size: 70px;
 }
 
 .statsLabels{
