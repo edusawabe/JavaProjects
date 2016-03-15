@@ -678,13 +678,18 @@ public class FXMLTableViewController implements Initializable{
 
 		while (i < line.length()) {
 			if((i + 1) < line.length()){
-				if ((line.charAt(i + 1) != ' ') && (line.charAt(i + 1) != '\n')){
-					ret = ret + " " + line.charAt(i) + line.charAt(i + 1);
+				if ((line.charAt(i) != ' ') && (line.charAt(i) != '\n') && (line.charAt(i) != '\t')){
+					if (ret.isEmpty())
+						ret = "" + line.charAt(i) + line.charAt(i + 1);
+					else
+						ret = ret + " " + line.charAt(i) + line.charAt(i + 1);
 					i = i + 3;
 				}
 				else
 					break;
 			}
+			else
+				break;
 		}
 		return ret;
 	}

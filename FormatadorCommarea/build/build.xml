@@ -87,7 +87,7 @@
 		</fx:resources>
 
 		<fx:application id="fxApplication"
-			name="Formatador Commarea - 2.6"
+			name="Formatador Commarea"
 			mainClass="fxmltableview.FXMLTableView"
 		/>
 
@@ -103,8 +103,8 @@
 
 			<manifest>
 				<attribute name="Implementation-Vendor" value="Edu"/>
-				<attribute name="Implementation-Title" value="Formatador Commarea - 2.6"/>
-				<attribute name="Implementation-Version" value="2.6"/>
+				<attribute name="Implementation-Title" value="Formatador Commarea"/>
+				<attribute name="Implementation-Version" value="2.6.1"/>
 				<attribute name="JavaFX-Feature-Proxy" value="None"/>
 			</manifest>
 		</fx:jar>
@@ -118,11 +118,11 @@
 			includeDT="false"
 			offlineAllowed="true"
 			outdir="${basedir}/deploy"
-			outfile="FormatadorCommarea-2.6" nativeBundles="exe"
+			outfile="FormatadorCommarea" nativeBundles="exe"
 			updatemode="background" >
 
 			<fx:platform basedir="${java.home}"/>
-			<fx:info title="FormatadorCommarea - 2.6" vendor="Edu"/>
+			<fx:info title="FormatadorCommarea" vendor="Edu"/>
 
 			<fx:application refId="fxApplication"/>
 			<fx:resources refid="appRes"/>
