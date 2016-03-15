@@ -1,11 +1,21 @@
 package application;
 
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
+import javax.mail.MessagingException;
+
+import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -17,22 +27,31 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import model.Player;
 import model.ProjecaoLine;
 import model.RankingLine;
+import model.ResultadoRodada;
 import model.Resumo;
 import model.Round;
 import util.Constants;
+import util.MailResultContent;
+import util.MailSender;
 import util.Mp3Player;
 
 public class PokerTimerFXController implements Initializable{
@@ -109,15 +128,20 @@ public class PokerTimerFXController implements Initializable{
 	@FXML
 	private Button btRanking;
 	@FXML
-	private TextField tfJogador;
+	private ComboBox<String> cbJogador;
 	@FXML
 	private Label lbTimer;
+	@FXML
+	private AnchorPane parent;
+	@FXML
+	private HBox painelInferior;
 
 	private ConfigManager configManager;
 	private ObservableList<String> oListJogadores = FXCollections.observableArrayList();
 	private ObservableList<String> oListRebuys = FXCollections.observableArrayList();
 	private ObservableList<String> oListFora = FXCollections.observableArrayList();
 	private ObservableList<String> oListrRodadas = FXCollections.observableArrayList();
+	private ObservableList<String> oListComboJogador = FXCollections.observableArrayList();
 
     private boolean paused;
     private boolean play;
@@ -137,6 +161,8 @@ public class PokerTimerFXController implements Initializable{
     private double total3l = 0;
     private double total4l = 0;
     private double total5l = 0;
+    private String currentComboValue = null;
+
 	public PokerTimerFXController() {
 
 	}
@@ -147,6 +173,22 @@ public class PokerTimerFXController implements Initializable{
     	Stage primaryStage = new Stage();
     	ObservableList<ProjecaoLine> lprojecaoLine = FXCollections.observableArrayList();
     	ProjecaoController projecaoController = new ProjecaoController();
+
+    	int totalJogadoresAno = 0;
+
+    	for (int i = 0; i < lPlayer.size(); i++) {
+    		ArrayList<ResultadoRodada> listResultados = lPlayer.get(i).getResultados();
+    		for (int j = 0; j < listResultados.size(); j++) {
+				if(!listResultados.get(j).getColocacao().equals("0") && !listResultados.get(j).getColocacao().equals("00"))
+					totalJogadoresAno++;
+    		}
+		}
+    	totalJogadoresAno = totalJogadoresAno + oListJogadores.size() + oListFora.size();
+
+    	double premioTotal = (totalJogadoresAno * 15);
+    	double premio1 = premioTotal * 0.6;
+    	double premio2 = premioTotal * 0.3;
+    	double premio3 = premioTotal * 0.1;
 
     	//obtem Loader
     	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Projecao.fxml"));
@@ -169,14 +211,66 @@ public class PokerTimerFXController implements Initializable{
 
 			projecaoController.setListProjecaoLines(lprojecaoLine);
 
+			projecaoController.getLabel1().setText("R$ "+ Math.round(premio1));
+			projecaoController.getLabel2().setText("R$ "+Math.round(premio2));
+			projecaoController.getLabel3().setText("R$ "+Math.round(premio3));
+			projecaoController.getLabelAnual().setText("R$ "+Math.round(premioTotal));
+
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * @param evt
+	 */
+	/**
+	 * @param evt
+	 */
 	@FXML
 	private void enviarResultados(Event evt){
 		configManager.updatePlayersResult(oListFora, oListRebuys, total1l, total2l, total3l, total4l, total5l);
+
+		MailResultContent mailContent = new MailResultContent();
+        mailContent.setArrecadado(statsTotalArrecadado.getText());
+        mailContent.setOuts(oListFora);
+        mailContent.setPlayers(oListJogadores);
+        mailContent.setPremio1(statsPremio1.getText());
+        mailContent.setPremio2(statsPremio2.getText());
+        mailContent.setPremio3(statsPremio3.getText());
+        mailContent.setPremio4(statsPremio4.getText());
+        mailContent.setPremio5(statsPremio5.getText());
+        mailContent.setRebuy(oListRebuys);
+        mailContent.setRoundFinal(oListrRodadas.get(listRodadas.getSelectionModel().getSelectedIndex()));
+        String msgHtml = mailContent.toStringCssHtml();
+        String msg = mailContent.toString();
+        MailSender sender = new MailSender();
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        String subject = "Resultados Etapa "+ dateFormat.format(date);
+
+		Alert alert = new Alert(AlertType.INFORMATION);
+		WebView webView = new WebView();
+		alert.setTitle("Resultados da Etapa");
+		alert.setHeaderText("Resultados da Etapa");
+		//alert.setContentText(msg);
+		webView.getEngine().loadContent(msgHtml);
+		webView.setPrefSize(800, 600);
+		//alert.getDialogPane().setContent(webView);
+		TextArea t = new TextArea();
+		t.setFont(new Font("Courrier New", 12));
+		t.setText(msg + "\n\n\n" + configManager.getMailList());
+		alert.getDialogPane().setContent(t);
+		alert.setWidth(800);
+		alert.setHeight(600);
+		alert.setResizable(true);
+		alert.show();
+        /*try {
+			sender.sendMail(subject, msgHtml, configManager.getMailList(), true);
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 	}
 
 	@FXML
@@ -203,24 +297,34 @@ public class PokerTimerFXController implements Initializable{
 					lOrderedPlayer.add(p);
 				else {
 					for (int j = 0; j < lOrderedPlayer.size(); j++) {
-						if(lOrderedPlayer.get(j).getPontuacaoTotal() < p.getPontuacaoTotal()){
-							lOrderedPlayer.add(j, p);
+						if (p.getPontuacaoTotal() == 0) {
+							lOrderedPlayer.add(p);
 							break;
 						}
-						else
-							if(lOrderedPlayer.get(j).getPontuacaoTotal() == p.getPontuacaoTotal()){
-								lOrderedPlayer.add(p);
+						if (lOrderedPlayer.get(j).getPontuacaoTotal() <= p.getPontuacaoTotal()) {
+							lOrderedPlayer.add(j, p);
+							break;
+						} else {
+							if (p.getPontuacaoTotal() < 0 && lOrderedPlayer.get(j).getPontuacaoTotal() == 0) {
+								lOrderedPlayer.add(j, p);
 								break;
 							}
+							if(lOrderedPlayer.get(j).getPontuacaoTotal() > p.getPontuacaoTotal() && j == (lOrderedPlayer.size() - 1))
+								lOrderedPlayer.add((lOrderedPlayer.size()-1), p);
+
+						}
+
 					}
 				}
 			}
 
+			int pos = 0;
 			//Adiciona os jogadores ordenados na lista de Ranking
 			for (int i = 0; i < lOrderedPlayer.size(); i++) {
 				Player p = lOrderedPlayer.get(i);
+				pos = i + 1;
 				RankingLine r = new RankingLine();
-				r.setJogador(p.getPlayerName());
+				r.setJogador(util.Util.completeZeros(pos, 2) + "º - " + p.getPlayerName());
 				r.setResult1(p.getResultados().get(0).getColocacao() + "/" + p.getResultados().get(0).getRebuys() + "/" + p.getResultados().get(0).getPontuacaoEtapa());
 				r.setResult2(p.getResultados().get(1).getColocacao() + "/" + p.getResultados().get(1).getRebuys() + "/" + p.getResultados().get(1).getPontuacaoEtapa());
 				r.setResult3(p.getResultados().get(2).getColocacao() + "/" + p.getResultados().get(2).getRebuys() + "/" + p.getResultados().get(2).getPontuacaoEtapa());
@@ -236,9 +340,9 @@ public class PokerTimerFXController implements Initializable{
 				resumo = p.getResumo();
 				r.setTotal("" + p.getPontuacaoTotal());
 				r.setTotalRebuys(""+resumo.getRebuys());
-				r.setTotalGanho("" + resumo.getTotalGanho());
-				r.setTotalGasto("-" + resumo.getTotalGasto());
-				r.setSaldo("" + resumo.getSaldo());
+				r.setTotalGanho("R$ " + resumo.getTotalGanho());
+				r.setTotalGasto("R$ -" + resumo.getTotalGasto());
+				r.setSaldo("R$ " + resumo.getSaldo());
 				lRanking.add(r);
 			}
 
@@ -262,22 +366,74 @@ public class PokerTimerFXController implements Initializable{
 
 	@FXML
 	private void addJogador(Event evt){
-		//oListJogadores = listJogadores.getItems();
-		addJogadorLista(tfJogador.getText());
-		listJogadores.setItems(oListJogadores);
-		configManager.addPlayer(tfJogador.getText());
+		int index = 0;
+
+		if (play) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Erro");
+			alert.setHeaderText("Torneio em Andamento");
+			alert.setContentText("Torneio Já Iniciado. Não é mais permitido adicionar jogadores.");
+			alert.show();
+		} else {
+			// oListJogadores = listJogadores.getItems();
+			//Verifica se jogador já existe no combo ou é novo item (index < 0)
+			index = cbJogador.getItems().indexOf(cbJogador.editorProperty().get().getText());
+
+			if (index < 0 && cbJogador.editorProperty().get().getText().isEmpty()) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Erro");
+				alert.setHeaderText("Jogador Inválido!");
+				alert.setContentText("Não é Permitido Incluir Jogador Sem Nome!");
+				alert.show();
+				return;
+			}
+
+			//Adiciona jogador no arquivo caso não exista
+			configManager.addPlayer(cbJogador.getSelectionModel().getSelectedItem());
+
+			//Se existe, remove jogador do combo e adiociona na lista de jogadores
+			//Senão apenas adiciona na lista de jogadores
+			if (index > 0){
+				addJogadorLista(cbJogador.getItems().get(index), oListJogadores);
+				cbJogador.getItems().remove(index);
+			}
+			else {
+				addJogadorLista(cbJogador.editorProperty().get().getText(), oListJogadores);
+			}
+			listJogadores.setItems(oListJogadores);
+			cbJogador.setItems(oListComboJogador);
+			cbJogador.editorProperty().get().setText("");
+		}
 	}
 
 	@FXML
 	private void removerJogador(Event evt){
-		int i = listJogadores.getSelectionModel().getSelectedIndex();
-		oListJogadores.remove(i);
-		listJogadores.setItems(oListJogadores);
+		String jogador = null;
+		if (play) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Erro");
+			alert.setHeaderText("Torneio em Andamento");
+			alert.setContentText("Torneio Já Iniciado. Não é mais permitido excluir jogadores.");
+			alert.show();
+		} else {
+			//obtem indice do jogador e nome do jogador
+			int i = listJogadores.getSelectionModel().getSelectedIndex();
+			jogador = listJogadores.getItems().get(i);
+
+			//remove da lista de jogadores
+			oListJogadores.remove(i);
+			listJogadores.setItems(oListJogadores);
+
+			//Adiciona na lista de jogadores do Combo ordenadamente
+			addJogadorLista(jogador, oListComboJogador);
+			cbJogador.getItems().setAll(oListComboJogador);
+		}
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@FXML
 	private void play(Event evt){
+		playFinish();
 		if(!play){
 			play = true;
 			timeLine = new Timeline();
@@ -339,6 +495,7 @@ public class PokerTimerFXController implements Initializable{
 			oListRebuys.add(oListJogadores.get(i));
 			atualizarEstatisticas();
 		}
+		listJogadores.requestFocus();
 	}
 
 	@FXML
@@ -355,6 +512,7 @@ public class PokerTimerFXController implements Initializable{
 			oListRebuys.remove(i);
 			atualizarEstatisticas();
 		}
+		listJogadores.requestFocus();
 	}
 
 	@FXML
@@ -372,6 +530,7 @@ public class PokerTimerFXController implements Initializable{
 			oListJogadores.remove(i);
 			atualizarEstatisticas();
 		}
+		listJogadores.requestFocus();
 	}
 
 	@FXML
@@ -385,26 +544,27 @@ public class PokerTimerFXController implements Initializable{
 			alert.show();
 		}
 		else{
-			addJogadorLista(oListFora.get(i));
+			addJogadorLista(oListFora.get(i), oListJogadores);
 			oListFora.remove(i);
 			atualizarEstatisticas();
 		}
+		listJogadores.requestFocus();
 	}
 
-	private void addJogadorLista(String jogador) {
+	private void addJogadorLista(String jogador, ObservableList<String> l) {
 		boolean added = false;
-		if(oListJogadores.size() == 0)
-			oListJogadores.add(jogador);
+		if(l.size() == 0)
+			l.add(jogador);
 		else{
-			for (int i = 0; i < oListJogadores.size(); i++) {
-				if (jogador.compareTo(oListJogadores.get(i)) < 0) {
-					oListJogadores.add(i, jogador);
+			for (int i = 0; i < l.size(); i++) {
+				if (jogador.compareTo(l.get(i)) < 0) {
+					l.add(i, jogador);
 					added = true;
 					break;
 				}
 			}
 			if(!added)
-				oListJogadores.add(jogador);
+				l.add(jogador);
 
 		}
 	}
@@ -417,7 +577,7 @@ public class PokerTimerFXController implements Initializable{
 		configManager.readFile(listJogadores);
 		LinkedList<Player> lp = configManager.getListPlayer();
 		for (int i = 0; i < lp.size(); i++) {
-			addJogadorLista(lp.get(i).getPlayerName());
+			addJogadorLista(lp.get(i).getPlayerName(),oListJogadores);
 		}
 
 		//Define a lista de rounds do Torneio
@@ -446,8 +606,8 @@ public class PokerTimerFXController implements Initializable{
 
 		//Desabilita edição e seleção da lista de rodadas
 		listRodadas.setEditable(false);
-		listRodadas.setMouseTransparent(true);
-		listRodadas.setFocusTraversable(false);
+		//listRodadas.setMouseTransparent(true);
+		//listRodadas.setFocusTraversable(false);
 
 		//Define Demais Listas
 		listFora.setItems(oListFora);
@@ -459,10 +619,13 @@ public class PokerTimerFXController implements Initializable{
         seconds = 0;
         minutes = Constants.MAX_MINUTES;
         maxRound = minutes * Constants.SECONDS_IN_MINUTE;
+
+        cbJogador.getItems().setAll(oListComboJogador);
+        cbJogador.setPromptText("Jogador");
 	}
 
     public void setRound(){
-        if (roundList.get(currentRound).getBigBlind() != 0)
+    	if (roundList.get(currentRound).getBigBlind() != 0)
             bigAtual.setText("" + roundList.get(currentRound).getBigBlind());
         else
         	bigAtual.setText("");
@@ -508,6 +671,8 @@ public class PokerTimerFXController implements Initializable{
         	smallSeguinte.setText("");
         	lbAnteSeguinte.setText("BREAK");
         }
+        listRodadas.getFocusModel().focus(currentRound);
+        listRodadas.scrollTo(currentRound);
     }
 
     public void restartTimer() {
@@ -570,7 +735,7 @@ public class PokerTimerFXController implements Initializable{
 			} else {
 				seconds--;
 				currentSecond = currentSecond + 1;
-				if (seconds < 31) {
+				if (minutes == 0 && seconds < 31) {
 					timerBar.setStyle("-fx-accent: #ff4d4d");
 				}
 			}
@@ -649,6 +814,9 @@ public class PokerTimerFXController implements Initializable{
 
 	private void setCurrentRound(){
 		currentRound = listRodadas.getSelectionModel().getSelectedIndex();
+		int round = (currentRound + 1)/5;
+    	if(roundList.get(currentRound).isBreakRound())
+    		oListRebuys.add("============= BREAK " + round + "===============");
 
         if (roundList.get(currentRound).getBigBlind() != 0)
             bigAtual.setText("" + roundList.get(currentRound).getBigBlind());
@@ -692,6 +860,8 @@ public class PokerTimerFXController implements Initializable{
             smallSeguinte.setText("");
             lbAnteSeguinte.setText("BREAK");
         }
+        listRodadas.getFocusModel().focus(currentRound);
+        listRodadas.scrollTo(currentRound);
     }
 
 	public void atualizarEstatisticas(){
@@ -699,12 +869,18 @@ public class PokerTimerFXController implements Initializable{
         int totalRebuy = oListRebuys.size();
         int totalJogando = oListJogadores.size();
         int totalFora = oListFora.size();
+        double totalArrecadado = 0;
+
+
+        for (int i = 0; i < oListRebuys.size(); i++) {
+        	if (oListRebuys.get(i).contains("==="))
+        		totalRebuy--;
+		}
 
         statsJogando.setText("" + totalJogando  + "/" + totalJogadores);
         statsFora.setText("" +  totalFora +  "/" + totalJogadores);
         statsRebuys.setText("" + totalRebuy);
 
-        double totalArrecadado = 0;
         totalArrecadado = ((totalJogadores * Constants.BUY_IN_VALUE)
                 + (totalRebuy * Constants.REBUY_VALUE));
         statsTotalArrecadado.setText("R$ " + totalArrecadado);
@@ -772,13 +948,13 @@ public class PokerTimerFXController implements Initializable{
 
     public void playCountdown() {
         Mp3Player player;
-        player = new Mp3Player(PokerTimerFXController.class.getResource("..//sounds//gate.wav"));
+        player = new Mp3Player(PokerTimerFXController.class.getResource("gate.wav"));
         player.start();
     }
 
     public void playFinish() {
         Mp3Player player;
-         player = new Mp3Player(PokerTimerFXController.class.getResource("..//sounds//Warning Siren-SoundBible.com-898272278.wav"));
+         player = new Mp3Player(PokerTimerFXController.class.getResource("Warning Siren-SoundBible.com-898272278.wav"));
         player.start();
     }
 
@@ -797,6 +973,8 @@ public class PokerTimerFXController implements Initializable{
 	         if (item != null) {
 	        	 if (item.equals("BREAK"))
 	        		 setTextFill(Color.RED);
+	        	 else
+	        		 setTextFill(Color.BLACK);
 	        	 super.setText(item);
 	         }
 	     }

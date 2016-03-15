@@ -5,7 +5,10 @@
  */
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
 
 /**
  *
@@ -76,9 +79,39 @@ public class Player {
 
 	public void updatePontuacaoTotal() {
 		pontuacaoTotal = 0;
+		LinkedList<Double> resultadosEtapas = new LinkedList<Double>();
+		Date date = new Date();
+		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
+		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(6, 7));
 
 		for (int i = 0; i < resultados.size(); i++) {
+			if (resultadosEtapas.isEmpty()) {
+				if(!resultados.get(i).getColocacao().equals("0") && !resultados.get(i).getColocacao().equals("00")){
+					resultadosEtapas.add(new Double(resultados.get(i).getPontuacaoEtapa()));
+				}
+			}
+			else
+			{
+				if(!resultados.get(i).getColocacao().equals("0") && !resultados.get(i).getColocacao().equals("00")){
+					for (int j = 0; j < resultadosEtapas.size(); j++) {
+						if(resultadosEtapas.get(j).compareTo(new Double(resultados.get(i).getPontuacaoEtapa())) >= 0){
+							resultadosEtapas.add(j, new Double(resultados.get(i).getPontuacaoEtapa()));
+							break;
+						}
+					}
+				}
+			}
 			pontuacaoTotal = pontuacaoTotal + resultados.get(i).getPontuacaoEtapa();
+		}
+
+		if(mesEtapa > 4){
+			pontuacaoTotal = pontuacaoTotal - resultadosEtapas.get(0);
+			pontuacaoTotal = pontuacaoTotal - resultadosEtapas.get(1);
+		}
+		else {
+			if(mesEtapa == 3){
+				pontuacaoTotal = pontuacaoTotal - resultadosEtapas.get(0);
+			}
 		}
 	}
 

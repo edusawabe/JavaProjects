@@ -13,13 +13,11 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -137,6 +135,8 @@ public class ConfigManager {
         BufferedReader reader;
         BufferedWriter writer;
         BufferedWriter writer2;
+        JogadorConfigFile j = new JogadorConfigFile();
+        boolean newPlayer = true;
         int cont = 0;
         try {
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(confgFile),"Cp1252"));
@@ -147,23 +147,31 @@ public class ConfigManager {
 				backupLine += line + "\n";
 				if (line.equals("#Jogadores"))
 					cont++;
-				if (cont == 2) {
-					readLines = readLines + player + complemento + "\n" + line + "\n";
-					cont++;
-				}
 				else
+					j.parseFileLine(line);
+
+				if (cont == 2) {
+					if(newPlayer)
+						readLines = readLines + player + complemento + "\n" + line + "\n";
+					cont++;
+				} else {
+					if(j.getNome().equals(player))
+						newPlayer = false;
 					readLines += line + "\n";
+				}
 				line = reader.readLine();
 			}
             reader.close();
-            writer = new BufferedWriter(new FileWriter(confgFile));
-            writer2 = new BufferedWriter(new FileWriter(configBackup[0] + dateFormat.format(date) + ".txt"));
-            writer.write(readLines);
-            writer.flush();
-            writer.close();
-            writer2.write(backupLine);
-            writer2.flush();
-            writer2.close();
+			if (newPlayer) {
+				writer = new BufferedWriter(new FileWriter(confgFile));
+				writer2 = new BufferedWriter(new FileWriter(configBackup[0] + dateFormat.format(date) + ".txt"));
+				writer.write(readLines);
+				writer.flush();
+				writer.close();
+				writer2.write(backupLine);
+				writer2.flush();
+				writer2.close();
+			}
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -287,6 +295,7 @@ public class ConfigManager {
 			, double total1l, double total2l, double total3l, double total4l, double total5l){
 
 		ObservableList<ProjecaoLine> projecaoList = FXCollections.observableArrayList();
+		ObservableList<ProjecaoLine> projecaoListOrdered = FXCollections.observableArrayList();
 		File confgFile  = new File(configFileName);
 		Date date = new Date();
 		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
@@ -321,23 +330,24 @@ public class ConfigManager {
 					line = reader.readLine();
 					while (line != null && (!line.equals("#Jogadores")) && cont < 2) {
 						posAtual = 0;
+						m = 0;
 						j.parseFileLine(line);
 						Player p = new Player();
 						p.setPlayerName(j.getNome());
 						p.setPlayerMail(j.getEmail());
 						results = j.getResults();
 						ArrayList<ResultadoRodada> aResults = new ArrayList<ResultadoRodada>();;
-						for (int i = (oListFora.size() - 1); i >= 0; i--) {
-							if(oListFora.get(i).equals(p.getPlayerName()))
+						for (int i = 0; i < oListFora.size(); i++) {
+							if(oListFora.get(i).equals(p.getPlayerName())){
 								posAtual = totalJogadores - m;
-							m++;
-							if(i == 0)
 								break;
+							}
+							m++;
 						}
 						for (int i = 0; i < results.length; i++) {
 							aResults.add(new ResultadoRodada());
 							aResults.get(i).getResultadoFromFileLine(results[i]);
-							if (aResults.get(i).getColocacao() != "0" && aResults.get(i).getColocacao() != "00")
+							if (!aResults.get(i).getColocacao().equals("0") && !aResults.get(i).getColocacao().equals("00"))
 								qtdeJogadoresTotal++;
 						}
 						p.setResultados(aResults);
@@ -352,7 +362,7 @@ public class ConfigManager {
 							ProjecaoLine pl = new ProjecaoLine();
 							pl.setJogador(j.getNome());
 							p.updatePontuacaoTotal();
-							pl.setAtual(""+p.getPontuacaoTotal());
+							pl.setAtual(Util.completeZerosDouble(p.getPontuacaoTotal(), 3));
 							r.getResultadoFromFileLine(results[i]);
 							if ((i+1) == mesEtapa){
 								for (int k = 0; k < 5; k++) {
@@ -363,57 +373,52 @@ public class ConfigManager {
 										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total1l));
 										r.setPremiacao(total1l);
 										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
-										pl.setProjecao1("" + projecao);
+										pl.setProjecao1(Util.completeZerosDouble(projecao, 3));
 										break;
 									case 2:
 										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total2l));
 										r.setPremiacao(total2l);
 										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
-										pl.setProjecao2("" + projecao);
+										pl.setProjecao2(Util.completeZerosDouble(projecao, 3));
 										break;
 									case 3:
 										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total3l));
 										r.setPremiacao(total3l);
 										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
-										pl.setProjecao3("" + projecao);
+										pl.setProjecao3(Util.completeZerosDouble(projecao, 3));
 										break;
 									case 4:
 										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total4l));
 										r.setPremiacao(total4l);
 										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
-										pl.setProjecao4("" + projecao);
+										pl.setProjecao4(Util.completeZerosDouble(projecao, 3));
 										break;
 									case 5:
 										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total5l));
 										r.setPremiacao(total5l);
 										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
-										pl.setProjecao5(""+ projecao);
-										break;
-									default:
-										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, 0.00));
-										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
-										r.setPremiacao(0.00 + projecao);
+										pl.setProjecao5(Util.completeZerosDouble(projecao, 3));
 										break;
 									}
 
 									switch (posAtual) {
 									case 1:
-										pl.setNestaRodada(posAtual + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total1l));
+										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total1l));
 										break;
 									case 2:
-										pl.setNestaRodada(posAtual + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total2l));
+										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total2l));
 										break;
 									case 3:
-										pl.setNestaRodada(posAtual + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total3l));
+										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total3l));
 										break;
 									case 4:
-										pl.setNestaRodada(posAtual + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total4l));
+										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total4l));
 										break;
 									case 5:
-										pl.setNestaRodada(posAtual + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total5l));
+										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total5l));
 										break;
 									default:
-										pl.setNestaRodada(posAtual + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, 0));
+										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, 0));
 										break;
 									}
 									results[mesEtapa -1] = r.getResultLine();
@@ -426,8 +431,41 @@ public class ConfigManager {
 						}
 						readLines = readLines + j.generateFileLine() + "\n";
 						line = reader.readLine();
-						if(!line.equals("#Jogadores"))
-							backupLine += line + "\n";
+						//if(!line.equals("#Jogadores"))
+						//	backupLine += line + "\n";
+					}
+				}
+			}
+            Double itemOrdenado;
+            Double itemLista;
+
+			for (int l = 0; l < projecaoList.size(); l++) {
+				if (l == 0) {
+					projecaoListOrdered.add(projecaoList.get(l));
+				}
+				else {
+					itemLista = new Double(projecaoList.get(l).getAtual());
+					for (int l2 = 0; l2 < projecaoListOrdered.size(); l2++) {
+						itemOrdenado = new Double(projecaoListOrdered.get(l2).getAtual());
+						if (itemOrdenado.compareTo(itemLista) <= 0) {
+							projecaoListOrdered.add(l2, projecaoList.get(l));
+							break;
+						} else {
+							if (Double.parseDouble(projecaoListOrdered.get(l2).getAtual()) == 0
+									&& Double.parseDouble(projecaoList.get(l).getAtual()) < 0) {
+								projecaoListOrdered.add(l2, projecaoList.get(l));
+								break;
+							}
+							if(itemLista.compareTo(new Double("0")) == 0) {
+								projecaoListOrdered.add(projecaoList.get(l));
+								break;
+							}
+							if (itemOrdenado.compareTo(itemLista) > 0
+									&& l2 == (projecaoListOrdered.size() - 1)) {
+								projecaoListOrdered.add(projecaoList.get(l));
+								break;
+							}
+						}
 					}
 				}
 			}
@@ -437,7 +475,7 @@ public class ConfigManager {
         } catch (IOException ex) {
             Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return projecaoList;
+        return projecaoListOrdered;
 	}
 
 	/*
@@ -463,16 +501,13 @@ public class ConfigManager {
 
 	public String getMailList(){
         String ret = new String();
-
-        for (int i = 0; i < listPlayer.size()-1; i++) {
+        for (int i = 0; i < listPlayer.size(); i++) {
             Player get = listPlayer.get(i);
-            if (!(get.getPlayerMail().isEmpty() && getMailList().equals(" ")))
-                ret = ret + get.getPlayerMail() + ";";
+            if (!(get.getPlayerMail().isEmpty()))
+            	if (!(get.getPlayerMail().equals(" ")))
+            		ret = ret + get.getPlayerMail() + ";";
         }
-
-        Player get = listPlayer.get(listPlayer.size()-1);
-        ret = ret + get.getPlayerMail();
-
+        ret = ret.substring(0, ret.length()-1);
         return ret;
     }
     /**

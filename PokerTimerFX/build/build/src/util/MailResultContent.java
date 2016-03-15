@@ -88,6 +88,9 @@ public class MailResultContent {
 
     public String toStringCssHtml()
     {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+
         String rebuyList = new String();
         String outsList = new String();
 
@@ -149,7 +152,7 @@ public class MailResultContent {
         "	<div class=\"header\">    	       \n" +
         "        <div class=\"banner\">\n" +
         "        	<div class=\"banner-content\">\n" +
-        "				 <h1>Poker Etapa 27/11/2015</h1>\n" +
+        "				 <h1>Poker Etapa "+dateFormat.format(date)+"</h1>\n" +
         "            </div>\n" +
         "        </div>        \n" +
         "    </div>\n" +
@@ -187,7 +190,182 @@ public class MailResultContent {
         "				   </tr>	\n" +
         "				   <tr>\n" +
         "				   	   <td>\n" +
-        "					   PremiaÃ§Ã£o 1Âº\n" +
+        "					   Premiação 1º\n" +
+        "					   </td>\n" +
+        "					   <td>\n" +
+        "					   "+getPremio1()+"\n" +
+        "					   </td>				   \n" +
+        "				   </tr>					   \n" +
+        "				   <tr>\n" +
+        "				   	   <td>\n" +
+        "					   Premiação 2º\n" +
+        "					   </td>\n" +
+        "					   <td>\n" +
+        "					   "+premio2+"\n" +
+        "					   </td>				   \n" +
+        "				   </tr>					   \n" +
+        "				   <tr>\n" +
+        "				   	   <td>\n" +
+        "					   Premiação 3º\n" +
+        "					   </td>\n" +
+        "					   <td>\n" +
+        "					   "+premio3+"\n" +
+        "					   </td>				   \n" +
+        "				   </tr>					   \n" +
+        "				   <tr>\n" +
+        "				   	   <td>\n" +
+        "					   Premiação 4º\n" +
+        "					   </td>\n" +
+        "					   <td>\n" +
+        "					   "+premio4+"\n" +
+        "					   </td>				   \n" +
+        "				   </tr>					   \n" +
+        "				   <tr>\n" +
+        "				   	   <td>\n" +
+        "					   Premiação 5º\n" +
+        "					   </td>\n" +
+        "					   <td>\n" +
+        "					   "+premio5+"\n" +
+        "					   </td>				   \n" +
+        "				   </tr>\n" +
+        "				   <tr>\n" +
+        "				   	   <td>\n" +
+        "					   Ultima Rodada\n" +
+        "					   </td>\n" +
+        "					   <td>\n" +
+        "					   "+getRoundFinal()+"\n" +
+        "					   </td>				   \n" +
+        "				   </tr>				   					   \n" +
+        "				</table>\n" +
+        "			<div class=\"panel-bottom\"></div>			\n" +
+        "		</div>\n" +
+        "		<div class=\"panel\">\n" +
+        "			<h1>Rebuys</h1>\n" +
+        "			<ol>\n" +
+        "                          "+rebuyList+
+        "			</ol>	\n" +
+        "			<div class=\"panel-bottom\"></div>		\n" +
+        "		</div>		\n" +
+        "		<div class=\"panel\">\n" +
+        "			<h1>Eliminaçõe</h1>\n" +
+        "			<ol>\n" +
+        "                          "+outsList+
+        "			</ol>	\n" +
+        "            <div class=\"panel-bottom\">\n" +
+        "			</div>\n" +
+        "		</div>				\n" +
+        "	</div>\n" +
+        "			\n" +
+        "</div>\n" +
+        "</body>\n" +
+        "</html>";
+    }
+
+    public String toStringCssHtml2()
+    {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+
+        String rebuyList = new String();
+        String outsList = new String();
+
+        for (int i = 0; i < rebuy.size(); i++) {
+            rebuyList = rebuyList + "<li>" + rebuy.get(i) + "</li>";
+        }
+
+        for (int i = 0; i < outs.size(); i++) {
+            outsList = outsList + "<li>" + outs.get(i) + "</li>";
+        }
+
+        return ""
+        + "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" +
+        "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n" +
+        "\n" +
+        "<html>\n" +
+        "<head>\n" +
+        "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n" +
+        "<title>Resultados Poker</title>\n" +
+        "<style>\n" +
+        "*{margin:0; padding:0; font-family: 'Pontano Sans', ; font-size:14px; color:#424044;font-weight: bold;}\n" +
+        "a{text-decoration:none;}\n" +
+        "image{border:none;}\n" +
+        ".clearing{clear:both;}\n" +
+        "\n" +
+        ".header-wrapper{width:100%; height:auto; background:#222156; overflow:hidden;}\n" +
+        ".header{width:960px; margin:0 auto; margin-top:1px; overflow:hidden;}\n" +
+        "\n" +
+        ".banner{width:100%; height:30px; margin:0 auto;}\n" +
+        ".banner-content{width:100%; float:left; padding-top:10px;}\n" +
+        ".banner-content h2{font-size:26px; font-weight:normal; color:#22a8f0;}\n" +
+        ".banner-content h1{font-family: 'Playfair Display', serif; font-size:38px; font-weight:normal; color:#ffc103; padding-bottom:10px; text-align:center}\n" +
+        ".banner-content ul{list-style-type: square;}\n" +
+        ".banner-content li{text-align:left;}\n" +
+        ".banner-content li a{display:block; width:151px; height:39px; background:url(../images/btn-banner.gif) no-repeat; font-family: 'Playfair Display', serif; font-size:16px; font-weight:normal; color:#ffffff; text-align:center; line-height:38px; text-transform:uppercase; padding-left:10px;}\n" +
+        ".banner-content li a:hover{display:block; width:151px; height:39px; background:url(../images/btn-banner-h.gif) no-repeat; font-family: 'Playfair Display', serif; font-size:16px; font-weight:normal; color:#222156; text-align:center; line-height:38px;}\n" +
+        "\n" +
+        "\n" +
+        ".panel-wrapper{width:100%; height:auto; background:#222156; overflow:hidden;}\n" +
+        ".panel-content{width:100%; margin:0 auto; margin-top:20px;}\n" +
+        ".panel{width:500px; height:auto; margin-left:40px; float:left; overflow:hidden; position:relative; background:#ffffff; border-width:3px; border-style:solid; border-radius: 25px;}\n" +
+        ".panel-center{width:300px; height:auto; float:center; background:#ffffff; overflow:hidden; position:relative; }\n" +
+        ".panel-center h1{font-family: 'Playfair Display', serif; font-size:22px; font-weight:normal; color:#22a8f0; padding-left:30px; padding-right:30px; padding-top:5px;}\n" +
+        ".panel-bottom{width:300px; height:10px; background:#ffffff; bottom no-repeat; padding-bottom:20px;}\n" +
+        ".panel h1{font-family: 'Playfair Display', serif; font-size:22px; font-weight:normal; color:#22a8f0; padding-left:30px; padding-right:30px; padding-top:10px;}\n" +
+        ".panel p{line-height:20px; padding-left:30px; padding-right:30px; padding-top:20px;}\n" +
+        ".panel table{padding-left:30px; padding-right:30px; padding-top:2px;}\n" +
+        ".panel table tr td{padding-left:0px; padding-right:30px; padding-top:7px;}\n" +
+        ".panel ol{line-height:20px; padding-left:70px; padding-right:30px; padding-top:5px; list-style-type:decimal; }\n" +
+        ".panel ol li{padding-left:0px; padding-right:30px; padding-top:2px;}\n" +
+        "a.more1{width:90px; height:30px; line-height:30px; font-family: 'Playfair Display', serif; font-size:14px; color:#ffffff; display:block;text-align:center; background:url(../images/btn-more-n.gif) no-repeat; margin-left:30px; margin-top:30px; }\n" +
+        "a.more1:hover{width:90px; height:30px; line-height:30px; font-family: 'Playfair Display', serif; font-size:14px; color:#ffffff; display:block;text-align:center; }\n" +
+        ".marRight{margin-right:30px;background:#FFFFFF}\n" +
+        "</style>\n" +
+        "<link href='http://fonts.googleapis.com/css?family=Playfair+Display|Pontano+Sans' rel='stylesheet' type='text/css'>\n" +
+        "</head>\n" +
+        "<body>\n" +
+        "<div class=\"header-wrapper\">\n" +
+        "	<div class=\"header\">    	       \n" +
+        "        <div class=\"banner\">\n" +
+        "        	<div class=\"banner-content\">\n" +
+        "				 <h1>Poker Etapa "+dateFormat.format(date)+"</h1>\n" +
+        "            </div>\n" +
+        "        </div>        \n" +
+        "    </div>\n" +
+        "</div>\n" +
+        "\n" +
+        "<div class=\"clearing\"></div>\n" +
+        "<div class=\"panel-wrapper\">\n" +
+        "	<div class=\"panel-content\">\n" +
+        "		<div class=\"panel marRight\">\n" +
+        "			<h1>Resultados</h1>\n" +
+        "			    <table>\n" +
+        "				   <tr>\n" +
+        "				   	   <td>\n" +
+        "					   Jogadores\n" +
+        "					   </td>\n" +
+        "					   <td>\n" +
+        "					   "+players.size()+"\n" +
+        "					   </td>\n" +
+        "				   </tr>\n" +
+        "				   <tr>\n" +
+        "				   	   <td>\n" +
+        "					   Rebuys\n" +
+        "					   </td>\n" +
+        "					   <td>\n" +
+        "					   "+rebuy.size()+"\n" +
+        "					   </td>				   \n" +
+        "				   </tr>\n" +
+        "				   <tr>\n" +
+        "				   	   <td>\n" +
+        "					   Total Arrecadado\n" +
+        "					   </td>\n" +
+        "					   <td>\n" +
+        "					   "+arrecadado+"\n" +
+        "					   </td>				   \n" +
+        "				   </tr>	\n" +
+        "				   <tr>\n" +
+        "				   	   <td>\n" +
+        "					   Premiação 1º\n" +
         "					   </td>\n" +
         "					   <td>\n" +
         "					   "+getPremio1()+"\n" +
@@ -268,7 +446,7 @@ ret =       "<p>===================== Etapa "+ dateFormat.format(date) +"=======
         ret = ret + "<P>Jogadores           : " + players.size() + "</P>";
         ret = ret + "<P>Rebuys              : " + rebuy.size() + "</P>";
         ret = ret + "<P>Total Arrecadado    : " + arrecadado + "</P>";
-        ret = ret + "<P>PremiaÃ§Ã£o 1o        : " + getPremio1() + "</P>";
+        ret = ret + "<P>Premiação 1o        : " + getPremio1() + "</P>";
         ret = ret + "<P>PremiaÃ§Ã£o 2o        : " + premio2 + "</P>";
         ret = ret + "<P>PremiaÃ§Ã£o 3o        : " + premio3 + "</P>";
         ret = ret + "<P>PremiaÃ§Ã£o 4o        : " + premio4 + "</P>";
@@ -329,11 +507,11 @@ ret =       "===================== Etapa "+ dateFormat.format(date) +"==========
         ret = ret + "Jogadores           : " + players.size() + "\n";
         ret = ret + "Rebuys              : " + rebuy.size() + "\n";
         ret = ret + "Total Arrecadado    : " + arrecadado + "\n";
-        ret = ret + "PremiaÃ§Ã£o 1o        : " + getPremio1() + "\n";
-        ret = ret + "PremiaÃ§Ã£o 2o        : " + premio2 + "\n";
-        ret = ret + "PremiaÃ§Ã£o 3o        : " + premio3 + "\n";
-        ret = ret + "PremiaÃ§Ã£o 4o        : " + premio4 + "\n";
-        ret = ret + "PremiaÃ§Ã£o 5o        : " + premio5 + "\n";
+        ret = ret + "Premiação 1o        : " + getPremio1() + "\n";
+        ret = ret + "Premiação 2o        : " + premio2 + "\n";
+        ret = ret + "Premiação 3o        : " + premio3 + "\n";
+        ret = ret + "Premiação 4o        : " + premio4 + "\n";
+        ret = ret + "Premiação 5o        : " + premio5 + "\n";
         ret = ret + "Ultimo Round        : " + getRoundFinal() + "\n";
         ret = ret + "*********************************************************\n";
         ret = ret + "Lista de Rebuys     : " + "\n";
@@ -341,7 +519,7 @@ ret =       "===================== Etapa "+ dateFormat.format(date) +"==========
             ret = ret + "   - " + (i+1) +" "+ rebuy.get(i) + "\n";
         }
         ret = ret + "*********************************************************\n";
-        ret = ret + "Lista de EliminaÃ§Ãµes: " + "\n";
+        ret = ret + "Lista de Eliminações: " + "\n";
         for (int i = 0; i < outs.size(); i++) {
             ret = ret + "   - " + (i+1) +" "+ outs.get(i) + "\n";
         }

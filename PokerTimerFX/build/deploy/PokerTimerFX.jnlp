@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="PokerTimerFX.jar" size="1597454" download="eager" />
+    <jar href="PokerTimerFX.jar" size="1557073" download="eager" />
     <jar href="libs\jmf.jar" size="2082557" download="eager" />
     <jar href="libs\mail.jar" size="521000" download="eager" />
   </resources>
