@@ -1,6 +1,8 @@
 package application;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -85,6 +87,62 @@ public class RankingController implements Initializable{
 		cTotalGasto.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("totalGasto"));
 		cTotalGanho.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("totalGanho"));
 		cSaldo.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("saldo"));
+		cResultado1.setVisible(false);
+		cResultado2.setVisible(false);
+		cResultado3.setVisible(false);
+		cResultado4.setVisible(false);
+		cResultado5.setVisible(false);
+		cResultado6.setVisible(false);
+		cResultado7.setVisible(false);
+		cResultado8.setVisible(false);
+		cResultado9.setVisible(false);
+		cResultado10.setVisible(false);
+		cResultado11.setVisible(false);
+		cResultado12.setVisible(false);
+		Date date = new Date();
+		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
+		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(6, 7));
+
+		for (int i = 0; i < mesEtapa; i++) {
+			switch (i+1) {
+			case 1:
+				cResultado1.setVisible(true);
+				break;
+			case 2:
+				cResultado2.setVisible(true);
+				break;
+			case 3:
+				cResultado3.setVisible(true);
+				break;
+			case 4:
+				cResultado4.setVisible(true);
+				break;
+			case 5:
+				cResultado5.setVisible(true);
+				break;
+			case 6:
+				cResultado6.setVisible(true);
+				break;
+			case 7:
+				cResultado7.setVisible(true);
+				break;
+			case 8:
+				cResultado8.setVisible(true);
+				break;
+			case 9:
+				cResultado9.setVisible(true);
+				break;
+			case 10:
+				cResultado10.setVisible(true);
+				break;
+			case 11:
+				cResultado11.setVisible(true);
+				break;
+			case 12:
+				cResultado12.setVisible(true);
+				break;
+			}
+		}
 }
 
 	public ObservableList<RankingLine> getListRanking() {
