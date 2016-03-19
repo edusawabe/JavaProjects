@@ -101,7 +101,7 @@ public class RankingController implements Initializable{
 		cResultado12.setVisible(false);
 		Date date = new Date();
 		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
-		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(6, 7));
+		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(3, 5));
 
 		for (int i = 0; i < mesEtapa; i++) {
 			switch (i+1) {

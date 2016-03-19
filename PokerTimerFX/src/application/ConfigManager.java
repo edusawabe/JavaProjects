@@ -185,7 +185,7 @@ public class ConfigManager {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss");
 		Date date = new Date();
 		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
-		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(6, 7));
+		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(3, 5));
 		if(Constants.CURRENT_MONTH > 0)
 			mesEtapa = Constants.CURRENT_MONTH;
 		String[] configBackup = configFileName.split("\\.t");

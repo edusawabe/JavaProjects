@@ -29,6 +29,14 @@ public class MailResultContent {
     private String premio4;
     private String premio5;
     private String roundFinal;
+    private int rebuys;
+
+    public void updateRebuys(){
+	    for (int i = 0; i < outs.size(); i++) {
+	    	if(!rebuy.get(i).contains("BREAK"))
+	    		rebuys++;
+		}
+    }
 
     /**
      * @return the rebuy
@@ -88,6 +96,7 @@ public class MailResultContent {
 
     public String toStringCssHtml()
     {
+    	updateRebuys();
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
 
@@ -95,7 +104,8 @@ public class MailResultContent {
         String outsList = new String();
 
         for (int i = 0; i < rebuy.size(); i++) {
-            rebuyList = rebuyList + "<li>" + rebuy.get(i) + "</li>";
+        	if(!rebuy.get(i).contains("BREAK"))
+        		rebuyList = rebuyList + "<li>" + rebuy.get(i) + "</li>";
         }
 
         for (int i = 0; i < outs.size(); i++) {
@@ -169,7 +179,7 @@ public class MailResultContent {
         "					   Jogadores\n" +
         "					   </td>\n" +
         "					   <td>\n" +
-        "					   "+players.size()+"\n" +
+        "					   "+outs.size()+"\n" +
         "					   </td>\n" +
         "				   </tr>\n" +
         "				   <tr>\n" +
@@ -177,7 +187,7 @@ public class MailResultContent {
         "					   Rebuys\n" +
         "					   </td>\n" +
         "					   <td>\n" +
-        "					   "+rebuy.size()+"\n" +
+        "					   "+rebuys+"\n" +
         "					   </td>				   \n" +
         "				   </tr>\n" +
         "				   <tr>\n" +
@@ -263,6 +273,7 @@ public class MailResultContent {
 
     public String toStringCssHtml2()
     {
+    	updateRebuys();
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
 
@@ -270,7 +281,8 @@ public class MailResultContent {
         String outsList = new String();
 
         for (int i = 0; i < rebuy.size(); i++) {
-            rebuyList = rebuyList + "<li>" + rebuy.get(i) + "</li>";
+        	if(!rebuy.get(i).contains("BREAK"))
+        		rebuyList = rebuyList + "<li>" + rebuy.get(i) + "</li>";
         }
 
         for (int i = 0; i < outs.size(); i++) {
@@ -344,7 +356,7 @@ public class MailResultContent {
         "					   Jogadores\n" +
         "					   </td>\n" +
         "					   <td>\n" +
-        "					   "+players.size()+"\n" +
+        "					   "+outs.size()+"\n" +
         "					   </td>\n" +
         "				   </tr>\n" +
         "				   <tr>\n" +
@@ -352,7 +364,7 @@ public class MailResultContent {
         "					   Rebuys\n" +
         "					   </td>\n" +
         "					   <td>\n" +
-        "					   "+rebuy.size()+"\n" +
+        "					   "+rebuys+"\n" +
         "					   </td>				   \n" +
         "				   </tr>\n" +
         "				   <tr>\n" +
@@ -438,13 +450,15 @@ public class MailResultContent {
 
     public String toStringHTML(){
         String retContent, ret;
+        int r = 0;
 
+        updateRebuys();
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
 ret =       "<p>===================== Etapa "+ dateFormat.format(date) +"==================================</P>";
         ret = ret + "<P>*********************************************************</P>";
-        ret = ret + "<P>Jogadores           : " + players.size() + "</P>";
-        ret = ret + "<P>Rebuys              : " + rebuy.size() + "</P>";
+        ret = ret + "<P>Jogadores           : " + outs.size() + "</P>";
+        ret = ret + "<P>Rebuys              : " + rebuys + "</P>";
         ret = ret + "<P>Total Arrecadado    : " + arrecadado + "</P>";
         ret = ret + "<P>Premiação 1o        : " + getPremio1() + "</P>";
         ret = ret + "<P>PremiaÃ§Ã£o 2o        : " + premio2 + "</P>";
@@ -455,7 +469,10 @@ ret =       "<p>===================== Etapa "+ dateFormat.format(date) +"=======
         ret = ret + "<P>*********************************************************</P>";
         ret = ret + "<P>Lista de Rebuys     : " + "</P>";
         for (int i = 0; i < rebuy.size(); i++) {
-            ret = ret + "<P>   - " + (i+1) +" "+ rebuy.get(i) + "</P>";
+        	if(!rebuy.get(i).contains("BREAK")){
+        		ret = ret + "<P>   - " + (r+1) +" "+ rebuy.get(i) + "</P>";
+        		r++;
+        	}
         }
         ret = ret + "<P>*********************************************************</P>";
         ret = ret + "<P>Lista de EliminaÃ§Ãµes: " + "</P>";
@@ -499,13 +516,15 @@ ret +
 
     public String toString(){
         String retContent, ret;
+        int r = 0;
 
+        updateRebuys();
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
 ret =       "===================== Etapa "+ dateFormat.format(date) +"==================================\n";
         ret = ret + "*********************************************************\n";
-        ret = ret + "Jogadores           : " + players.size() + "\n";
-        ret = ret + "Rebuys              : " + rebuy.size() + "\n";
+        ret = ret + "Jogadores           : " + outs.size() + "\n";
+        ret = ret + "Rebuys              : " + rebuys + "\n";
         ret = ret + "Total Arrecadado    : " + arrecadado + "\n";
         ret = ret + "Premiação 1o        : " + getPremio1() + "\n";
         ret = ret + "Premiação 2o        : " + premio2 + "\n";
@@ -516,7 +535,10 @@ ret =       "===================== Etapa "+ dateFormat.format(date) +"==========
         ret = ret + "*********************************************************\n";
         ret = ret + "Lista de Rebuys     : " + "\n";
         for (int i = 0; i < rebuy.size(); i++) {
-            ret = ret + "   - " + (i+1) +" "+ rebuy.get(i) + "\n";
+        	if(!rebuy.get(i).contains("BREAK")){
+        		ret = ret + "   - " + (r+1) +" "+ rebuy.get(i) + "\n";
+        		r++;
+        	}
         }
         ret = ret + "*********************************************************\n";
         ret = ret + "Lista de Eliminações: " + "\n";
