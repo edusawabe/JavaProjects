@@ -738,6 +738,7 @@ public class PokerTimerFXController implements Initializable{
 			if (seconds == 0) {
 				if (minutes > 0) {
 					minutes--;
+					breakMinutes--;
 					seconds = 59;
 					currentSecond = currentSecond + 1;
 				} else {
@@ -747,10 +748,16 @@ public class PokerTimerFXController implements Initializable{
 
 					if (roundList.get(listRodadas.getSelectionModel().getSelectedIndex()).isBreakRound()) {
 						minutes = Constants.MAX_MINUTES_BREAK;
+						breakMinutes = Constants.MAX_MINUTES_BREAK + (4 * Constants.MAX_MINUTES);
 						seconds = 0;
 					} else {
 						minutes = Constants.MAX_MINUTES;
 						seconds = 0;
+			            int resto  = ((listRodadas.getSelectionModel().getSelectedIndex()+1) % 5);
+			            int qtdeRounds = 0;
+			            qtdeRounds = 5 - resto;
+			            breakMinutes = Constants.MAX_MINUTES * qtdeRounds;
+			            breakSeconds = 0;
 					}
 					maxRound = minutes * Constants.SECONDS_IN_MINUTE;
 					setCurrentRound();
@@ -789,49 +796,32 @@ public class PokerTimerFXController implements Initializable{
 
 	private void setBreakTime() {
         // Time to Break Update
-        if (breakSeconds == 0) {
-            if (breakMinutes > 0) {
-                breakMinutes--;
-                breakSeconds = 59;
-            } else {
-                if ((roundList.get(listRodadas.getSelectionModel().getSelectedIndex()).isBreakRound())) {
-                    breakMinutes = Constants.MAX_MINUTES_BREAK + (4 * Constants.MAX_MINUTES);
-                    breakSeconds = 0;
-                } else {
-                    breakMinutes = 0;
-                    breakSeconds = 0;
-                }
-            }
-        } else {
-            breakSeconds--;
-        }
-
         int tmpHours = breakMinutes / 60;
 
         if (tmpHours > 0) {
             int tmpMinutes = breakMinutes % 60;
             if (tmpMinutes < 10) {
-                if (breakSeconds > 10)
-                    lbProximoBreak.setText("0" + tmpHours + ":0" + tmpMinutes + ":" + breakSeconds);
+                if (seconds > 10)
+                    lbProximoBreak.setText("0" + tmpHours + ":0" + tmpMinutes + ":" + seconds);
                 else
-                	lbProximoBreak.setText("0" + tmpHours + ":0" + tmpMinutes + ":0" + breakSeconds);
+                	lbProximoBreak.setText("0" + tmpHours + ":0" + tmpMinutes + ":0" + seconds);
             } else {
-                if (breakSeconds > 10)
-                	lbProximoBreak.setText("0" + tmpHours + ":" + tmpMinutes + ":" + breakSeconds);
+                if (seconds > 10)
+                	lbProximoBreak.setText("0" + tmpHours + ":" + tmpMinutes + ":" + seconds);
                 else
-                	lbProximoBreak.setText("0" + tmpHours + ":" + tmpMinutes + ":0" + breakSeconds);
+                	lbProximoBreak.setText("0" + tmpHours + ":" + tmpMinutes + ":0" + seconds);
             }
         } else {
             if (breakMinutes < 10) {
-                if (breakSeconds > 10)
-                	lbProximoBreak.setText("0" + breakMinutes + ":" + breakSeconds);
+                if (seconds > 10)
+                	lbProximoBreak.setText("0" + breakMinutes + ":" + seconds);
                 else
-                	lbProximoBreak.setText("0" + breakMinutes + ":0" + breakSeconds);
+                	lbProximoBreak.setText("0" + breakMinutes + ":0" + seconds);
             } else {
-                if (breakSeconds > 10)
-                	lbProximoBreak.setText(breakMinutes + ":" + breakSeconds);
+                if (seconds > 10)
+                	lbProximoBreak.setText(breakMinutes + ":" + seconds);
                 else
-                	lbProximoBreak.setText(breakMinutes + ":0" + breakSeconds);
+                	lbProximoBreak.setText(breakMinutes + ":0" + seconds);
             }
         }
     }
@@ -839,7 +829,8 @@ public class PokerTimerFXController implements Initializable{
 	private void setCurrentRound(){
 		currentRound = listRodadas.getSelectionModel().getSelectedIndex();
 		int round = (currentRound + 1)/5;
-    	if(roundList.get(currentRound).isBreakRound())
+
+		if(roundList.get(currentRound).isBreakRound() && round < 3)
     		oListRebuys.add("============= BREAK " + round + "===============");
 
         if (roundList.get(currentRound).getBigBlind() != 0)
