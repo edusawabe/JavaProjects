@@ -166,6 +166,33 @@ public class PokerTimerFXController implements Initializable{
 	public PokerTimerFXController() {
 
 	}
+
+	@FXML
+	private void abrirSorteio(Event evt){
+		Stage primaryStage = new Stage();
+		SorteioMesasController sorteioMesasController = new SorteioMesasController();
+		sorteioMesasController.setoListJogadores(oListJogadores);
+
+		//obtem Loader
+    	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SorteioMesas.fxml"));
+		try {
+			//carrega o loader
+			Pane myPane = (Pane) fxmlLoader.load();
+
+			// definindo a nova janela
+			Scene scene = new Scene(myPane, 600, 400);
+			primaryStage.setScene(scene);
+			primaryStage.setTitle("Sorteio de Mesas");
+
+			// obtem o controller da nova janela
+			sorteioMesasController = fxmlLoader.<SorteioMesasController> getController();
+			primaryStage.show();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	@FXML
 	private void abrirProjecao(Event evt){
 		configManager.getPlayers();
@@ -684,23 +711,20 @@ public class PokerTimerFXController implements Initializable{
 
         if (roundList.get(listRodadas.getSelectionModel().getSelectedIndex()).isBreakRound()) {
             minutes = Constants.MAX_MINUTES_BREAK;
-        } else {
-            minutes = Constants.MAX_MINUTES;
-        }
-        timerBar.setProgress(0);
-
-        int resto  = ((listRodadas.getSelectionModel().getSelectedIndex()+1) % 5);
-
-        if (resto == 0){
             breakMinutes = Constants.MAX_MINUTES * 4 + Constants.MAX_MINUTES_BREAK;
             breakSeconds = 0;
-        }
-        else{
+        } else {
+            int resto  = ((listRodadas.getSelectionModel().getSelectedIndex()+1) % 5);
+
+        	minutes = Constants.MAX_MINUTES;
             int qtdeRounds = 0;
             qtdeRounds = 5 - resto;
             breakMinutes = Constants.MAX_MINUTES * qtdeRounds;
             breakSeconds = 0;
         }
+        timerBar.setProgress(0);
+
+        int resto  = ((listRodadas.getSelectionModel().getSelectedIndex()+1) % 5);
     }
 
 	private void timerAction() {
