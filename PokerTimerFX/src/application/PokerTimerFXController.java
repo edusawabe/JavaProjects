@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import javax.mail.MessagingException;
@@ -37,6 +38,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.web.WebView;
@@ -112,6 +114,10 @@ public class PokerTimerFXController implements Initializable{
 	@FXML
 	private ListView<String> listFora;
 	@FXML
+	private ListView<String> listMesa1;
+	@FXML
+	private ListView<String> listMesa2;
+	@FXML
 	private Button btAdicionaJogador;
 	@FXML
 	private Button btExcluirJogador;
@@ -135,13 +141,20 @@ public class PokerTimerFXController implements Initializable{
 	private AnchorPane parent;
 	@FXML
 	private HBox painelInferior;
+	@FXML
+	private VBox painelInferiorJogadores;
+	@FXML
+	private HBox hbBotoesJogadores;
 
 	private ConfigManager configManager;
+
 	private ObservableList<String> oListJogadores = FXCollections.observableArrayList();
 	private ObservableList<String> oListRebuys = FXCollections.observableArrayList();
 	private ObservableList<String> oListFora = FXCollections.observableArrayList();
 	private ObservableList<String> oListrRodadas = FXCollections.observableArrayList();
 	private ObservableList<String> oListComboJogador = FXCollections.observableArrayList();
+	private ObservableList<String> oListJogadoresMesa1 = FXCollections.observableArrayList();
+	private ObservableList<String> oListJogadoresMesa2 = FXCollections.observableArrayList();
 
     private boolean paused;
     private boolean play;
@@ -162,9 +175,72 @@ public class PokerTimerFXController implements Initializable{
     private double total4l = 0;
     private double total5l = 0;
     private String currentComboValue = null;
+    private LinkedList<String> llMesa1;
+    private LinkedList<String> llMesa2;
 
 	public PokerTimerFXController() {
 
+	}
+
+	@FXML
+	private void selecaoMesa1(Event evt){
+		listMesa2.getSelectionModel().select(-1);
+		listJogadores.getSelectionModel().select(-1);
+	}
+
+	@FXML
+	private void selecaoMesa2(Event evt){
+		listMesa1.getSelectionModel().select(-1);
+		listJogadores.getSelectionModel().select(-1);
+	}
+
+	@FXML
+	private void selecaojogadores(Event evt){
+		listMesa1.getSelectionModel().select(-1);
+		listMesa2.getSelectionModel().select(-1);
+	}
+
+	@FXML
+	private void sortearMesas(Event evt){
+		Random gerador = new Random();
+		Random geradorMesa = new Random();
+		ObservableList<String> copyList =  FXCollections.observableArrayList(oListJogadores);
+
+		int size = oListJogadores.size();
+		int totalSize = oListJogadores.size();
+		int maxMesa = (totalSize/2) + 1;
+		int numero = gerador.nextInt(size);
+		int mesa = geradorMesa.nextInt(1);
+		//int resto  = (totalSize % 2);
+
+		while (size > 0 ){
+			if (llMesa1.size() < maxMesa && llMesa2.size() < maxMesa) {
+				if ((mesa % 2) == 0)
+					llMesa1.add(copyList.get(numero));
+				else
+					llMesa2.add(copyList.get(numero));
+			} else {
+				if (llMesa1.size() < maxMesa) {
+					llMesa1.add(copyList.get(numero));
+				} else {
+					llMesa2.add(copyList.get(numero));
+				}
+			}
+			copyList.remove(numero);
+			mesa = geradorMesa.nextInt(100);
+			size = copyList.size();
+			if(size > 0)
+				numero = gerador.nextInt(size);
+		}
+		for (int i = 0; i < llMesa1.size(); i++) {
+			oListJogadoresMesa1.add(i, llMesa1.get(i));
+		}
+
+		for (int i = 0; i < llMesa2.size(); i++) {
+			oListJogadoresMesa2.add(i, llMesa2.get(i));
+		}
+		listMesa1.setItems(oListJogadoresMesa1);
+		listMesa2.setItems(oListJogadoresMesa2);
 	}
 
 	@FXML
@@ -460,6 +536,28 @@ public class PokerTimerFXController implements Initializable{
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@FXML
 	private void play(Event evt){
+		int s = painelInferiorJogadores.getChildren().size();
+
+		for (int i = 0; i < s; i++) {
+			if (painelInferiorJogadores.getChildren().get(i).getId() != null) {
+				if (painelInferiorJogadores.getChildren().get(i).getId().equals("painelJogadores")) {
+					painelInferiorJogadores.getChildren().remove(i);
+					break;
+				}
+			}
+		}
+
+		s = painelInferiorJogadores.getChildren().size();
+		for (int i = 0; i < s; i++) {
+			if (painelInferiorJogadores.getChildren().get(i).getId() != null) {
+				if (painelInferiorJogadores.getChildren().get(i).getId().equals("comboJogadores")) {
+					painelInferiorJogadores.getChildren().remove(i);
+					break;
+				}
+			}
+		}
+
+		setRound();
 		playFinish();
 		if(!play){
 			play = true;
@@ -549,11 +647,13 @@ public class PokerTimerFXController implements Initializable{
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Erro");
 			alert.setHeaderText("Selecionar Jogador");
-			alert.setContentText("Favor Selecionar Jogador Eliminado");
+			alert.setContentText("Favor Selecionar Jogador Eliminado na Lista de Inscritos!");
 			alert.show();
 		}
 		else{
 			oListFora.add(oListJogadores.get(i));
+			oListJogadoresMesa1.remove(oListJogadores.get(i));
+			oListJogadoresMesa2.remove(oListJogadores.get(i));
 			oListJogadores.remove(i);
 			atualizarEstatisticas();
 		}
@@ -572,6 +672,10 @@ public class PokerTimerFXController implements Initializable{
 		}
 		else{
 			addJogadorLista(oListFora.get(i), oListJogadores);
+			if(llMesa1.indexOf(oListFora.get(i)) >= 0)
+				retornarJogadorMesa(oListFora.get(i), oListJogadoresMesa1, llMesa1);
+			else
+				retornarJogadorMesa(oListFora.get(i), oListJogadoresMesa2, llMesa2);
 			oListFora.remove(i);
 			atualizarEstatisticas();
 		}
@@ -596,6 +700,24 @@ public class PokerTimerFXController implements Initializable{
 		}
 	}
 
+	private void retornarJogadorMesa(String jogador, ObservableList<String> l, LinkedList<String> lOriginal) {
+		boolean added = false;
+		if(l.size() == 0)
+			l.add(jogador);
+		else{
+			int posOriginal = lOriginal.indexOf(jogador);
+			for (int i = 0; i < l.size(); i++) {
+				if(lOriginal.indexOf(l.get(i)) > posOriginal){
+					l.add(i,jogador);
+					added = true;
+					break;
+				}
+			}
+			if(!added)
+				l.add(jogador);
+		}
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		//ConfigManager obtem a lista de jogadores cadastrados
@@ -609,13 +731,12 @@ public class PokerTimerFXController implements Initializable{
 
 		//Define a lista de rounds do Torneio
 		roundList = new LinkedList<Round>();
-		listJogadores.setItems(oListJogadores);
 		roundManager = new RoundManager();
+		//construindo lista de rounds
 		roundManager.setRoundList(roundList);
 		roundManager.setRoundListValues();
 
-		//listRodadas.setCellFactory(TextFieldListCell.forListView());
-
+		//Definindo CellFactory da Listview das Rodadas
 		listRodadas.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
 			@Override
 			public ListCell<String> call(ListView<String> param) {
@@ -623,6 +744,7 @@ public class PokerTimerFXController implements Initializable{
 			}
 		});
 
+		//Alimentando valores na lista de rodadas
 		for (int i = 0; i < roundList.size(); i++) {
 			oListrRodadas.add(roundList.get(i).getRoundName());
 		}
@@ -637,8 +759,13 @@ public class PokerTimerFXController implements Initializable{
 		//listRodadas.setFocusTraversable(false);
 
 		//Define Demais Listas
+		listJogadores.setItems(oListJogadores);
+		listMesa1.setItems(oListJogadoresMesa1);
+		listMesa2.setItems(oListJogadoresMesa2);
 		listFora.setItems(oListFora);
 		listRebuys.setItems(oListRebuys);
+		llMesa1 = new LinkedList<>();
+		llMesa2 = new LinkedList<>();
 
 		//Inicializa tempos
         breakMinutes = 4 * Constants.MAX_MINUTES;
@@ -651,7 +778,7 @@ public class PokerTimerFXController implements Initializable{
         cbJogador.setPromptText("Jogador");
 	}
 
-    public void setRound(){
+    private void setRound(){
     	if (roundList.get(currentRound).getBigBlind() != 0)
             bigAtual.setText("" + roundList.get(currentRound).getBigBlind());
         else
@@ -723,8 +850,6 @@ public class PokerTimerFXController implements Initializable{
             breakSeconds = 0;
         }
         timerBar.setProgress(0);
-
-        int resto  = ((listRodadas.getSelectionModel().getSelectedIndex()+1) % 5);
     }
 
 	private void timerAction() {

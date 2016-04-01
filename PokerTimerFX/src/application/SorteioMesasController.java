@@ -17,6 +17,8 @@ public class SorteioMesasController implements Initializable{
 	private ListView<String> ltMesa1;
 	@FXML
 	private ListView<String> ltMesa2;
+	@FXML
+	private ListView<String> ltjogadores;
 
 	private ObservableList<String> olQdteMesas = FXCollections.observableArrayList();
 	private ObservableList<String> olMesa1 = FXCollections.observableArrayList();

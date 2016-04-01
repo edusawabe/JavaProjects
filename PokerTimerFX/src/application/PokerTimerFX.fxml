@@ -51,7 +51,7 @@
                               <Font name="System Bold" size="40.0" />
                            </font>
                         </Label>
-                        <Label fx:id="smallAtual" prefHeight="73.0" prefWidth="297.0" styleClass="blindsLabels" stylesheets="@application.css" text="10" GridPane.rowIndex="1">
+                        <Label fx:id="smallAtual" prefHeight="73.0" prefWidth="297.0" styleClass="blindsLabels" stylesheets="@application.css" text="12000" GridPane.rowIndex="1">
                            <font>
                               <Font name="System Bold" size="50.0" />
                            </font>
@@ -178,30 +178,45 @@
             </HBox>
             <HBox prefHeight="430.0" prefWidth="1004.0">
                <children>
-                  <BorderPane prefHeight="180.0" prefWidth="280.0">
-                     <center>
-                        <ListView fx:id="listJogadores" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                           <BorderPane.margin>
-                              <Insets bottom="10.0" right="10.0" />
-                           </BorderPane.margin>
-                        </ListView>
-                     </center>
+                  <BorderPane prefHeight="180.0" prefWidth="700.0">
                      <bottom>
-                        <VBox prefHeight="60.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                        <VBox fx:id="painelInferiorJogadores" prefHeight="10.0" BorderPane.alignment="CENTER">
                            <children>
-                              <ComboBox fx:id="cbJogador" editable="true" prefHeight="50.0" prefWidth="251.0">
+                              <ComboBox id="comboJogadores" fx:id="cbJogador" editable="true" prefHeight="25.0" prefWidth="268.0">
                                  <VBox.margin>
                                     <Insets bottom="10.0" />
                                  </VBox.margin>
                               </ComboBox>
-                              <HBox prefWidth="200.0">
+                              <HBox id="painelJogadores" fx:id="hbBotoesJogadores" prefHeight="100.0" prefWidth="200.0">
                                  <children>
-                                    <Button fx:id="btExcluirJogador" mnemonicParsing="false" onAction="#removerJogador" prefHeight="25.0" prefWidth="112.0" text="Excluir">
+                                    <Button fx:id="btExcluirJogador" mnemonicParsing="false" onAction="#removerJogador" prefHeight="25.0" prefWidth="130.0" text="Excluir">
                                        <HBox.margin>
                                           <Insets right="5.0" />
                                        </HBox.margin>
                                     </Button>
-                                    <Button fx:id="btAdicionaJogador" mnemonicParsing="false" onAction="#addJogador" prefHeight="25.0" prefWidth="136.0" text="Adiciona">
+                                    <Button fx:id="btAdicionaJogador" mnemonicParsing="false" onAction="#addJogador" prefHeight="25.0" prefWidth="130.0" text="Adiciona">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox prefWidth="200.0">
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#sortearMesas" prefWidth="300.0" text="Sortear Mesas">
+                                       <HBox.margin>
+                                          <Insets right="5.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                    <Button mnemonicParsing="false" prefWidth="360.0" text="Trocar Jogador de Mesa">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                    <Button mnemonicParsing="false" prefWidth="380.0" text="Excluir Jogador da Mesa">
                                        <HBox.margin>
                                           <Insets left="5.0" />
                                        </HBox.margin>
@@ -210,17 +225,71 @@
                               </HBox>
                            </children>
                            <BorderPane.margin>
-                              <Insets right="10.0" />
+                              <Insets />
                            </BorderPane.margin>
                         </VBox>
                      </bottom>
                      <top>
-                        <Label prefHeight="17.0" prefWidth="309.0" text="Jogadores:" BorderPane.alignment="CENTER">
+                        <Label prefHeight="20.0" prefWidth="757.0" text="Jogadores:" BorderPane.alignment="CENTER">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
                      </top>
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                     <center>
+                        <HBox prefHeight="600.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <VBox prefHeight="200.0" prefWidth="400.0">
+                                 <children>
+                                    <Label alignment="CENTER" prefWidth="400.0" text="Inscritos">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <ListView fx:id="listJogadores" onMouseClicked="#selecaojogadores">
+                                       <VBox.margin>
+                                          <Insets right="5.0" />
+                                       </VBox.margin>
+                                    </ListView>
+                                 </children>
+                              </VBox>
+                              <VBox prefHeight="200.0" prefWidth="400.0">
+                                 <children>
+                                    <Label alignment="CENTER" prefWidth="400.0" text="Mesa 1">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <ListView fx:id="listMesa1" onMouseClicked="#selecaoMesa1">
+                                       <VBox.margin>
+                                          <Insets left="5.0" right="5.0" />
+                                       </VBox.margin>
+                                    </ListView>
+                                 </children>
+                              </VBox>
+                              <VBox prefHeight="200.0" prefWidth="400.0">
+                                 <children>
+                                    <Label alignment="CENTER" prefWidth="400.0" text="Mesa 2">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <ListView fx:id="listMesa2" onMouseClicked="#selecaoMesa2">
+                                       <VBox.margin>
+                                          <Insets left="5.0" />
+                                       </VBox.margin>
+                                    </ListView>
+                                 </children>
+                              </VBox>
+                           </children>
+                           <BorderPane.margin>
+                              <Insets bottom="10.0" />
+                           </BorderPane.margin>
+                        </HBox>
+                     </center>
                   </BorderPane>
                   <BorderPane prefHeight="200.0" prefWidth="280.0">
                      <HBox.margin>
@@ -417,22 +486,21 @@
                      <bottom>
                         <HBox prefHeight="26.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                            <children>
-                              <Button fx:id="btEnviarResultados" mnemonicParsing="false" onAction="#enviarResultados" prefHeight="25.0" prefWidth="113.0" text="Enviar Resultados">
+                              <Button fx:id="btEnviarResultados" mnemonicParsing="false" onAction="#enviarResultados" prefHeight="25.0" prefWidth="200.0" text="Enviar Resultados">
                                  <HBox.margin>
                                     <Insets right="5.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button fx:id="btRanking" mnemonicParsing="false" onAction="#loadRanking" prefHeight="25.0" prefWidth="70.0" text="Ranking">
+                              <Button fx:id="btRanking" mnemonicParsing="false" onAction="#loadRanking" prefHeight="25.0" prefWidth="200.0" text="Ranking">
                                  <HBox.margin>
                                     <Insets left="5.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button mnemonicParsing="false" onAction="#abrirProjecao" prefHeight="25.0" prefWidth="80.0" text="Projeções">
+                              <Button mnemonicParsing="false" onAction="#abrirProjecao" prefHeight="25.0" prefWidth="200.0" text="Projeções">
                                  <HBox.margin>
-                                    <Insets left="10.0" right="10.0" />
+                                    <Insets left="10.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button mnemonicParsing="false" onAction="#abrirSorteio" prefHeight="25.0" prefWidth="102.0" text="Sortear Mesas" />
                            </children>
                         </HBox>
                      </bottom>
