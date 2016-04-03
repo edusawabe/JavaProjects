@@ -28,6 +28,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -145,6 +146,10 @@ public class PokerTimerFXController implements Initializable{
 	private VBox painelInferiorJogadores;
 	@FXML
 	private HBox hbBotoesJogadores;
+	@FXML
+	private Label lbJogadorSelecionado;
+	@FXML
+	private Button btSortear;
 
 	private ConfigManager configManager;
 
@@ -201,7 +206,50 @@ public class PokerTimerFXController implements Initializable{
 	}
 
 	@FXML
+	private void trocarJogadorMesa(Event evt){
+		if (listMesa1.getSelectionModel().getSelectedIndex() < 0
+				&& listMesa2.getSelectionModel().getSelectedIndex() < 0) {
+
+			Alert alError = new Alert(AlertType.ERROR);
+			alError.setTitle("Selecionar Jogador");
+			alError.setContentText("Por favor selecionar o jogador da troca em uma das Mesas");
+			alError.show();
+		}
+
+		Random gerador = new Random();
+		int maxMesa;
+		int origem = 0, destino = 0;
+		Alert al = new Alert(AlertType.CONFIRMATION);
+
+		if (listMesa1.getSelectionModel().getSelectedIndex() > 0){
+			origem = listMesa1.getSelectionModel().getSelectedIndex();
+			maxMesa = listMesa2.getItems().size();
+			destino = gerador.nextInt(maxMesa);
+
+			al.setTitle("Troca de Mesa");
+			al.setContentText("Confirmar Troca:"
+					+ "\nMesa 1: "
+					+ "\n - " + oListJogadoresMesa1.get(origem)
+					+ "\nMesa 2: "
+					+ "\n - " + oListJogadoresMesa2.get(destino));
+			al.showAndWait();
+			if(al.getResult() == ButtonType.OK){
+				String j1, j2;
+				j1 = oListJogadoresMesa1.get(origem);
+				j2 = oListJogadoresMesa2.get(destino);
+				oListJogadoresMesa1.remove(origem);
+				oListJogadoresMesa2.remove(destino);
+				oListJogadoresMesa2.set(destino, j1);
+				oListJogadoresMesa1.set(origem, j2);
+			}
+
+		}
+		listMesa2.getSelectionModel().select(-1);
+	}
+
+	@FXML
 	private void sortearMesas(Event evt){
+		btSortear.setDisable(true);
 		Random gerador = new Random();
 		Random geradorMesa = new Random();
 		ObservableList<String> copyList =  FXCollections.observableArrayList(oListJogadores);
@@ -776,6 +824,7 @@ public class PokerTimerFXController implements Initializable{
 
         cbJogador.getItems().setAll(oListComboJogador);
         cbJogador.setPromptText("Jogador");
+
 	}
 
     private void setRound(){
@@ -926,27 +975,27 @@ public class PokerTimerFXController implements Initializable{
         if (tmpHours > 0) {
             int tmpMinutes = breakMinutes % 60;
             if (tmpMinutes < 10) {
-                if (seconds > 10)
-                    lbProximoBreak.setText("0" + tmpHours + ":0" + tmpMinutes + ":" + seconds);
+                if (seconds < 10)
+                    lbProximoBreak.setText("0" + tmpHours + ":0" + tmpMinutes + ":0" + seconds);
                 else
-                	lbProximoBreak.setText("0" + tmpHours + ":0" + tmpMinutes + ":0" + seconds);
+                	lbProximoBreak.setText("0" + tmpHours + ":0" + tmpMinutes + ":" + seconds);
             } else {
-                if (seconds > 10)
-                	lbProximoBreak.setText("0" + tmpHours + ":" + tmpMinutes + ":" + seconds);
-                else
+                if (seconds < 10)
                 	lbProximoBreak.setText("0" + tmpHours + ":" + tmpMinutes + ":0" + seconds);
+                else
+                	lbProximoBreak.setText("0" + tmpHours + ":" + tmpMinutes + ":" + seconds);
             }
         } else {
             if (breakMinutes < 10) {
-                if (seconds > 10)
-                	lbProximoBreak.setText("0" + breakMinutes + ":" + seconds);
-                else
+                if (seconds < 10)
                 	lbProximoBreak.setText("0" + breakMinutes + ":0" + seconds);
-            } else {
-                if (seconds > 10)
-                	lbProximoBreak.setText(breakMinutes + ":" + seconds);
                 else
+                	lbProximoBreak.setText("0" + breakMinutes + ":" + seconds);
+            } else {
+                if (seconds < 10)
                 	lbProximoBreak.setText(breakMinutes + ":0" + seconds);
+                else
+                	lbProximoBreak.setText(breakMinutes + ":" + seconds);
             }
         }
     }
@@ -1011,6 +1060,7 @@ public class PokerTimerFXController implements Initializable{
         int totalFora = oListFora.size();
         double totalArrecadado = 0;
 
+        lbJogadorSelecionado.setText(oListJogadores.get(listJogadores.getSelectionModel().getSelectedIndex()));
 
         for (int i = 0; i < oListRebuys.size(); i++) {
         	if (oListRebuys.get(i).contains("==="))
