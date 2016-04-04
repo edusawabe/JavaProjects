@@ -266,7 +266,7 @@
                               </VBox>
                               <VBox prefHeight="200.0" prefWidth="400.0">
                                  <children>
-                                    <Label alignment="CENTER" prefWidth="400.0" text="Mesa 1">
+                                    <Label fx:id="lbMesa1" alignment="CENTER" prefWidth="400.0" text="Mesa 1">
                                        <font>
                                           <Font name="System Bold" size="14.0" />
                                        </font>
@@ -280,7 +280,7 @@
                               </VBox>
                               <VBox prefHeight="200.0" prefWidth="400.0">
                                  <children>
-                                    <Label alignment="CENTER" prefWidth="400.0" text="Mesa 2">
+                                    <Label fx:id="lbMesa2" alignment="CENTER" prefWidth="400.0" text="Mesa 2">
                                        <font>
                                           <Font name="System Bold" size="14.0" />
                                        </font>
