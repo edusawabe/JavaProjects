@@ -716,11 +716,11 @@ public class PokerTimerFXController implements Initializable{
 	@FXML
 	private void removeJogadorTorneio(Event evt){
 		int i = listJogadores.getSelectionModel().getSelectedIndex();
-		int size1, size2, diferenca, posicaoTroca, posicaoEliminacao, mesa;
+		int size1, size2, diferenca, posicaoTroca, posicaoEliminacao, mesa, sorteado, sortedSize;
 		Alert al = new Alert(AlertType.INFORMATION);
 		al.setTitle("Mudar Jogador de Mesa");
 		Random gerador = new Random();
-		String eliminado;
+		String eliminado, jogadorReposicionado;
 
 		if (i < 0){
 			Alert alert = new Alert(AlertType.ERROR);
@@ -730,8 +730,13 @@ public class PokerTimerFXController implements Initializable{
 			alert.show();
 		}
 		else{
+			//nome do jogador eliminado
 			eliminado = oListJogadores.get(i);
+
+			//adiciona na lista de eliminados
 			oListFora.add(oListJogadores.get(i));
+
+			//verifica de qual mesa o jogador esta sendo eliminado e elimina jogador da mesa
 			mesa = 1;
 			posicaoEliminacao = oListJogadoresMesa1.indexOf(eliminado);
 			if (posicaoEliminacao < 0 ) {
@@ -743,36 +748,69 @@ public class PokerTimerFXController implements Initializable{
 			{
 				oListJogadoresMesa1.remove(oListJogadores.get(i));
 			}
+			//elimina jogador da lista de inscritos
 			oListJogadores.remove(i);
+
+			//recalcula tamanho das mesas
 			size1 = oListJogadoresMesa1.size();
 			size2 = oListJogadoresMesa2.size();
-			if(size1 > size2){
+
+			//tratamento para sorteio da mesa final
+			if (oListJogadores.size() == 9){
+				oListJogadoresMesa1.clear();
+				oListJogadoresMesa2.clear();
+				sortedSize = oListJogadoresMesa1.size();
+
+				while(sortedSize != oListJogadores.size()){
+					sorteado = gerador.nextInt(oListJogadores.size());
+					if(oListJogadoresMesa1.indexOf(oListJogadores.get(sorteado)) < 0){
+						oListJogadoresMesa1.add(oListJogadores.get(sorteado));
+						sortedSize = oListJogadoresMesa1.size();
+					}
+				}
+				Alert alMesaFinal = new Alert(AlertType.CONFIRMATION);
+				alMesaFinal.setTitle("Mesa Final");
+				alMesaFinal.setContentText("Numero de Jogadores da Mesa Final Atingido."
+						+ "\nFavor Reposicionar Jogadores Conforme o Novo Sorteio Realizado!");
+				alMesaFinal.showAndWait();
+				return;
+			}
+
+			//verfica se existe necessidade de balancear jogadores
+			if (size1 > size2) {
 				diferenca = size1 - size2;
-				if(diferenca > 1) {
+			} else {
+				diferenca = size2 - size1;
+			}
+			//balanceando jogadores
+			if (diferenca > 1) {
+				//se jogador eliminado é da mesa 2
+				if (mesa == 2) {
+					//obtem jogador da mesa 1 a ser trocado
 					posicaoTroca = gerador.nextInt(size1);
-					al.setContentText("Trocar de Mesa!" + "\n"
-							+ "\n  - Jogador: " + oListJogadoresMesa1.get(posicaoTroca)
-							+ "\nIr para Mesa 2: "
-							+ "\n  - Na posição em que estava: " + eliminado);
+					jogadorReposicionado = oListJogadoresMesa1.get(posicaoTroca);
+
+					al.setContentText("Trocar de Mesa!" + "\n" + "\n  - Jogador: " + jogadorReposicionado
+							+ "\nIr para Mesa 2: " + "\n  - Na posição em que estava: " + eliminado);
+
 					oListJogadoresMesa2.add(posicaoEliminacao, oListJogadoresMesa1.get(posicaoTroca));
 					oListJogadoresMesa1.remove(posicaoTroca);
-					al.show();
-					listMesa2.getSelectionModel().select(posicaoEliminacao);
-				}
-			}
-			else{
-				diferenca = size2 - size1;
-				if(diferenca > 1) {
+					listMesa2.getSelectionModel().select(jogadorReposicionado);
+				} else {
+				//se jogador eliminado é da mesa 1
+					//obtem jogador da mesa 2 a ser trocado
 					posicaoTroca = gerador.nextInt(size2);
-					al.setContentText("Trocar de Mesa!" + "\n"
-							+ "\n  - Jogador: " + oListJogadoresMesa1.get(posicaoTroca)
-							+ "\nIr para Mesa 1: "
-							+ "\n  - Na posição em que estava: " + eliminado);
+					jogadorReposicionado = oListJogadoresMesa2.get(posicaoTroca);
+
+					al.setContentText("Trocar de Mesa!" + "\n" + "\n  - Jogador: " + jogadorReposicionado
+							+ "\nIr para Mesa 1: " + "\n  - Na posição em que estava: " + eliminado);
+
 					oListJogadoresMesa1.add(posicaoEliminacao, oListJogadoresMesa1.get(posicaoTroca));
 					oListJogadoresMesa2.remove(posicaoTroca);
-					al.show();
-					listMesa1.getSelectionModel().select(posicaoEliminacao);
+					listMesa1.getSelectionModel().select(jogadorReposicionado);
 				}
+				al.show();
+
 			}
 			atualizarEstatisticas();
 		}
