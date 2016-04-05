@@ -15,10 +15,12 @@ import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -187,6 +189,7 @@ public class PokerTimerFXController implements Initializable{
     private String currentComboValue = null;
     private LinkedList<String> llMesa1;
     private LinkedList<String> llMesa2;
+    private Task updateGuitask;
 
 	public PokerTimerFXController() {
 
@@ -795,6 +798,7 @@ public class PokerTimerFXController implements Initializable{
 
 					oListJogadoresMesa2.add(posicaoEliminacao, oListJogadoresMesa1.get(posicaoTroca));
 					oListJogadoresMesa1.remove(posicaoTroca);
+					listJogadores.getSelectionModel().select(-1);
 					listMesa2.getSelectionModel().select(jogadorReposicionado);
 				} else {
 				//se jogador eliminado é da mesa 1
@@ -807,6 +811,7 @@ public class PokerTimerFXController implements Initializable{
 
 					oListJogadoresMesa1.add(posicaoEliminacao, oListJogadoresMesa1.get(posicaoTroca));
 					oListJogadoresMesa2.remove(posicaoTroca);
+					listJogadores.getSelectionModel().select(-1);
 					listMesa1.getSelectionModel().select(jogadorReposicionado);
 				}
 				al.show();
@@ -934,6 +939,10 @@ public class PokerTimerFXController implements Initializable{
         cbJogador.getItems().setAll(oListComboJogador);
         cbJogador.setPromptText("Jogador");
 
+        updateGuitask = createWorker();
+        atualizarEstatisticas();
+        //new Thread(updateGuitask).start();
+        //Platform.setImplicitExit(false);
 	}
 
     private void setRound(){
@@ -1274,7 +1283,7 @@ public class PokerTimerFXController implements Initializable{
         player.start();
     }
 
-	 public class MyListCell extends ListCell<String> {
+	public class MyListCell extends ListCell<String> {
 
 	     public MyListCell() {
 	     }
@@ -1295,4 +1304,16 @@ public class PokerTimerFXController implements Initializable{
 	         }
 	     }
 	 }
+
+	private Task createWorker() {
+        return new Task() {
+            @Override
+            protected Object call() throws Exception {
+				while(true){
+					atualizarEstatisticas();
+					Thread.sleep(10);
+				}
+            }
+        };
+    }
 }
