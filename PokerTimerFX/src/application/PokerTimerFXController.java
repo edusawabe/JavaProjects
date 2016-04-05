@@ -153,6 +153,8 @@ public class PokerTimerFXController implements Initializable{
 	@FXML
 	private Button btSortear;
 	@FXML
+	private Button btTrocarMesa;
+	@FXML
 	private Label lbMesa1;
 	@FXML
 	private Label lbMesa2;
@@ -189,7 +191,7 @@ public class PokerTimerFXController implements Initializable{
     private String currentComboValue = null;
     private LinkedList<String> llMesa1;
     private LinkedList<String> llMesa2;
-    private Task updateGuitask;
+    private Timeline updateGuitask;
 
 	public PokerTimerFXController() {
 
@@ -247,6 +249,10 @@ public class PokerTimerFXController implements Initializable{
 				oListJogadoresMesa2.remove(destino);
 				oListJogadoresMesa2.add(destino, j1);
 				oListJogadoresMesa1.add(origem, j2);
+				listMesa1.getSelectionModel().select(origem);
+				listMesa2.getSelectionModel().select(destino);
+				listMesa1.scrollTo(origem);
+				listMesa2.scrollTo(destino);
 			}
 
 		} else {
@@ -408,7 +414,7 @@ public class PokerTimerFXController implements Initializable{
 	 */
 	@FXML
 	private void enviarResultados(Event evt){
-		configManager.updatePlayersResult(oListFora, oListRebuys, total1l, total2l, total3l, total4l, total5l);
+		//configManager.updatePlayersResult(oListFora, oListRebuys, total1l, total2l, total3l, total4l, total5l);
 
 		MailResultContent mailContent = new MailResultContent();
         mailContent.setArrecadado(statsTotalArrecadado.getText());
@@ -444,7 +450,8 @@ public class PokerTimerFXController implements Initializable{
 		alert.setHeight(600);
 		alert.setResizable(true);
 		alert.show();
-        /*try {
+		/*
+        try {
 			sender.sendMail(subject, msgHtml, configManager.getMailList(), true);
 		} catch (MessagingException e) {
 			// TODO Auto-generated catch block
@@ -594,9 +601,18 @@ public class PokerTimerFXController implements Initializable{
 			alert.setHeaderText("Torneio em Andamento");
 			alert.setContentText("Torneio Já Iniciado. Não é mais permitido excluir jogadores.");
 			alert.show();
+			return;
 		} else {
 			//obtem indice do jogador e nome do jogador
 			int i = listJogadores.getSelectionModel().getSelectedIndex();
+			if (i < 0){
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Erro");
+				alert.setHeaderText("Selecionar Jogador");
+				alert.setContentText("Favor Selecionar Jogador a Excluir.");
+				alert.show();
+				return;
+			}
 			jogador = listJogadores.getItems().get(i);
 
 			//remove da lista de jogadores
@@ -613,7 +629,6 @@ public class PokerTimerFXController implements Initializable{
 	@FXML
 	private void play(Event evt){
 		int s = painelInferiorJogadores.getChildren().size();
-
 		for (int i = 0; i < s; i++) {
 			if (painelInferiorJogadores.getChildren().get(i).getId() != null) {
 				if (painelInferiorJogadores.getChildren().get(i).getId().equals("painelJogadores")) {
@@ -633,6 +648,7 @@ public class PokerTimerFXController implements Initializable{
 			}
 		}
 
+		btTrocarMesa.setDisable(true);
 		setRound();
 		playFinish();
 		if(!play){
@@ -779,45 +795,44 @@ public class PokerTimerFXController implements Initializable{
 				return;
 			}
 
-			//verfica se existe necessidade de balancear jogadores
-			if (size1 > size2) {
-				diferenca = size1 - size2;
-			} else {
-				diferenca = size2 - size1;
-			}
-			//balanceando jogadores
-			if (diferenca > 1) {
-				//se jogador eliminado é da mesa 2
-				if (mesa == 2) {
-					//obtem jogador da mesa 1 a ser trocado
-					posicaoTroca = gerador.nextInt(size1);
-					jogadorReposicionado = oListJogadoresMesa1.get(posicaoTroca);
-
-					al.setContentText("Trocar de Mesa!" + "\n" + "\n  - Jogador: " + jogadorReposicionado
-							+ "\nIr para Mesa 2: " + "\n  - Na posição em que estava: " + eliminado);
-
-					oListJogadoresMesa2.add(posicaoEliminacao, oListJogadoresMesa1.get(posicaoTroca));
-					oListJogadoresMesa1.remove(posicaoTroca);
-					listJogadores.getSelectionModel().select(-1);
-					listMesa2.getSelectionModel().select(jogadorReposicionado);
+			// verfica se existe necessidade de balancear jogadores
+			if (size1 > 0 && size2 > 0) {
+				if (size1 > size2) {
+					diferenca = size1 - size2;
 				} else {
-				//se jogador eliminado é da mesa 1
-					//obtem jogador da mesa 2 a ser trocado
-					posicaoTroca = gerador.nextInt(size2);
-					jogadorReposicionado = oListJogadoresMesa2.get(posicaoTroca);
-
-					al.setContentText("Trocar de Mesa!" + "\n" + "\n  - Jogador: " + jogadorReposicionado
-							+ "\nIr para Mesa 1: " + "\n  - Na posição em que estava: " + eliminado);
-
-					oListJogadoresMesa1.add(posicaoEliminacao, oListJogadoresMesa1.get(posicaoTroca));
-					oListJogadoresMesa2.remove(posicaoTroca);
-					listJogadores.getSelectionModel().select(-1);
-					listMesa1.getSelectionModel().select(jogadorReposicionado);
+					diferenca = size2 - size1;
 				}
-				al.show();
+				// balanceando jogadores
+				if (diferenca > 1) {
+					// se jogador eliminado é da mesa 2
+					if (mesa == 2) {
+						// obtem jogador da mesa 1 a ser trocado
+						posicaoTroca = gerador.nextInt(size1);
+						jogadorReposicionado = oListJogadoresMesa1.get(posicaoTroca);
 
+						al.setContentText("Trocar de Mesa!" + "\n" + "\n  - Jogador: " + jogadorReposicionado
+								+ "\nIr para Mesa 2: " + "\n  - Na posição em que estava: " + eliminado);
+
+						oListJogadoresMesa2.add(posicaoEliminacao, oListJogadoresMesa1.get(posicaoTroca));
+						oListJogadoresMesa1.remove(posicaoTroca);
+						listJogadores.getSelectionModel().select(-1);
+						listMesa2.getSelectionModel().select(jogadorReposicionado);
+					} else {
+						// se jogador eliminado é da mesa 1
+						// obtem jogador da mesa 2 a ser trocado
+						posicaoTroca = gerador.nextInt(size2);
+						jogadorReposicionado = oListJogadoresMesa2.get(posicaoTroca);
+
+						al.setContentText("Trocar de Mesa!" + "\n" + "\n  - Jogador: " + jogadorReposicionado
+								+ "\nIr para Mesa 1: " + "\n  - Na posição em que estava: " + eliminado);
+						oListJogadoresMesa1.add(posicaoEliminacao, oListJogadoresMesa2.get(posicaoTroca));
+						oListJogadoresMesa2.remove(posicaoTroca);
+						listJogadores.getSelectionModel().select(-1);
+						listMesa1.getSelectionModel().select(jogadorReposicionado);
+					}
+					al.show();
+				}
 			}
-			atualizarEstatisticas();
 		}
 		listJogadores.requestFocus();
 	}
@@ -939,10 +954,21 @@ public class PokerTimerFXController implements Initializable{
         cbJogador.getItems().setAll(oListComboJogador);
         cbJogador.setPromptText("Jogador");
 
-        updateGuitask = createWorker();
-        atualizarEstatisticas();
         //new Thread(updateGuitask).start();
         //Platform.setImplicitExit(false);
+
+		updateGuitask = new Timeline();
+		updateGuitask.setCycleCount(Timeline.INDEFINITE);
+		updateGuitask.getKeyFrames().add(new KeyFrame(Duration.seconds(0.1), new EventHandler() {
+			// KeyFrame event handler
+			@Override
+			public void handle(Event event) {
+				setRound();
+				atualizarEstatisticas();
+			}
+		}));
+		updateGuitask.playFromStart();
+
 	}
 
     private void setRound(){
@@ -1304,16 +1330,4 @@ public class PokerTimerFXController implements Initializable{
 	         }
 	     }
 	 }
-
-	private Task createWorker() {
-        return new Task() {
-            @Override
-            protected Object call() throws Exception {
-				while(true){
-					atualizarEstatisticas();
-					Thread.sleep(10);
-				}
-            }
-        };
-    }
 }

@@ -213,7 +213,7 @@
                                                 <Insets right="5.0" />
                                              </HBox.margin>
                                           </Button>
-                                          <Button mnemonicParsing="false" onAction="#trocarJogadorMesa" prefWidth="330.0" text="Trocar Jogador de Mesa">
+                                          <Button fx:id="btTrocarMesa" mnemonicParsing="false" onAction="#trocarJogadorMesa" prefWidth="330.0" text="Trocar Jogador de Mesa">
                                              <HBox.margin>
                                                 <Insets left="5.0" />
                                              </HBox.margin>
