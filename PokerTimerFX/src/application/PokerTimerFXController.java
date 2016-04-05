@@ -173,12 +173,10 @@ public class PokerTimerFXController implements Initializable{
     private boolean paused;
     private boolean play;
     private int seconds;
-    private int breakSeconds;
     private int minutes;
     private int breakMinutes;
     private int maxRound;
     private int currentRound;
-    private int totalSeconds;
     private int currentSecond;
     private LinkedList<Round> roundList;
     private RoundManager roundManager;
@@ -188,7 +186,6 @@ public class PokerTimerFXController implements Initializable{
     private double total3l = 0;
     private double total4l = 0;
     private double total5l = 0;
-    private String currentComboValue = null;
     private LinkedList<String> llMesa1;
     private LinkedList<String> llMesa2;
     private Timeline updateGuitask;
@@ -288,7 +285,6 @@ public class PokerTimerFXController implements Initializable{
 		int maxMesa = (totalSize/2) + 1;
 		int numero = gerador.nextInt(size);
 		int mesa = geradorMesa.nextInt(1);
-		//int resto  = (totalSize % 2);
 
 		if ((totalSize % 2) == 0)
 			maxMesa = totalSize/2;
@@ -946,7 +942,6 @@ public class PokerTimerFXController implements Initializable{
 
 		//Inicializa tempos
         breakMinutes = 4 * Constants.MAX_MINUTES;
-        breakSeconds = 0;
         seconds = 0;
         minutes = Constants.MAX_MINUTES;
         maxRound = minutes * Constants.SECONDS_IN_MINUTE;
@@ -1025,14 +1020,11 @@ public class PokerTimerFXController implements Initializable{
     public void restartTimer() {
         seconds = 0;
         currentSecond = 0;
-        breakSeconds = 0;
-
         timerBar.setStyle("-fx-accent: #6699ff");
 
         if (roundList.get(listRodadas.getSelectionModel().getSelectedIndex()).isBreakRound()) {
             minutes = Constants.MAX_MINUTES_BREAK;
             breakMinutes = Constants.MAX_MINUTES * 4 + Constants.MAX_MINUTES_BREAK;
-            breakSeconds = 0;
         } else {
             int resto  = ((listRodadas.getSelectionModel().getSelectedIndex()+1) % 5);
 
@@ -1040,7 +1032,6 @@ public class PokerTimerFXController implements Initializable{
             int qtdeRounds = 0;
             qtdeRounds = 5 - resto;
             breakMinutes = Constants.MAX_MINUTES * qtdeRounds;
-            breakSeconds = 0;
         }
         timerBar.setProgress(0);
     }
@@ -1075,7 +1066,6 @@ public class PokerTimerFXController implements Initializable{
 			            int qtdeRounds = 0;
 			            qtdeRounds = 5 - resto;
 			            breakMinutes = Constants.MAX_MINUTES * qtdeRounds;
-			            breakSeconds = 0;
 					}
 					maxRound = minutes * Constants.SECONDS_IN_MINUTE;
 					setCurrentRound();
