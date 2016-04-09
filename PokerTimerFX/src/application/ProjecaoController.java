@@ -24,6 +24,8 @@ public class ProjecaoController implements Initializable{
 		@FXML
 		private TableColumn cNestaRodada;
 		@FXML
+		private TableColumn cPosRodada;
+		@FXML
 		private TableColumn cProjecao1;
 		@FXML
 		private TableColumn cProjecao2;
@@ -56,6 +58,7 @@ public class ProjecaoController implements Initializable{
 			cJogador.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("jogador"));
 			cAtual.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("atual"));
 			cNestaRodada.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("nestaRodada"));
+			cPosRodada.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("posRodada"));
 			cProjecao1.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao1"));
 			cProjecao2.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao2"));
 			cProjecao3.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao3"));

@@ -6,6 +6,7 @@ public class ProjecaoLine {
 	private SimpleStringProperty jogador;
 	private SimpleStringProperty atual;
 	private SimpleStringProperty nestaRodada;
+	private SimpleStringProperty posRodada;
 	private SimpleStringProperty projecao1;
 	private SimpleStringProperty projecao2;
 	private SimpleStringProperty projecao3;
@@ -16,6 +17,7 @@ public class ProjecaoLine {
 		jogador = new SimpleStringProperty();
 		atual = new SimpleStringProperty();
 		nestaRodada = new SimpleStringProperty();
+		posRodada = new SimpleStringProperty();
 		projecao1 = new SimpleStringProperty();
 		projecao2 = new SimpleStringProperty();
 		projecao3 = new SimpleStringProperty();
@@ -40,6 +42,12 @@ public class ProjecaoLine {
 	}
 	public void setNestaRodada(String nestaRodada) {
 		this.nestaRodada.set(nestaRodada);
+	}
+	public String getPosRodada() {
+		return posRodada.get();
+	}
+	public void setPosRodada(String posRodada) {
+		this.posRodada.set(posRodada);
 	}
 	public String getProjecao1() {
 		return projecao1.get();

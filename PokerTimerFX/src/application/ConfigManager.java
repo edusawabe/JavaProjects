@@ -302,7 +302,6 @@ public class ConfigManager {
 		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(6, 7));
 		if(Constants.CURRENT_MONTH > 0)
 			mesEtapa = Constants.CURRENT_MONTH;
-		String[] configBackup = configFileName.split("\\.t");
         BufferedReader reader;
         int cont = 0;
         int qtdeJogadoresTotal = 0;
@@ -310,6 +309,8 @@ public class ConfigManager {
         LinkedList<Player> lPlayer = new LinkedList<Player>();
         JogadorConfigFile j = new JogadorConfigFile();
         String[] results;
+		double soma = 0.0;
+
         try {
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(confgFile),"Cp1252"));
             String line = reader.readLine();
@@ -404,25 +405,33 @@ public class ConfigManager {
 									switch (posAtual) {
 									case 1:
 										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total1l));
+										soma = getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total1l);
 										break;
 									case 2:
 										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total2l));
+										soma = getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total2l);
 										break;
 									case 3:
 										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total3l));
+										soma = getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total3l);
 										break;
 									case 4:
 										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total4l));
+										soma = getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total4l);
 										break;
 									case 5:
 										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total5l));
+										soma = getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total5l);
 										break;
 									default:
 										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, 0));
+										soma = getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, 0);
 										break;
 									}
 									results[mesEtapa -1] = r.getResultLine();
 								}
+								soma = soma + p.getPontuacaoTotal();
+								pl.setPosRodada(""+Util.completeZerosDouble(Util.arredondar(soma),3));
 								projecaoList.add(pl);
 							}
 							else

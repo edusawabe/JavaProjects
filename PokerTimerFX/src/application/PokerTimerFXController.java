@@ -11,16 +11,10 @@ import java.util.ResourceBundle;
 
 import javax.mail.MessagingException;
 
-import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -37,7 +31,6 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -58,6 +51,7 @@ import util.Constants;
 import util.MailResultContent;
 import util.MailSender;
 import util.Mp3Player;
+import util.Util;
 
 public class PokerTimerFXController implements Initializable{
 	@FXML
@@ -383,6 +377,7 @@ public class PokerTimerFXController implements Initializable{
 			primaryStage.setTitle("Projeções");
 
 			lprojecaoLine = configManager.projetarResultado(oListRebuys, oListFora, oListFora.size() + oListJogadores.size(), total1l, total2l, total3l, total4l, total5l);
+			lprojecaoLine = ordenarProjecaoRodada(lprojecaoLine);
 
 			// obtem o controller da nova janela
 			projecaoController = fxmlLoader.<ProjecaoController> getController();
@@ -475,7 +470,7 @@ public class PokerTimerFXController implements Initializable{
 			for (int i = 0; i < lPlayer.size(); i++) {
 				Player p = lPlayer.get(i);
 				p.updatePontuacaoTotal();
-				if(lOrderedPlayer.isEmpty())
+				if (lOrderedPlayer.isEmpty())
 					lOrderedPlayer.add(p);
 				else {
 					for (int j = 0; j < lOrderedPlayer.size(); j++) {
@@ -491,11 +486,12 @@ public class PokerTimerFXController implements Initializable{
 								lOrderedPlayer.add(j, p);
 								break;
 							}
-							if(lOrderedPlayer.get(j).getPontuacaoTotal() > p.getPontuacaoTotal() && j == (lOrderedPlayer.size() - 1))
-								lOrderedPlayer.add((lOrderedPlayer.size()-1), p);
-
+							if (lOrderedPlayer.get(j).getPontuacaoTotal() > p.getPontuacaoTotal()
+									&& j == (lOrderedPlayer.size() - 1)) {
+								lOrderedPlayer.add((lOrderedPlayer.size() - 1), p);
+								break;
+							}
 						}
-
 					}
 				}
 			}
@@ -679,7 +675,15 @@ public class PokerTimerFXController implements Initializable{
 			listRodadas.getSelectionModel().select(iRodada-1);
 		else
 			listRodadas.getSelectionModel().select(0);
+		iRodada = listRodadas.getSelectionModel().getSelectedIndex();
 		setCurrentRound();
+		if (iRodada > Constants.MAX_ROUND_REBUY) {
+			btAdicionaRebuy.setDisable(true);
+			btExcluirRebuy.setDisable(true);
+		} else {
+			btAdicionaRebuy.setDisable(false);
+			btExcluirRebuy.setDisable(false);
+		}
 		restartTimer();
 	}
 
@@ -690,7 +694,15 @@ public class PokerTimerFXController implements Initializable{
 			listRodadas.getSelectionModel().select(iRodada+1);
 		else
 			listRodadas.getSelectionModel().select(Constants.MAX_ROUNDS);
+		iRodada = listRodadas.getSelectionModel().getSelectedIndex();
 		setCurrentRound();
+		if (iRodada >= Constants.MAX_ROUND_REBUY) {
+			btAdicionaRebuy.setDisable(true);
+			btExcluirRebuy.setDisable(true);
+		} else {
+			btAdicionaRebuy.setDisable(false);
+			btExcluirRebuy.setDisable(false);
+		}
 		restartTimer();
 	}
 
@@ -771,7 +783,7 @@ public class PokerTimerFXController implements Initializable{
 			size2 = oListJogadoresMesa2.size();
 
 			//tratamento para sorteio da mesa final
-			if (oListJogadores.size() == 9){
+			if (oListJogadores.size() == Constants.MAX_PLAYERS_FINAL_TABLE){
 				oListJogadoresMesa1.clear();
 				oListJogadoresMesa2.clear();
 				sortedSize = oListJogadoresMesa1.size();
@@ -1286,6 +1298,49 @@ public class PokerTimerFXController implements Initializable{
         if (totalJogando > 0)
         	statsMedia.setText("" + (((totalJogadores + totalRebuy) * 3000)/totalJogando));
     }
+
+	private ObservableList<ProjecaoLine> ordenarProjecaoRodada(ObservableList<ProjecaoLine> l) {
+		LinkedList<ProjecaoLine> lOrdered = new LinkedList<ProjecaoLine>();
+		Double d1 = new Double(0.0);
+		Double d2 = new Double(0.0);
+
+		// prepara os dados do jogador e rodadas
+		for (int i = 0; i < l.size(); i++) {
+			ProjecaoLine p = l.get(i);
+
+			if (lOrdered.isEmpty())
+				lOrdered.add(p);
+			else {
+				for (int j = 0; j < lOrdered.size(); j++) {
+					d1 = d1.parseDouble(lOrdered.get(j).getPosRodada());
+					d2 = d2.parseDouble(p.getPosRodada());
+					if (d2.equals(new Double(0.0))) {
+						lOrdered.add(p);
+						break;
+					}
+					if (d2 >= d1) {
+						lOrdered.add(j, p);
+						break;
+					} else {
+						if (d2 < 0 && d1.equals(new Double(0.0))) {
+							lOrdered.add(j, p);
+							break;
+						}
+						if (d1 > d2 && j == (lOrdered.size() - 1)) {
+							lOrdered.add(p);
+							break;
+						}
+					}
+				}
+			}
+		}
+		l.clear();
+		for (int i = 0; i < lOrdered.size(); i++) {
+			lOrdered.get(i).setPosRodada(Util.completeZeros(i+1, 2) + "º/" + lOrdered.get(i).getPosRodada());
+			l.add(lOrdered.get(i));
+		}
+		return l;
+	}
 
     public void playCountdown() {
         Mp3Player player;
