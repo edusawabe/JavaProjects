@@ -994,10 +994,14 @@ public class PokerTimerFXController implements Initializable{
             valorAnteAtual.setText("" + roundList.get(currentRound).getAnte());
         }
         else
-            if (roundList.get(currentRound).getBigBlind() != 0)
-            	lbAnteAtual.setText("  ");
-            else
+            if (roundList.get(currentRound).isBreakRound()){
+            	lbAnteAtual.setText("");
             	valorAnteAtual.setText("BREAK");
+            	}
+            else{
+            	valorAnteAtual.setText("");
+            	lbAnteAtual.setText("Ante:");
+            }
 
         if (currentRound < Constants.MAX_ROUNDS){
             if (roundList.get(currentRound+1).getBigBlind() != 0)
@@ -1015,15 +1019,20 @@ public class PokerTimerFXController implements Initializable{
                 valorAnteSeguinte.setText("" + roundList.get(currentRound+1).getAnte());
             }
             else
-                if (roundList.get(currentRound+1).getBigBlind() != 0)
-                	lbAnteSeguinte.setText("  ");
-                else
-                	valorAnteAtual.setText("BREAK");
+                if (roundList.get(currentRound+1).isBreakRound()){
+                	lbAnteSeguinte.setText("");
+                	valorAnteSeguinte.setText("BREAK");
+                	}
+                else{
+                	lbAnteSeguinte.setText("Ante:");
+                	valorAnteAtual.setText("");
+                	}
         }
         else{
         	bigSeguinte.setText("");
         	smallSeguinte.setText("");
-        	lbAnteSeguinte.setText("BREAK");
+        	lbAnteSeguinte.setText(" ");
+        	valorAnteSeguinte.setText("BREAK");
         }
         listRodadas.getFocusModel().focus(currentRound);
         listRodadas.scrollTo(currentRound);
@@ -1168,8 +1177,10 @@ public class PokerTimerFXController implements Initializable{
         else
             if (roundList.get(currentRound).getBigBlind() != 0)
             	lbAnteAtual.setText("  ");
-            else
-            	lbAnteAtual.setText("BREAK");
+            else{
+            	lbAnteAtual.setText(" ");
+            	valorAnteAtual.setText("BREAK");
+            	}
 
         if (currentRound < Constants.MAX_ROUNDS){
             if (roundList.get(currentRound+1).getBigBlind() != 0)
@@ -1182,18 +1193,19 @@ public class PokerTimerFXController implements Initializable{
             else
             	smallSeguinte.setText("");
 
-            if (roundList.get(currentRound+1).getAnte()!= 0)
-                lbAnteSeguinte.setText("" + roundList.get(currentRound+1).getAnte());
-            else
-                if (roundList.get(currentRound+1).getBigBlind() != 0)
-                	lbAnteSeguinte.setText("  ");
-                else
-                	lbAnteSeguinte.setText("BREAK");
-        }
-        else{
+			if (roundList.get(currentRound + 1).getAnte() != 0)
+				lbAnteSeguinte.setText("" + roundList.get(currentRound + 1).getAnte());
+			else if (roundList.get(currentRound + 1).getBigBlind() != 0)
+				lbAnteSeguinte.setText("  ");
+			else {
+				lbAnteSeguinte.setText(" ");
+				valorAnteSeguinte.setText("BREAK");
+			}
+		}        else{
             bigSeguinte.setText("");
             smallSeguinte.setText("");
-            lbAnteSeguinte.setText("BREAK");
+            lbAnteSeguinte.setText(" ");
+            valorAnteSeguinte.setText("BREAK");
         }
         listRodadas.getFocusModel().focus(currentRound);
         listRodadas.scrollTo(currentRound);
