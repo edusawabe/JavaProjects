@@ -1160,7 +1160,7 @@ public class PokerTimerFXController implements Initializable{
 		int round = (currentRound + 1)/5;
 
 		if(roundList.get(currentRound).isBreakRound() && round < 3)
-    		oListRebuys.add("============= BREAK " + round + "===============");
+    		oListRebuys.add("========= BREAK " + round + "===========");
 
         if (roundList.get(currentRound).getBigBlind() != 0)
             bigAtual.setText("" + roundList.get(currentRound).getBigBlind());
