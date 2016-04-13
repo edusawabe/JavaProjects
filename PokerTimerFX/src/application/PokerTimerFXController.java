@@ -26,6 +26,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -795,11 +796,19 @@ public class PokerTimerFXController implements Initializable{
 						sortedSize = oListJogadoresMesa1.size();
 					}
 				}
-				Alert alMesaFinal = new Alert(AlertType.CONFIRMATION);
+				Alert alMesaFinal = new Alert(AlertType.INFORMATION);
 				alMesaFinal.setTitle("Mesa Final");
 				alMesaFinal.setContentText("Numero de Jogadores da Mesa Final Atingido."
 						+ "\nFavor Reposicionar Jogadores Conforme o Novo Sorteio Realizado!");
-				alMesaFinal.showAndWait();
+				DialogPane dialogPane = alMesaFinal.getDialogPane();
+				dialogPane.getStylesheets().add(
+				   getClass().getResource("dialog.css").toExternalForm());
+				dialogPane.getStyleClass().add("myDialog");
+				dialogPane.setPrefSize(600, 400);
+				alMesaFinal.setResizable(true);
+				alMesaFinal.setWidth(600);
+				alMesaFinal.setHeight(400);
+				alMesaFinal.show();
 				return;
 			}
 
@@ -818,8 +827,8 @@ public class PokerTimerFXController implements Initializable{
 						posicaoTroca = gerador.nextInt(size1);
 						jogadorReposicionado = oListJogadoresMesa1.get(posicaoTroca);
 
-						al.setContentText("Trocar de Mesa!" + "\n" + "\n  - Jogador: " + jogadorReposicionado
-								+ "\nIr para Mesa 2: " + "\n  - Na posição em que estava: " + eliminado);
+						al.setContentText("Trocar de Mesa!" + "\n" + " - Jogador:\n   " + jogadorReposicionado
+								+ "\nIr para Mesa 2: " + "\n  - Na posição em que estava:\n  " + eliminado);
 
 						oListJogadoresMesa2.add(posicaoEliminacao, oListJogadoresMesa1.get(posicaoTroca));
 						oListJogadoresMesa1.remove(posicaoTroca);
@@ -831,13 +840,21 @@ public class PokerTimerFXController implements Initializable{
 						posicaoTroca = gerador.nextInt(size2);
 						jogadorReposicionado = oListJogadoresMesa2.get(posicaoTroca);
 
-						al.setContentText("Trocar de Mesa!" + "\n" + "\n  - Jogador: " + jogadorReposicionado
-								+ "\nIr para Mesa 1: " + "\n  - Na posição em que estava: " + eliminado);
+						al.setContentText("Trocar de Mesa!" + "\n" + " - Jogador:\n   " + jogadorReposicionado
+								+ "\nIr para Mesa 1: " + "\n  - Na posição em que estava:\n  " + eliminado);
 						oListJogadoresMesa1.add(posicaoEliminacao, oListJogadoresMesa2.get(posicaoTroca));
 						oListJogadoresMesa2.remove(posicaoTroca);
 						listJogadores.getSelectionModel().select(-1);
 						listMesa1.getSelectionModel().select(jogadorReposicionado);
 					}
+					DialogPane dialogPane = al.getDialogPane();
+					dialogPane.getStylesheets().add(
+					   getClass().getResource("dialog.css").toExternalForm());
+					dialogPane.getStyleClass().add("myDialog");
+					dialogPane.setPrefSize(600, 500);
+					al.setResizable(true);
+					al.setWidth(600);
+					al.setHeight(500);
 					al.show();
 				}
 			}
