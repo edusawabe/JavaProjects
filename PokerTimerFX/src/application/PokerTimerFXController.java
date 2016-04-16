@@ -406,7 +406,7 @@ public class PokerTimerFXController implements Initializable{
 	 */
 	@FXML
 	private void enviarResultados(Event evt){
-		//configManager.updatePlayersResult(oListFora, oListRebuys, total1l, total2l, total3l, total4l, total5l);
+		configManager.updatePlayersResult(oListFora, oListRebuys, total1l, total2l, total3l, total4l, total5l);
 
 		MailResultContent mailContent = new MailResultContent();
         mailContent.setArrecadado(statsTotalArrecadado.getText());

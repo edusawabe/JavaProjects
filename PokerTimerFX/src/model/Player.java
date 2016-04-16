@@ -82,34 +82,32 @@ public class Player {
 		LinkedList<Double> resultadosEtapas = new LinkedList<Double>();
 		Date date = new Date();
 		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
-		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(6, 7));
+		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(3, 5));
+		boolean added;
 
 		for (int i = 0; i < resultados.size(); i++) {
+			added = false;
 			if (resultadosEtapas.isEmpty()) {
-				if(!resultados.get(i).getColocacao().equals("0") && !resultados.get(i).getColocacao().equals("00")){
-					resultadosEtapas.add(new Double(resultados.get(i).getPontuacaoEtapa()));
-				}
-			}
-			else
-			{
-				if(!resultados.get(i).getColocacao().equals("0") && !resultados.get(i).getColocacao().equals("00")){
-					for (int j = 0; j < resultadosEtapas.size(); j++) {
-						if(resultadosEtapas.get(j).compareTo(new Double(resultados.get(i).getPontuacaoEtapa())) >= 0){
-							resultadosEtapas.add(j, new Double(resultados.get(i).getPontuacaoEtapa()));
-							break;
-						}
+				resultadosEtapas.add(new Double(resultados.get(i).getPontuacaoEtapa()));
+			} else {
+				for (int j = 0; j < resultadosEtapas.size(); j++) {
+					if (resultadosEtapas.get(j).compareTo(new Double(resultados.get(i).getPontuacaoEtapa())) >= 0) {
+						resultadosEtapas.add(j, new Double(resultados.get(i).getPontuacaoEtapa()));
+						added = true;
+						break;
 					}
 				}
+				if (!added)
+					resultadosEtapas.add(new Double(resultados.get(i).getPontuacaoEtapa()));
 			}
 			pontuacaoTotal = pontuacaoTotal + resultados.get(i).getPontuacaoEtapa();
 		}
 
-		if(mesEtapa > 4){
+		if (mesEtapa >= 4) {
 			pontuacaoTotal = pontuacaoTotal - resultadosEtapas.get(0);
 			pontuacaoTotal = pontuacaoTotal - resultadosEtapas.get(1);
-		}
-		else {
-			if(mesEtapa == 3){
+		} else {
+			if (mesEtapa == 3) {
 				pontuacaoTotal = pontuacaoTotal - resultadosEtapas.get(0);
 			}
 		}
