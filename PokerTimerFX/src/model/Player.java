@@ -20,6 +20,7 @@ public class Player {
     private ArrayList<ResultadoRodada> resultados;
     private double pontuacaoTotal;
     private int posicaoAtual;
+    private boolean played;
 
     public Player() {
     	resultados = new ArrayList<ResultadoRodada>();
@@ -130,5 +131,13 @@ public class Player {
 		resumo.setTotalGanho(totalGanho);
 		resumo.setTotalGasto(totalGasto);
 		return resumo;
+	}
+
+	public boolean isPlayed() {
+		return played;
+	}
+
+	public void setPlayed(boolean played) {
+		this.played = played;
 	}
 }

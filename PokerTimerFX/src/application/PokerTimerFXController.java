@@ -641,9 +641,8 @@ public class PokerTimerFXController implements Initializable{
 			}
 		}
 
-		btTrocarMesa.setDisable(true);
 		setRound();
-		playFinish();
+		playMario();
 		if(!play){
 			play = true;
 			timeLine = new Timeline();
@@ -709,6 +708,7 @@ public class PokerTimerFXController implements Initializable{
 
 	@FXML
 	private void adicionaRebuy(Event evt){
+		playRebuy();
 		int i = listJogadores.getSelectionModel().getSelectedIndex();
 		if (i < 0){
 			Alert alert = new Alert(AlertType.ERROR);
@@ -743,6 +743,7 @@ public class PokerTimerFXController implements Initializable{
 
 	@FXML
 	private void removeJogadorTorneio(Event evt){
+		playElimina();
 		int i = listJogadores.getSelectionModel().getSelectedIndex();
 		int size1, size2, diferenca, posicaoTroca, posicaoEliminacao, mesa, sorteado, sortedSize;
 		Alert al = new Alert(AlertType.INFORMATION);
@@ -925,10 +926,13 @@ public class PokerTimerFXController implements Initializable{
 		//ConfigManager obtem a lista de jogadores cadastrados
 		configManager = new ConfigManager();
 		configManager.setConfigFileName("./config.txt");
-		configManager.readFile(listJogadores);
+		configManager.readFile();
 		LinkedList<Player> lp = configManager.getListPlayer();
 		for (int i = 0; i < lp.size(); i++) {
-			addJogadorLista(lp.get(i).getPlayerName(),oListJogadores);
+			if(lp.get(i).isPlayed())
+				addJogadorLista(lp.get(i).getPlayerName(),oListJogadores);
+			else
+				oListComboJogador.add(lp.get(i).getPlayerName());
 		}
 
 		//Define a lista de rounds do Torneio
@@ -996,6 +1000,7 @@ public class PokerTimerFXController implements Initializable{
 	}
 
     private void setRound(){
+
     	if (roundList.get(currentRound).getBigBlind() != 0)
             bigAtual.setText("" + roundList.get(currentRound).getBigBlind());
         else
@@ -1374,6 +1379,24 @@ public class PokerTimerFXController implements Initializable{
     public void playCountdown() {
         Mp3Player player;
         player = new Mp3Player(PokerTimerFXController.class.getResource("gate.wav"));
+        player.start();
+    }
+
+    public void playRebuy() {
+        Mp3Player player;
+        player = new Mp3Player(PokerTimerFXController.class.getResource("PowerUp.wav"));
+        player.start();
+    }
+
+    public void playElimina() {
+        Mp3Player player;
+        player = new Mp3Player(PokerTimerFXController.class.getResource("SuperMario3-Die.wav"));
+        player.start();
+    }
+
+    public void playMario() {
+        Mp3Player player;
+        player = new Mp3Player(PokerTimerFXController.class.getResource("MarioRiff.wav"));
         player.start();
     }
 

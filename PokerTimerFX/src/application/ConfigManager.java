@@ -47,8 +47,9 @@ public class ConfigManager {
 		this.listPlayer = listPlayer;
 	}
 
-	public void readFile(ListView<String> jltJogando){
-        File confgFile  = new File(configFileName);
+	//public void readFile(ListView<String> jltJogando){
+	public void readFile(){
+		File confgFile  = new File(configFileName);
         BufferedReader reader;
         String[] results;
         listPlayer = new LinkedList<>();
@@ -64,14 +65,17 @@ public class ConfigManager {
                     JogadorConfigFile j = new JogadorConfigFile();
                     j.parseFileLine(line);
                     Player p = new Player();
+                    p.setPlayed(false);
                     p.setPlayerName(j.getNome());
                     p.setPlayerMail(j.getEmail());
                     results = j.getResults();
                     for (int i = 0; i < results.length; i++) {
                     	p.getResultados().add(new ResultadoRodada(results[i]));
+                    	if(!(p.getResultados().get(i).getColocacao().equals("00")) && !(p.getResultados().get(i).getColocacao().equals("0")))
+                    			p.setPlayed(true);
 					}
                     listPlayer.add(p);
-                    ((ObservableList<String>) jltJogando.getItems()).add(p.getPlayerName());
+                    //((ObservableList<String>) jltJogando.getItems()).add(p.getPlayerName());
                     line = reader.readLine();
                     if (line == null)
                         break;
