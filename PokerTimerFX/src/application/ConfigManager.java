@@ -513,7 +513,7 @@ public class ConfigManager {
 		double resultado = 0;
 		if (pos > 0){
 			resultado = ((3 * qtdJogadores) - (3 * (pos - 1)));
-			if (pos < 9)
+			if (pos <= Constants.MAX_PLAYERS_FINAL_TABLE)
 				resultado = resultado + 20.00;
 			resultado = resultado + (premio * 0.6);
 			resultado = resultado + (rebuys * (-15.00));
