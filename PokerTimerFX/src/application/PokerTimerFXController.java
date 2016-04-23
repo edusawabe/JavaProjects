@@ -708,7 +708,7 @@ public class PokerTimerFXController implements Initializable{
 
 	@FXML
 	private void adicionaRebuy(Event evt){
-		playRebuy();
+
 		int i = listJogadores.getSelectionModel().getSelectedIndex();
 		if (i < 0){
 			Alert alert = new Alert(AlertType.ERROR);
@@ -720,6 +720,7 @@ public class PokerTimerFXController implements Initializable{
 		else{
 			oListRebuys.add(oListJogadores.get(i));
 			atualizarEstatisticas();
+			playRebuy();
 		}
 		listJogadores.requestFocus();
 	}
@@ -737,13 +738,14 @@ public class PokerTimerFXController implements Initializable{
 		else{
 			oListRebuys.remove(i);
 			atualizarEstatisticas();
+			playCancelRebuy();
 		}
 		listJogadores.requestFocus();
 	}
 
 	@FXML
 	private void removeJogadorTorneio(Event evt){
-		playElimina();
+
 		int i = listJogadores.getSelectionModel().getSelectedIndex();
 		int size1, size2, diferenca, posicaoTroca, posicaoEliminacao, mesa, sorteado, sortedSize;
 		Alert al = new Alert(AlertType.INFORMATION);
@@ -759,6 +761,13 @@ public class PokerTimerFXController implements Initializable{
 			alert.show();
 		}
 		else{
+			if(oListJogadores.size() == 2)
+				playLastPlayer();
+			else
+				if(oListJogadores.size() == 1)
+					playFinishTournament();
+				else
+					playElimina();
 			//nome do jogador eliminado
 			eliminado = oListJogadores.get(i);
 
@@ -874,6 +883,7 @@ public class PokerTimerFXController implements Initializable{
 			alert.show();
 		}
 		else{
+			playCancelElimina();
 			addJogadorLista(oListFora.get(i), oListJogadores);
 			if(llMesa1.indexOf(oListFora.get(i)) >= 0)
 				retornarJogadorMesa(oListFora.get(i), oListJogadoresMesa1, llMesa1);
@@ -1384,13 +1394,39 @@ public class PokerTimerFXController implements Initializable{
 
     public void playRebuy() {
         Mp3Player player;
+//        player = new Mp3Player(PokerTimerFXController.class.getResource("Death.wav"));
+//        player.start();
         player = new Mp3Player(PokerTimerFXController.class.getResource("PowerUp.wav"));
+        player.start();
+    }
+
+    public void playLastPlayer() {
+        Mp3Player player;
+        player = new Mp3Player(PokerTimerFXController.class.getResource("DefeatBowser.wav"));
+        player.start();
+    }
+
+    public void playCancelRebuy() {
+        Mp3Player player;
+        player = new Mp3Player(PokerTimerFXController.class.getResource("Coin.wav"));
+        player.start();
+    }
+
+    public void playCancelElimina() {
+        Mp3Player player;
+        player = new Mp3Player(PokerTimerFXController.class.getResource("1up.wav"));
         player.start();
     }
 
     public void playElimina() {
         Mp3Player player;
-        player = new Mp3Player(PokerTimerFXController.class.getResource("SuperMario3-Die.wav"));
+        player = new Mp3Player(PokerTimerFXController.class.getResource("GameOver.wav"));
+        player.start();
+    }
+
+    public void playFinishTournament() {
+        Mp3Player player;
+        player = new Mp3Player(PokerTimerFXController.class.getResource("WinStage.wav"));
         player.start();
     }
 
