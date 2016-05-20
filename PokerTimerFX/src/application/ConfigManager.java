@@ -96,6 +96,8 @@ public class ConfigManager {
         BufferedReader reader;
         String[] results;
         listPlayer = new LinkedList<Player>();
+        int[] lQtdeJogadoresRodada = new int[12];
+
         try {
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(confgFile),"Cp1252"));
             String line = reader.readLine();
@@ -113,6 +115,8 @@ public class ConfigManager {
                     results = j.getResults();
                     for (int i = 0; i < results.length; i++) {
                     	p.getResultados().add(new ResultadoRodada(results[i]));
+                    	if(!(p.getResultados().get(i).getColocacao().equals("0") || p.getResultados().get(i).getColocacao().equals("00")))
+                    		lQtdeJogadoresRodada[i]++;
 					}
                     listPlayer.add(p);
                     line = reader.readLine();
@@ -120,9 +124,16 @@ public class ConfigManager {
                         break;
                 }
                 reader.close();
+                for (int i = 0; i < listPlayer.size(); i++) {
+                	for (int j = 0; j < lQtdeJogadoresRodada.length; j++) {
+                		listPlayer.get(i).getResultados().get(j).setQtdeJogadores(lQtdeJogadoresRodada[j]);
+					}
+                	listPlayer.get(i).updatePontuacaoTotal();
+				}
                 return;
             }
             reader.close();
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -509,7 +520,7 @@ public class ConfigManager {
 			C: Cada um dos 8 jogadores da mesa final ganha 20 pontos
 			D: Cada Rebuy realizado vale -15 pontos
 	 */
-	private double getPontuacaoJogadorEtapa(int qtdJogadores, int rebuys, int pos, double premio){
+	public double getPontuacaoJogadorEtapa(int qtdJogadores, int rebuys, int pos, double premio){
 		double resultado = 0;
 		if (pos > 0){
 			resultado = ((3 * qtdJogadores) - (3 * (pos - 1)));
