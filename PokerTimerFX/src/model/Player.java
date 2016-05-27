@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 
+import application.ConfigManager;
+
 /**
  *
  * @author eduardo.sawabe
@@ -89,7 +91,8 @@ public class Player {
 		for (int i = 0; i < resultados.size(); i++) {
 			added = false;
 			if (resultadosEtapas.isEmpty()) {
-				resultadosEtapas.add(new Double(resultados.get(i).getPontuacaoEtapa()));
+				ConfigManager cfg = new ConfigManager();
+				resultadosEtapas.add(cfg.getPontuacaoJogadorEtapa(resultados.get(i)));
 			} else {
 				for (int j = 0; j < resultadosEtapas.size(); j++) {
 					if (resultadosEtapas.get(j).compareTo(new Double(resultados.get(i).getPontuacaoEtapa())) >= 0) {

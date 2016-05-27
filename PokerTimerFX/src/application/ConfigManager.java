@@ -13,6 +13,8 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -528,7 +530,35 @@ public class ConfigManager {
 			resultado = resultado + (premio * 0.6);
 			resultado = resultado + (rebuys * (-15.00));
 		}
+
+		BigDecimal bd = new BigDecimal(resultado);
+	    bd = bd.setScale(2, RoundingMode.HALF_UP);
+	    resultado = bd.doubleValue();
+
 		return resultado;
+	}
+
+	/*
+	 * Pontos = A + B + C + D
+			A: Pontos pela posição inversa:
+				( 3 * qtde de jogadores ) – ( 3 * (posição-1) )
+			B: Pontos pelo prêmio recebido
+				( 0,6 * prêmio recebido em dinheiro )
+			C: Cada um dos 8 jogadores da mesa final ganha 20 pontos
+			D: Cada Rebuy realizado vale -15 pontos
+	 */
+	public double getPontuacaoJogadorEtapa(ResultadoRodada r){
+		int qtdJogadores;
+		int rebuys;
+		int pos;
+		double premio;
+
+		pos = Integer.parseInt(r.getColocacao());
+		qtdJogadores = r.getQtdeJogadores();
+		rebuys = r.getRebuys();
+		premio = r.getPremiacao();
+
+		return getPontuacaoJogadorEtapa(qtdJogadores, rebuys, pos, premio);
 	}
 
 	public String getMailList(){
