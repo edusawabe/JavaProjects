@@ -8,9 +8,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.ResourceBundle;
-
-import javax.mail.MessagingException;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -568,7 +565,7 @@ public class PokerTimerFXController implements Initializable{
 			}
 
 			//Adiciona jogador no arquivo caso não exista
-			configManager.addPlayer(cbJogador.getSelectionModel().getSelectedItem());
+			configManager.addPlayer(cbJogador.editorProperty().get().getText());
 
 			//Se existe, remove jogador do combo e adiociona na lista de jogadores
 			//Senão apenas adiciona na lista de jogadores
@@ -614,7 +611,7 @@ public class PokerTimerFXController implements Initializable{
 
 			//Adiciona na lista de jogadores do Combo ordenadamente
 			addJogadorLista(jogador, oListComboJogador);
-			cbJogador.getItems().setAll(oListComboJogador);
+			cbJogador.setItems(oListComboJogador);
 		}
 	}
 
@@ -989,7 +986,7 @@ public class PokerTimerFXController implements Initializable{
         minutes = Constants.MAX_MINUTES;
         maxRound = minutes * Constants.SECONDS_IN_MINUTE;
 
-        cbJogador.getItems().setAll(oListComboJogador);
+        cbJogador.setItems(oListComboJogador);
         cbJogador.setPromptText("Jogador");
 
         //new Thread(updateGuitask).start();

@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ListView;
 import model.JogadorConfigFile;
 import model.Player;
 import model.ProjecaoLine;
