@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0_65"/>
+	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Jars/svnkit-1.8.12/lib/svnkit-1.8.12.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/svnkit-1.8.12/lib/sqljet-1.1.10.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/svnkit-1.8.12/lib/antlr-runtime-3.4.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/svnkit-1.8.12/lib/jna-4.1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/svnkit-1.8.12/lib/jna-platform-4.1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/svnkit-1.8.12/lib/jsch.agentproxy.connector-factory-0.0.7.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/svnkit-1.8.12/lib/jsch.agentproxy.core-0.0.7.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/svnkit-1.8.12/lib/jsch.agentproxy.pageant-0.0.7.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/svnkit-1.8.12/lib/jsch.agentproxy.sshagent-0.0.7.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/svnkit-1.8.12/lib/jsch.agentproxy.svnkit-trilead-ssh2-0.0.7.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/svnkit-1.8.12/lib/jsch.agentproxy.usocket-jna-0.0.7.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/svnkit-1.8.12/lib/jsch.agentproxy.usocket-nc-0.0.7.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/svnkit-1.8.12/lib/sequence-library-1.0.3.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/svnkit-1.8.12/lib/svnkit-cli-1.8.12.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/svnkit-1.8.12/lib/svnkit-javahl16-1.8.12.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/svnkit-1.8.12/lib/trilead-ssh2-1.0.0-build220.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/ctf_80_sdk/lib/activation.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/ctf_80_sdk/lib/axis.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/ctf_80_sdk/lib/commons-discovery.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/ctf_80_sdk/lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/ctf_80_sdk/lib/jaxrpc.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/ctf_80_sdk/lib/log4j-1.2.8.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/ctf_80_sdk/lib/mail.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/ctf_80_sdk/lib/saaj.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/ctf_80_sdk/lib/sf_soap60_sdk.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

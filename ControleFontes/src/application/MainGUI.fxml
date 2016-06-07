@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainGUIController">
+   <children>
+      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox prefHeight="26.0" prefWidth="332.0">
+               <children>
+                  <Label text="Tipo:               ">
+                     <HBox.margin>
+                        <Insets right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <ComboBox fx:id="cbTipo" onAction="#tipoSelecionado" prefHeight="25.0" prefWidth="125.0" promptText="Tipo">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </ComboBox>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox layoutX="20.0" layoutY="20.0" prefHeight="26.0" prefWidth="332.0">
+               <children>
+                  <Label text="Tipo de Fonte:">
+                     <HBox.margin>
+                        <Insets right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <ComboBox fx:id="cbTipoFonte" onAction="#tipoFonteSelecionado" prefHeight="25.0" prefWidth="125.0" promptText="Tipo de Fonte">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </ComboBox>
+               </children>
+               <opaqueInsets>
+                  <Insets top="5.0" />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets bottom="5.0" top="5.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox layoutX="20.0" layoutY="53.0" prefHeight="26.0" prefWidth="332.0">
+               <children>
+                  <Label text="Quantidade:    ">
+                     <HBox.margin>
+                        <Insets right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="tfQuantidade" prefHeight="25.0" prefWidth="132.0">
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <Button fx:id="btIncluir" mnemonicParsing="false" prefHeight="25.0" prefWidth="67.0" text="Incluir">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+               <opaqueInsets>
+                  <Insets top="5.0" />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets bottom="5.0" top="5.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox>
+               <children>
+                  <TableView fx:id="tvManutencoes">
+                    <columns>
+                      <TableColumn fx:id="tcTipo" prefWidth="190.0" text="Tipo" />
+                      <TableColumn fx:id="tcTipoFonte" prefWidth="102.0" text="Tipo de Fonte" />
+                        <TableColumn fx:id="tcQuantidade" prefWidth="84.0" text="Quantidade" />
+                    </columns>
+                     <HBox.margin>
+                        <Insets top="5.0" />
+                     </HBox.margin>
+                  </TableView>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="5.0" top="5.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox>
+               <children>
+                  <Button fx:id="btAlterar" mnemonicParsing="false" prefHeight="25.0" prefWidth="76.0" text="Alterar">
+                     <HBox.margin>
+                        <Insets left="220.0" right="5.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="btExcluir" mnemonicParsing="false" prefHeight="25.0" prefWidth="76.0" text="Excluir">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="5.0" top="5.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefHeight="10.0" prefWidth="382.0">
+               <children>
+                  <Button fx:id="btGerarNomes" mnemonicParsing="false" prefHeight="25.0" prefWidth="395.0" text="Gerar Nomes" />
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>
