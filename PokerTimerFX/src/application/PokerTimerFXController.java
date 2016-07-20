@@ -1318,7 +1318,7 @@ public class PokerTimerFXController implements Initializable{
                 break;
             default:
                 total1 = totalArrecadado * 0.45;
-                total2 = totalArrecadado * 0.20;
+                total2 = totalArrecadado * 0.25;
                 total3 = totalArrecadado * 0.15;
                 total4 = totalArrecadado * 0.10;
                 total5 = totalArrecadado * 0.05;

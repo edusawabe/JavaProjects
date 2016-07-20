@@ -115,6 +115,7 @@ public class Player {
 				pontuacaoTotal = pontuacaoTotal - resultadosEtapas.get(0);
 			}
 		}
+		pontuacaoTotal = Math.round(pontuacaoTotal);
 	}
 
 	public Resumo getResumo(){

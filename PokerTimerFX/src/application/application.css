@@ -10,6 +10,13 @@
 	-fx-font-size: 76px;
 }
 
+.nextBlindsLabels {
+	-fx-font: "System";
+	-fx-font-weight: bold;
+	-fx-font-style: italic;
+	-fx-font-size: 68px;
+}
+
 .statsLabels{
 	-fx-font: "System";
 	-fx-font-size: 18px;
