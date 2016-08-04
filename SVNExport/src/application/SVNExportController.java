@@ -8,16 +8,31 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 
+import com.sun.javafx.tk.Toolkit.Task;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
+import javafx.util.Duration;
 
 public class SVNExportController {
 	@FXML
 	private TextArea taArea;
 	@FXML
 	private Button btConfirm;
+	@FXML
+	private ProgressBar pbProgresso;
+
+	private Timeline exportProcess;
+	private int i;
+	private String content;
+	private Task exportTask;
 
 	@FXML
 	private void processar(Event event) throws IOException{
@@ -34,71 +49,91 @@ public class SVNExportController {
 		exportDir.delete();
 		LinkedList<String[]> commandlist = new LinkedList<String[]>();
 		for (int i = 0; i < linhas.length; i++) {
+			//obtendo revision
 			if (linhas[i].contains("Revision: ")){
 				String [] tmp = linhas[i].split("Revision: ");
 				currentRevision = tmp[1];
 			}
 			if(linhas[i].contains("Added :") || linhas[i].contains("Modified :")){
 				String [] tmp2 = linhas[i].split(" : ");
+				//Criando estrutura de diretorio
 				dir = tmp2[1].substring(0, tmp2[1].lastIndexOf(47));
 				dir = dir.replace('/', '\\');
-				//dir = "\"" + "C:\\exp" + dir + "\"";
-				//res = res + "mkdir " + dir + " \n";
 				dir = "C:\\exp" + dir;
 				File newDir = new File(dir);
 				newDir.mkdirs();
+
+				//incluindo aspas no diretorio
 				dir =  "\"" +  dir + "\"";
-				res = res + "C:\\Program Files\\TortoiseSVN\\bin\\svn.exe export -r" + currentRevision + " --force \"https://scm-coconet.capgemini.com/svn/repos/br-cpmb-bd-pf-rfin" + tmp2[1] + "\" "+ dir + "\n";
-				String[] toAdd = new String[6];
-				toAdd[0] = "svn";
-				toAdd[1] = "export";
-				toAdd[2] = "-r"+currentRevision;
-				toAdd[3] = "--force";
-				toAdd[4] = "\"https://scm-coconet.capgemini.com/svn/repos/br-cpmb-bd-pf-rfin" + tmp2[1] + "\" ";
-				toAdd[5] = dir;
+
+				//criando parametro de execução
+				String[] toAdd = new String[8];
+				toAdd[0] = "cmd.exe";
+				toAdd[1] = "/c";
+				toAdd[2] = "svn";
+				toAdd[3] = "export";
+				toAdd[4] = "-r"+currentRevision;
+				toAdd[5] = "--force";
+				toAdd[6] = "\"https://scm-coconet.capgemini.com/svn/repos/br-cpmb-bd-pf-rfin" + tmp2[1] + "\"";
+				toAdd[7] = dir;
 				commandlist.add(toAdd);
 			}
 		}
+		Process process = null;
+		taArea.setText("");
+		pbProgresso = new ProgressBar();
+		pbProgresso.setProgress(0);
+		pbProgresso.progressProperty().unbind();
 
-		try {
-			FileWriter writer = new FileWriter(new File("C:\\export.bat"));
-			writer.append(res);
-			writer.close();
-
-			Process process = null;
-			BufferedReader stdInput;
-			BufferedReader stdError;
-			String[] cmd = res.split("\n");
-			String content = new String();
-
-			for (int i = 0; i < commandlist.size(); i++) {
-				String[] toCall = cmd[i].split(" ");
-				process = Runtime.getRuntime().exec(commandlist.get(i));
-				//content = content + commandlist.get(i).toString()+ "\n";
-				// Get input streams
-				stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-				stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-
-				// Read command standard output
-				String s;
-				content = content + "======> Outputs:" + "\n";
-				while ((s = stdInput.readLine()) != null) {
-					content = content + s + "\n";
+		exportProcess = new Timeline();
+		exportProcess.setCycleCount(Timeline.INDEFINITE);
+		i = 0;
+		exportProcess.getKeyFrames().add(new KeyFrame(Duration.seconds(0.5), new EventHandler() {
+			// KeyFrame event handler
+			@Override
+			public void handle(Event event) {
+				try {
+					doExportProcess(process, commandlist, i);
+					i++;
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-
-				content = content + "======> Erros:" + "\n";
-				// Read command errors
-				while ((s = stdError.readLine()) != null) {
-					content = content + s + "\n";
-				}
-				taArea.setText(content);
 			}
+		}));
+		exportProcess.playFromStart();
+	}
 
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+	private void doExportProcess(Process process, LinkedList<String[]> commandlist, int i) throws Exception{
+		if (i > commandlist.size()){
+			taArea.setText(taArea.getText() + "\n" + "====================================================\n" +
+					"\t\tEXPORTACAO REALIZADA COM SUCESSO!\n" +
+					"\t\tConteúdo disponivel em:\n"+
+					"\t\t\tC:\\exp\n"+
+					"====================================================\n");
+			return;
 		}
-		taArea.setText(res);
+		process = Runtime.getRuntime().exec(commandlist.get(i));
+		BufferedReader stdInput;
+		BufferedReader stdError;
+		// Get input streams
+		stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+		// Read command standard output
+		String s;
+		while ((s = stdInput.readLine()) != null) {
+			taArea.appendText(s + "\n");
+		}
+		// Read command errors
+		while ((s = stdError.readLine()) != null) {
+			taArea.appendText(s + "\n");
+		}
+		  if (Platform.isFxApplicationThread()) {
+		        taArea.appendText("");
+		    } else {
+		        Platform.runLater(() -> taArea.appendText(""));
+		    }
 	}
 
 	private void delete(File f) throws IOException {
