@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 
 import com.sun.javafx.tk.Toolkit.Task;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -17,6 +16,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.util.Duration;
@@ -28,6 +28,8 @@ public class SVNExportController {
 	private Button btConfirm;
 	@FXML
 	private ProgressBar pbProgresso;
+	@FXML
+	private Label progressText;
 
 	private Timeline exportProcess;
 	private int i;
@@ -83,7 +85,6 @@ public class SVNExportController {
 		taArea.setText("");
 		pbProgresso = new ProgressBar();
 		pbProgresso.setProgress(0);
-		pbProgresso.progressProperty().unbind();
 
 		exportProcess = new Timeline();
 		exportProcess.setCycleCount(Timeline.INDEFINITE);
@@ -111,8 +112,10 @@ public class SVNExportController {
 					"\t\tConteúdo disponivel em:\n"+
 					"\t\t\tC:\\exp\n"+
 					"====================================================\n");
+			exportProcess.stop();
 			return;
 		}
+		pbProgresso.setProgress(i/commandlist.size());
 		process = Runtime.getRuntime().exec(commandlist.get(i));
 		BufferedReader stdInput;
 		BufferedReader stdError;
@@ -131,9 +134,12 @@ public class SVNExportController {
 		}
 		  if (Platform.isFxApplicationThread()) {
 		        taArea.appendText("");
+				progressText.setText("Arquivos Processados: " + (i+1) + "/"+ commandlist.size());
 		    } else {
 		        Platform.runLater(() -> taArea.appendText(""));
+				progressText.setText("Arquivos Processados: " + (i+1) + "/"+ commandlist.size());
 		    }
+
 	}
 
 	private void delete(File f) throws IOException {
