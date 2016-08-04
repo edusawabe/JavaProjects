@@ -3,12 +3,12 @@ package application;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 
 import com.sun.javafx.tk.Toolkit.Task;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -35,6 +35,7 @@ public class SVNExportController {
 	private int i;
 	private String content;
 	private Task exportTask;
+	private LinkedList<String[]> commandlist;
 
 	@FXML
 	private void processar(Event event) throws IOException{
@@ -49,7 +50,8 @@ public class SVNExportController {
 		if(exportDir.exists())
 			delete(exportDir);
 		exportDir.delete();
-		LinkedList<String[]> commandlist = new LinkedList<String[]>();
+		commandlist = new LinkedList<String[]>();
+		LinkedList<String[]> orderedList = new LinkedList<String[]>();
 		for (int i = 0; i < linhas.length; i++) {
 			//obtendo revision
 			if (linhas[i].contains("Revision: ")){
@@ -81,6 +83,27 @@ public class SVNExportController {
 				commandlist.add(toAdd);
 			}
 		}
+
+		//ordenar por Revision
+		int j = 0;
+		for (int i = 0; i < commandlist.size(); i++) {
+			if(orderedList.isEmpty())
+				orderedList.add(commandlist.get(i));
+			else{
+				j = 0;
+				while (j<orderedList.size()) {
+					if (orderedList.get(j)[4].compareTo(commandlist.get(i)[4]) < 0)
+						j++;
+					else
+						break;
+				}
+				orderedList.add(j,commandlist.get(i));
+			}
+		}
+
+		commandlist.clear();
+		commandlist = (LinkedList<String[]>)orderedList.clone();
+		orderedList.clear();
 		Process process = null;
 		taArea.setText("");
 		pbProgresso = new ProgressBar();
