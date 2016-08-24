@@ -4,6 +4,14 @@
 	-fx-font-size: 46px;
 }
 
+.nextBlindsTitleLabels {
+	-fx-font: "System" 36px;
+	-fx-font-weight: bold;
+	-fx-font-size: 36px;
+	-fx-text-fill: gray;
+	-fx-font-style: italic;
+}
+
 .blindsLabels {
 	-fx-font: "System";
 	-fx-font-weight: bold;
@@ -14,7 +22,8 @@
 	-fx-font: "System";
 	-fx-font-weight: bold;
 	-fx-font-style: italic;
-	-fx-font-size: 68px;
+	-fx-font-size: 60px;
+	-fx-text-fill: gray;
 }
 
 .statsLabels{

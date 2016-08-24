@@ -6,8 +6,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
+
+import com.sun.xml.internal.ws.api.pipe.NextAction;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -69,16 +73,6 @@ public class PokerTimerFXController implements Initializable{
 	@FXML
 	private Label valorAnteSeguinte;
 	@FXML
-	private ProgressBar timerBar;
-	@FXML
-	private Button btAnterior;
-	@FXML
-	private Button btPause;
-	@FXML
-	private Button btPlay;
-	@FXML
-	private Button btSeguinte;
-	@FXML
 	private Label lbProximoBreak;
 	@FXML
 	private Label statsJogando;
@@ -100,6 +94,28 @@ public class PokerTimerFXController implements Initializable{
 	private Label statsPremio5;
 	@FXML
 	private Label statsMedia;
+	@FXML
+	private Label lbJogadorSelecionado;
+	@FXML
+	private Label lbMesa1;
+	@FXML
+	private Label lbMesa2;
+	@FXML
+	private ProgressBar timerBar;
+	@FXML
+	private Button btAnterior;
+	@FXML
+	private Button btPause;
+	@FXML
+	private Button btPlay;
+	@FXML
+	private Button btSeguinte;
+	@FXML
+	private Button btSortear;
+	@FXML
+	private Button btTrocarMesa;
+	@FXML
+	private Button btAdicionaNaoInscrito;
 	@FXML
 	private ListView<String> listRodadas;
 	@FXML
@@ -140,17 +156,6 @@ public class PokerTimerFXController implements Initializable{
 	private VBox painelInferiorJogadores;
 	@FXML
 	private HBox hbBotoesJogadores;
-	@FXML
-	private Label lbJogadorSelecionado;
-	@FXML
-	private Button btSortear;
-	@FXML
-	private Button btTrocarMesa;
-	@FXML
-	private Label lbMesa1;
-	@FXML
-	private Label lbMesa2;
-
 
 	private ConfigManager configManager;
 
@@ -161,6 +166,14 @@ public class PokerTimerFXController implements Initializable{
 	private ObservableList<String> oListComboJogador = FXCollections.observableArrayList();
 	private ObservableList<String> oListJogadoresMesa1 = FXCollections.observableArrayList();
 	private ObservableList<String> oListJogadoresMesa2 = FXCollections.observableArrayList();
+
+	private ObservableList<String> oListJogadoresBk = FXCollections.observableArrayList();
+	private ObservableList<String> oListRebuysBk = FXCollections.observableArrayList();
+	private ObservableList<String> oListForaBk = FXCollections.observableArrayList();
+	private ObservableList<String> oListrRodadasBk = FXCollections.observableArrayList();
+	private ObservableList<String> oListComboJogadorBk = FXCollections.observableArrayList();
+	private ObservableList<String> oListJogadoresMesa1Bk = FXCollections.observableArrayList();
+	private ObservableList<String> oListJogadoresMesa2Bk = FXCollections.observableArrayList();
 
     private boolean paused;
     private boolean play;
@@ -202,6 +215,15 @@ public class PokerTimerFXController implements Initializable{
 	private void selecaojogadores(Event evt){
 		listMesa1.getSelectionModel().select(-1);
 		listMesa2.getSelectionModel().select(-1);
+	}
+
+	@FXML
+	private void adicionaNaoInscrito(Event evt){
+		int s = painelInferiorJogadores.getChildren().size();
+		painelInferiorJogadores.getChildren().add(0, cbJogador);
+		btExcluirJogador.setDisable(true);
+		painelInferiorJogadores.getChildren().add(1, hbBotoesJogadores);
+		btAdicionaNaoInscrito.setDisable(true);
 	}
 
 	@FXML
@@ -543,44 +565,113 @@ public class PokerTimerFXController implements Initializable{
 	@FXML
 	private void addJogador(Event evt){
 		int index = 0;
+		//Verifica se jogador já existe no combo ou é novo item (index < 0)
+		index = cbJogador.getItems().indexOf(cbJogador.editorProperty().get().getText());
 
-		if (play) {
+		if (index < 0 && cbJogador.editorProperty().get().getText().isEmpty()) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Erro");
-			alert.setHeaderText("Torneio em Andamento");
-			alert.setContentText("Torneio Já Iniciado. Não é mais permitido adicionar jogadores.");
+			alert.setHeaderText("Jogador Inválido!");
+			alert.setContentText("Não é Permitido Incluir Jogador Sem Nome!");
 			alert.show();
-		} else {
-			// oListJogadores = listJogadores.getItems();
-			//Verifica se jogador já existe no combo ou é novo item (index < 0)
-			index = cbJogador.getItems().indexOf(cbJogador.editorProperty().get().getText());
+			return;
+		}
+		btAdicionaNaoInscrito.setDisable(false);
 
-			if (index < 0 && cbJogador.editorProperty().get().getText().isEmpty()) {
+		if (play) {
+			if(listRodadas.getSelectionModel().getSelectedIndex() > Constants.MAX_ROUND_REBUY){
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Erro");
-				alert.setHeaderText("Jogador Inválido!");
-				alert.setContentText("Não é Permitido Incluir Jogador Sem Nome!");
+				alert.setHeaderText("Torneio em Andamento");
+				alert.setContentText("Torneio Já Iniciado. Não é mais permitido adicionar jogadores.");
 				alert.show();
-				return;
-			}
+			} else {
+				int s = painelInferiorJogadores.getChildren().size();
+				for (int i = 0; i < s; i++) {
+					if (painelInferiorJogadores.getChildren().get(i).getId() != null) {
+						if (painelInferiorJogadores.getChildren().get(i).getId().equals("painelJogadores")) {
+							painelInferiorJogadores.getChildren().remove(i);
+							break;
+						}
+					}
+				}
 
-			//Adiciona jogador no arquivo caso não exista
-			configManager.addPlayer(cbJogador.editorProperty().get().getText());
+				s = painelInferiorJogadores.getChildren().size();
+				for (int i = 0; i < s; i++) {
+					if (painelInferiorJogadores.getChildren().get(i).getId() != null) {
+						if (painelInferiorJogadores.getChildren().get(i).getId().equals("comboJogadores")) {
+							painelInferiorJogadores.getChildren().remove(i);
+							break;
+						}
+					}
+				}
 
-			//Se existe, remove jogador do combo e adiociona na lista de jogadores
-			//Senão apenas adiciona na lista de jogadores
-			if (index > 0){
-				addJogadorLista(cbJogador.getItems().get(index), oListJogadores);
-				cbJogador.getItems().remove(index);
+				Random gerador = new Random();
+				int destino = gerador.nextInt(10);
+				int pos = 0;
+				destino = destino%2;
+
+				if (oListJogadoresMesa1.size() == oListJogadoresMesa2.size()) {
+					if (destino == 0) {
+						adicionaTorneioMesa1(gerador);
+					} else {
+						adicionaTorneioMesa2(gerador);
+					}
+				} else {
+					if (oListJogadoresMesa1.size() > oListJogadoresMesa2.size()) {
+						adicionaTorneioMesa2(gerador);
+					} else {
+						adicionaTorneioMesa1(gerador);
+					}
+				}
 			}
-			else {
-				addJogadorLista(cbJogador.editorProperty().get().getText(), oListJogadores);
-			}
-			listJogadores.setItems(oListJogadores);
-			cbJogador.setItems(oListComboJogador);
-			cbJogador.editorProperty().get().setText("");
+		} else {
+			movimentaJogador();
 		}
 	}
+
+	private void adicionaTorneioMesa2(Random gerador) {
+		int pos;
+		pos = gerador.nextInt(oListJogadoresMesa2.size()+1);
+		oListJogadoresMesa2.add(pos, cbJogador.getSelectionModel().getSelectedItem());
+		addJogadorLista(cbJogador.getSelectionModel().getSelectedItem(), oListJogadores);
+		oListComboJogador.remove(cbJogador.getSelectionModel().getSelectedIndex());
+		cbJogador.setItems(oListComboJogador);
+		listMesa2.setItems(oListJogadoresMesa2);
+	}
+
+	private void adicionaTorneioMesa1(Random gerador) {
+		int pos;
+		pos = gerador.nextInt(oListJogadoresMesa1.size()+1);
+		oListJogadoresMesa1.add(pos, cbJogador.getSelectionModel().getSelectedItem());
+		addJogadorLista(cbJogador.getSelectionModel().getSelectedItem(), oListJogadores);
+		oListComboJogador.remove(cbJogador.getSelectionModel().getSelectedIndex());
+		cbJogador.setItems(oListComboJogador);
+		listMesa1.setItems(oListJogadoresMesa1);
+	}
+
+	private void movimentaJogador() {
+		int index = 0;
+		//Verifica se jogador já existe no combo ou é novo item (index < 0)
+		index = cbJogador.getItems().indexOf(cbJogador.editorProperty().get().getText());
+
+		//Adiciona jogador no arquivo caso não exista
+		configManager.addPlayer(cbJogador.editorProperty().get().getText());
+
+		//Se existe, remove jogador do combo e adiociona na lista de jogadores
+		//Senão apenas adiciona na lista de jogadores
+		if (index > 0){
+			addJogadorLista(cbJogador.getItems().get(index), oListJogadores);
+			cbJogador.getItems().remove(index);
+		}
+		else {
+			addJogadorLista(cbJogador.editorProperty().get().getText(), oListJogadores);
+		}
+		listJogadores.setItems(oListJogadores);
+		cbJogador.setItems(oListComboJogador);
+		cbJogador.editorProperty().get().setText("");
+	}
+
 
 	@FXML
 	private void removerJogador(Event evt){
@@ -618,6 +709,7 @@ public class PokerTimerFXController implements Initializable{
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@FXML
 	private void play(Event evt){
+		btAdicionaNaoInscrito.setVisible(true);
 		int s = painelInferiorJogadores.getChildren().size();
 		for (int i = 0; i < s; i++) {
 			if (painelInferiorJogadores.getChildren().get(i).getId() != null) {
@@ -677,9 +769,11 @@ public class PokerTimerFXController implements Initializable{
 		if (iRodada > Constants.MAX_ROUND_REBUY) {
 			btAdicionaRebuy.setDisable(true);
 			btExcluirRebuy.setDisable(true);
+			btAdicionaNaoInscrito.setDisable(true);
 		} else {
 			btAdicionaRebuy.setDisable(false);
 			btExcluirRebuy.setDisable(false);
+			btAdicionaNaoInscrito.setDisable(false);
 		}
 		restartTimer();
 	}
@@ -693,12 +787,14 @@ public class PokerTimerFXController implements Initializable{
 			listRodadas.getSelectionModel().select(Constants.MAX_ROUNDS);
 		iRodada = listRodadas.getSelectionModel().getSelectedIndex();
 		setCurrentRound();
-		if (iRodada >= Constants.MAX_ROUND_REBUY) {
+		if (iRodada > Constants.MAX_ROUND_REBUY) {
 			btAdicionaRebuy.setDisable(true);
 			btExcluirRebuy.setDisable(true);
+			btAdicionaNaoInscrito.setDisable(true);
 		} else {
 			btAdicionaRebuy.setDisable(false);
 			btExcluirRebuy.setDisable(false);
+			btAdicionaNaoInscrito.setDisable(false);
 		}
 		restartTimer();
 	}
@@ -1002,6 +1098,7 @@ public class PokerTimerFXController implements Initializable{
 				atualizarEstatisticas();
 			}
 		}));
+		btAdicionaNaoInscrito.setVisible(false);
 		updateGuitask.playFromStart();
 
 	}

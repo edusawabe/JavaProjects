@@ -71,7 +71,7 @@
                               <Font name="System Bold" size="34.0" />
                            </font>
                         </Label>
-                        <Label prefHeight="75.0" prefWidth="297.0" styleClass="blindsTitleLabels" stylesheets="@application.css" text="Próxima" GridPane.rowIndex="4">
+                        <Label prefHeight="75.0" prefWidth="297.0" styleClass="nextBlindsTitleLabels" stylesheets="@application.css" text="Próxima" GridPane.rowIndex="4">
                            <font>
                               <Font name="System Bold" size="40.0" />
                            </font>
@@ -86,12 +86,12 @@
                               <Font name="System Bold" size="34.0" />
                            </font>
                         </Label>
-                        <Label fx:id="lbAnteSeguinte" prefHeight="73.0" prefWidth="299.0" styleClass="blindsTitleLabels" stylesheets="@application.css" text="" GridPane.rowIndex="6">
+                        <Label fx:id="lbAnteSeguinte" prefHeight="73.0" prefWidth="299.0" styleClass="nextBlindsTitleLabels" stylesheets="@application.css" text="" GridPane.rowIndex="6">
                            <font>
                               <Font name="System Bold" size="34.0" />
                            </font>
                         </Label>
-                        <Label fx:id="valorAnteSeguinte" prefHeight="73.0" prefWidth="297.0" styleClass="blindsLabels" stylesheets="@application.css" text="" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                        <Label fx:id="valorAnteSeguinte" prefHeight="73.0" prefWidth="297.0" styleClass="nextBlindsLabels" stylesheets="@application.css" text="" GridPane.columnIndex="1" GridPane.rowIndex="6">
                            <font>
                               <Font name="System Bold" size="34.0" />
                            </font>
@@ -208,14 +208,19 @@
                                  <children>
                                     <HBox prefWidth="200.0">
                                        <children>
-                                          <Button fx:id="btSortear" mnemonicParsing="false" onAction="#sortearMesas" prefWidth="260.0" text="Sortear Mesas">
+                                          <Button fx:id="btSortear" mnemonicParsing="false" onAction="#sortearMesas" prefHeight="25.0" prefWidth="194.0" text="Sortear Mesas">
                                              <HBox.margin>
                                                 <Insets right="5.0" />
                                              </HBox.margin>
                                           </Button>
-                                          <Button fx:id="btTrocarMesa" mnemonicParsing="false" onAction="#trocarJogadorMesa" prefWidth="330.0" text="Trocar Jogador de Mesa">
+                                          <Button fx:id="btTrocarMesa" mnemonicParsing="false" onAction="#trocarJogadorMesa" prefHeight="25.0" prefWidth="179.0" text="Trocar Jogador de Mesa">
                                              <HBox.margin>
-                                                <Insets left="5.0" />
+                                                <Insets left="5.0" right="5.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                          <Button fx:id="btAdicionaNaoInscrito" mnemonicParsing="false" onAction="#adicionaNaoInscrito" prefHeight="25.0" prefWidth="179.0" text="Adicionar Não Inscrito">
+                                             <HBox.margin>
+                                                <Insets left="5.0" right="10.0" />
                                              </HBox.margin>
                                           </Button>
                                        </children>
