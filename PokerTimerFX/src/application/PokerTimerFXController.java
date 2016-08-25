@@ -29,6 +29,10 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -190,9 +194,94 @@ public class PokerTimerFXController implements Initializable{
     private LinkedList<String> llMesa1;
     private LinkedList<String> llMesa2;
     private Timeline updateGuitask;
+    private String lastKey;
+    private String inputName;
+    private int currentSelection;
+    private int lastInput;
+    private String lastSelectedName;
 
 	public PokerTimerFXController() {
+		lastKey = "";
+		inputName = "";
+		currentSelection = 0;
+		lastSelectedName = "";
+	}
 
+	@FXML
+	private void tratarFocus(Event evt){
+		inputName = "";
+	}
+
+	@FXML
+	private void tratarEventosTeclado(KeyEvent evt){
+		lastInput = 3;
+		if(listJogadores.isFocused()){
+			inputName = inputName + ((KeyEvent) evt).getCharacter();
+			for (int i = currentSelection; i < oListJogadores.size(); i++) {
+				if(oListJogadores.get(i).startsWith(inputName)){
+					if(lastSelectedName.equals(oListJogadores.get(i)))
+						currentSelection = i + 1;
+					else {
+						listJogadores.getSelectionModel().select(i);
+						listJogadores.scrollTo(i);
+						currentSelection = i;
+						lastSelectedName = oListJogadores.get(i);
+						break;
+					}
+				}
+			}
+		} else {
+			inputName = "";
+			currentSelection = 0;
+		}
+
+		switch (evt.getCharacter()) {
+		case "1":
+			listJogadores.requestFocus();
+			break;
+		case "2":
+			listRebuys.requestFocus();
+			break;
+		case "3":
+			listFora.requestFocus();
+			break;
+		case "e":
+			if(lastKey.equals("5"))
+				removeJogadorTorneio(evt);
+			break;
+		case "E":
+			if(lastKey.equals("5"))
+				removeJogadorTorneio(evt);
+			break;
+		case "r":
+			if(lastKey.equals("5"))
+				adicionaRebuy(evt);
+			break;
+		case "R":
+			if(lastKey.equals("5"))
+				adicionaRebuy(evt);
+			break;
+		case "c":
+			if(lastKey.equals("5")){
+				if(listRebuys.isFocused())
+					removeRebuy(evt);
+				if(listFora.isFocused())
+					cancelarRemocaoJogadorTorneio(evt);
+			}
+		case "C":
+			if(lastKey.equals("5")){
+				if(listRebuys.isFocused())
+					removeRebuy(evt);
+				if(listFora.isFocused())
+					cancelarRemocaoJogadorTorneio(evt);
+			}
+		default:
+			break;
+		}
+
+		if ((Character.isDigit(evt.getCharacter().charAt(0)) || (Character.isAlphabetic(evt.getCharacter().charAt(0))))) {
+			lastKey= evt.getCharacter();
+		}
 	}
 
 	@FXML
@@ -1342,6 +1431,12 @@ public class PokerTimerFXController implements Initializable{
         int totalMesa2 = oListJogadoresMesa2.size();
         double totalArrecadado = 0;
         String jogadorSelecionado;
+		if (lastInput > 0)
+			lastInput--;
+		else {
+			inputName = "";
+			currentSelection = 0;
+		}
 
         if(listJogadores.getSelectionModel().getSelectedIndex() >= 0 ){
         	jogadorSelecionado = oListJogadores.get(listJogadores.getSelectionModel().getSelectedIndex());
@@ -1553,4 +1648,5 @@ public class PokerTimerFXController implements Initializable{
 	         }
 	     }
 	 }
+
 }
