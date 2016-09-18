@@ -28,6 +28,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -286,20 +287,20 @@ public class PokerTimerFXController implements Initializable{
 
 	@FXML
 	private void selecaoMesa1(Event evt){
-		listMesa2.getSelectionModel().select(-1);
-		listJogadores.getSelectionModel().select(-1);
+		listMesa2.getSelectionModel().clearSelection();
+		listJogadores.getSelectionModel().clearSelection();
 	}
 
 	@FXML
 	private void selecaoMesa2(Event evt){
-		listMesa1.getSelectionModel().select(-1);
-		listJogadores.getSelectionModel().select(-1);
+		listMesa1.getSelectionModel().clearSelection();
+		listJogadores.getSelectionModel().clearSelection();
 	}
 
 	@FXML
 	private void selecaojogadores(Event evt){
-		listMesa1.getSelectionModel().select(-1);
-		listMesa2.getSelectionModel().select(-1);
+		listMesa1.getSelectionModel().clearSelection();
+		listMesa2.getSelectionModel().clearSelection();
 	}
 
 	@FXML
@@ -313,6 +314,8 @@ public class PokerTimerFXController implements Initializable{
 
 	@FXML
 	private void trocarJogadorMesa(Event evt){
+		listMesa1.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		listMesa2.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		if (listMesa1.getSelectionModel().getSelectedIndex() < 0
 				&& listMesa2.getSelectionModel().getSelectedIndex() < 0) {
 
@@ -327,6 +330,17 @@ public class PokerTimerFXController implements Initializable{
 		int maxMesa;
 		int origem = 0, destino = 0;
 		Alert al = new Alert(AlertType.CONFIRMATION);
+		int jogadorRandom = 0;
+
+		if(listMesa1.getSelectionModel().getSelectedIndices().size() > 1){
+			jogadorRandom = gerador.nextInt(listMesa1.getSelectionModel().getSelectedIndices().size());
+			listMesa1.getSelectionModel().select(listMesa1.getSelectionModel().getSelectedIndices().get(jogadorRandom).intValue());
+		}
+
+		if(listMesa2.getSelectionModel().getSelectedIndices().size() > 1){
+			jogadorRandom = gerador.nextInt(listMesa2.getSelectionModel().getSelectedIndices().size());
+			listMesa2.getSelectionModel().select(listMesa2.getSelectionModel().getSelectedIndices().get(jogadorRandom).intValue());
+		}
 
 		if (listMesa1.getSelectionModel().getSelectedIndex() >= 0) {
 			origem = listMesa1.getSelectionModel().getSelectedIndex();
@@ -924,6 +938,11 @@ public class PokerTimerFXController implements Initializable{
 	@FXML
 	private void removeJogadorTorneio(Event evt){
 
+		oListJogadoresMesa1Bk.clear();
+		oListJogadoresMesa1Bk.addAll(oListJogadoresMesa1);
+		oListJogadoresMesa2Bk.clear();
+		oListJogadoresMesa2Bk.addAll(oListJogadoresMesa2);
+
 		int i = listJogadores.getSelectionModel().getSelectedIndex();
 		int size1, size2, diferenca, posicaoTroca, posicaoEliminacao, mesa, sorteado, sortedSize;
 		Alert al = new Alert(AlertType.INFORMATION);
@@ -1020,7 +1039,8 @@ public class PokerTimerFXController implements Initializable{
 
 						oListJogadoresMesa2.add(posicaoEliminacao, oListJogadoresMesa1.get(posicaoTroca));
 						oListJogadoresMesa1.remove(posicaoTroca);
-						listJogadores.getSelectionModel().select(-1);
+						listJogadores.getSelectionModel().clearSelection();
+						listMesa2.getSelectionModel().clearSelection();
 						listMesa2.getSelectionModel().select(jogadorReposicionado);
 					} else {
 						// se jogador eliminado é da mesa 1
@@ -1032,7 +1052,8 @@ public class PokerTimerFXController implements Initializable{
 								+ "\nIr para Mesa 1: " + "\n  - Na posição em que estava:\n  " + eliminado);
 						oListJogadoresMesa1.add(posicaoEliminacao, oListJogadoresMesa2.get(posicaoTroca));
 						oListJogadoresMesa2.remove(posicaoTroca);
-						listJogadores.getSelectionModel().select(-1);
+						listJogadores.getSelectionModel().clearSelection();
+						listMesa1.getSelectionModel().clearSelection();
 						listMesa1.getSelectionModel().select(jogadorReposicionado);
 					}
 					DialogPane dialogPane = al.getDialogPane();
@@ -1063,11 +1084,11 @@ public class PokerTimerFXController implements Initializable{
 		else{
 			playCancelElimina();
 			addJogadorLista(oListFora.get(i), oListJogadores);
-			if(llMesa1.indexOf(oListFora.get(i)) >= 0)
-				retornarJogadorMesa(oListFora.get(i), oListJogadoresMesa1, llMesa1);
-			else
-				retornarJogadorMesa(oListFora.get(i), oListJogadoresMesa2, llMesa2);
 			oListFora.remove(i);
+			oListJogadoresMesa1.clear();
+			oListJogadoresMesa1.addAll(oListJogadoresMesa1Bk);
+			oListJogadoresMesa2.clear();
+			oListJogadoresMesa2.addAll(oListJogadoresMesa2Bk);
 			atualizarEstatisticas();
 		}
 		listJogadores.requestFocus();
@@ -1185,7 +1206,8 @@ public class PokerTimerFXController implements Initializable{
 		}));
 		btAdicionaNaoInscrito.setVisible(false);
 		updateGuitask.playFromStart();
-
+		listMesa1.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		listMesa2.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 	}
 
     private void setRound(){
@@ -1442,13 +1464,15 @@ public class PokerTimerFXController implements Initializable{
         	jogadorSelecionado = oListJogadores.get(listJogadores.getSelectionModel().getSelectedIndex());
         	lbJogadorSelecionado.setText(jogadorSelecionado);
 			if (oListJogadoresMesa1.indexOf(jogadorSelecionado) >= 0) {
+				listMesa1.getSelectionModel().clearSelection();
 				listMesa1.getSelectionModel().select(oListJogadoresMesa1.indexOf(jogadorSelecionado));
 				listMesa1.scrollTo(oListJogadoresMesa1.indexOf(jogadorSelecionado));
-				listMesa2.getSelectionModel().select(-1);
+				listMesa2.getSelectionModel().clearSelection();
 			} else {
+				listMesa2.getSelectionModel().clearSelection();
 				listMesa2.getSelectionModel().select(oListJogadoresMesa2.indexOf(jogadorSelecionado));
 				listMesa2.scrollTo(oListJogadoresMesa2.indexOf(jogadorSelecionado));
-				listMesa1.getSelectionModel().select(-1);
+				listMesa1.getSelectionModel().clearSelection();
 			}
         }
         lbMesa1.setText("Mesa 1 ("+ totalMesa1 + "/" + totalJogando +")");
