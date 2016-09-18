@@ -313,7 +313,7 @@ public class PokerTimerFXController implements Initializable{
 	}
 
 	@FXML
-	private void trocarJogadorMesa(Event evt){
+	private void trocarJogadorMesa(Event evt) {
 		listMesa1.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		listMesa2.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		if (listMesa1.getSelectionModel().getSelectedIndex() < 0
@@ -332,14 +332,16 @@ public class PokerTimerFXController implements Initializable{
 		Alert al = new Alert(AlertType.CONFIRMATION);
 		int jogadorRandom = 0;
 
-		if(listMesa1.getSelectionModel().getSelectedIndices().size() > 1){
+		if (listMesa1.getSelectionModel().getSelectedIndices().size() > 1) {
 			jogadorRandom = gerador.nextInt(listMesa1.getSelectionModel().getSelectedIndices().size());
-			listMesa1.getSelectionModel().select(listMesa1.getSelectionModel().getSelectedIndices().get(jogadorRandom).intValue());
+			listMesa1.getSelectionModel()
+					.select(listMesa1.getSelectionModel().getSelectedIndices().get(jogadorRandom).intValue());
 		}
 
-		if(listMesa2.getSelectionModel().getSelectedIndices().size() > 1){
+		if (listMesa2.getSelectionModel().getSelectedIndices().size() > 1) {
 			jogadorRandom = gerador.nextInt(listMesa2.getSelectionModel().getSelectedIndices().size());
-			listMesa2.getSelectionModel().select(listMesa2.getSelectionModel().getSelectedIndices().get(jogadorRandom).intValue());
+			listMesa2.getSelectionModel()
+					.select(listMesa2.getSelectionModel().getSelectedIndices().get(jogadorRandom).intValue());
 		}
 
 		if (listMesa1.getSelectionModel().getSelectedIndex() >= 0) {
@@ -355,10 +357,16 @@ public class PokerTimerFXController implements Initializable{
 				String j1, j2;
 				j1 = oListJogadoresMesa1.get(origem);
 				j2 = oListJogadoresMesa2.get(destino);
+				llMesa1.remove(j1);
+				llMesa2.remove(j2);
+				llMesa2.remove(j1);
+				llMesa1.remove(j2);
 				oListJogadoresMesa1.remove(origem);
 				oListJogadoresMesa2.remove(destino);
 				oListJogadoresMesa2.add(destino, j1);
 				oListJogadoresMesa1.add(origem, j2);
+				listMesa1.getSelectionModel().clearSelection();
+				listMesa2.getSelectionModel().clearSelection();
 				listMesa1.getSelectionModel().select(origem);
 				listMesa2.getSelectionModel().select(destino);
 				listMesa1.scrollTo(origem);
@@ -378,12 +386,23 @@ public class PokerTimerFXController implements Initializable{
 				String j1, j2;
 				j1 = oListJogadoresMesa2.get(origem);
 				j2 = oListJogadoresMesa1.get(destino);
+				llMesa1.remove(j1);
+				llMesa2.remove(j2);
+				llMesa2.remove(j1);
+				llMesa1.remove(j2);
 				oListJogadoresMesa2.remove(origem);
 				oListJogadoresMesa1.remove(destino);
 				oListJogadoresMesa1.add(destino, j1);
 				oListJogadoresMesa2.add(origem, j2);
+				listMesa1.getSelectionModel().clearSelection();
+				listMesa2.getSelectionModel().clearSelection();
+				listMesa2.getSelectionModel().select(origem);
+				listMesa1.getSelectionModel().select(destino);
+				listMesa2.scrollTo(origem);
+				listMesa1.scrollTo(destino);
+
 			}
-	}
+		}
 	}
 
 	@FXML
