@@ -34,6 +34,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -54,6 +60,7 @@ public class FXMLTableViewController implements Initializable{
     @FXML private TableColumn<Pair<String,Object>,String> campoColumn;
     @FXML private TableColumn<Pair<String,Object>,Object> valorColumn;
 
+    @FXML private CheckBox chLineNumber;
     @FXML private TextField tfbookFile;
     @FXML private Button bookSelectButton;
     @FXML private MaskTextField fluxoField;
@@ -137,6 +144,23 @@ public class FXMLTableViewController implements Initializable{
 		if (tfbookFile == null)
 			tfbookFile = new TextField();
 		tfbookFile.setPromptText("Book");
+		/*
+		commArea.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.C,KeyCombination.CONTROL_ANY), new Runnable() {
+
+			@Override
+			public void run() {
+			String[] lines = commArea.getText().split("\n");
+			Clipboard clipboard = Clipboard.getSystemClipboard();
+	        ClipboardContent content = new ClipboardContent();
+	        String sContent = new String();
+	        for (int i = 0; i < lines.length; i++) {
+	        	sContent = sContent + lines[i].substring(10, lines[i].length());
+			}
+	        content.putString(sContent);
+	        clipboard.setContent(content);
+			}
+		});
+		*/
 	}
 
 
@@ -145,6 +169,22 @@ public class FXMLTableViewController implements Initializable{
      * Actions
      * ======================================================================================================
      */
+	@FXML
+	protected void tratarCtrlC(KeyEvent event) {
+		KeyCombination k = new KeyCodeCombination(KeyCode.B, KeyCombination.CONTROL_DOWN);
+		if (k.match(event)) {
+			String[] lines = commArea.getSelectedText().split("\n");
+			//final Clipboard clipboard = Clipboard.getSystemClipboard();
+	        final ClipboardContent content = new ClipboardContent();
+	        String sContent = new String();
+	        for (int i = 0; i < lines.length; i++) {
+	        	sContent = sContent + lines[i].substring(7, lines[i].length()) + "\n";
+			}
+	        content.putString(sContent);
+	        Clipboard.getSystemClipboard().setContent(content);
+		}
+	}
+
 	@FXML
 	protected void insereBookRFINW00W(ActionEvent event) {
 		inputReturnBook();
@@ -495,7 +535,7 @@ public class FXMLTableViewController implements Initializable{
 		Campo c = new Campo();
 		c.setOccurs(true);
 		c.newListOccurs();
-		int posPonto = line.indexOf('.');
+		int posPonto = line.lastIndexOf('.');
 		int posOccurs = line.indexOf("OCCURS");
 		int posTo = line.indexOf("TO");
 		int posTimes = line.indexOf("TIMES");
@@ -524,13 +564,29 @@ public class FXMLTableViewController implements Initializable{
 		int cont = 0;
 
 		for (int i = 0; i < breakLine.length; i++) {
-				if (!breakLine[i].isEmpty())
-					cont++;
+				if (!breakLine[i].isEmpty()) {
+					if(cont == 0){
+						if(isNumeric(breakLine[i])){
+							cont++;
+						}
+					} else {
+						cont++;
+					}
+				}
 				if(cont == 1)
 					c.setNivel(breakLine[i]);
 				if(cont == 2)
 					c.setNome(breakLine[i]);
 		}
+	}
+
+	private boolean isNumeric(String n){
+		try {
+			Integer.parseInt(n);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
 	}
 
 	private Campo processStringValue(String line){
@@ -557,7 +613,7 @@ public class FXMLTableViewController implements Initializable{
 		getNomeNivelCampo(line, c);
 		c.setTam(Integer.parseInt(line.substring(beginPic, endPic)));
 
-		posPonto = line.indexOf('.');
+		posPonto = line.lastIndexOf('.');
 		c.setType(line.substring(beginPic - 6, posPonto));
 		return c;
 	}
@@ -572,7 +628,7 @@ public class FXMLTableViewController implements Initializable{
 		getNomeNivelCampo(line, c);
 		c.setTam(Integer.parseInt(line.substring(beginPic, endPic)));
 
-		posPonto = line.indexOf('.');
+		posPonto = line.lastIndexOf('.');
 		c.setType(line.substring(beginPic - 6, posPonto));
 		return c;
 	}
@@ -626,7 +682,7 @@ public class FXMLTableViewController implements Initializable{
 		}
 
 		getNomeNivelCampo(line, c);
-		posPonto = line.indexOf('.');
+		posPonto = line.lastIndexOf('.');
 		c.setType(line.substring(beginPic - 6, posPonto));
 		return c;
 	}
@@ -972,13 +1028,14 @@ public class FXMLTableViewController implements Initializable{
 		sCommAreaSize = Util.completeZeros(sCommAreaSize, 5);
 
 		area =
-			    "FRWKGL010021600"+ sCommAreaSize +"                                51174335457216TERM\n"+
-				"00011                 "+ fluxo +"0023700001050TERM0001       012008121215\n"+
-				"4737NNNIEA700013                       E                              \n"+
-				"217230GSEGGLAA00230                    EI910940                       \n"+
-				"NN                                                                    \n"+
-		        "                                                                      \n"+
-				"                          GSEGGLAE00041006Nsenha002                ";
+				generateLineNumber(0) + "FRWKGL010021600"+ sCommAreaSize +"                                51174335457216TERM\n"+
+			    generateLineNumber(70) + "00011                 "+ fluxo +"0023700001050TERM0001       012008121215\n"+
+			    generateLineNumber(70*2) + "4737NNNIEA700013                       E                              \n"+
+			    generateLineNumber(70*3) + "217230GSEGGLAA00230                    EI910940                       \n"+
+			    generateLineNumber(70*4) + "NN                                                                    \n"+
+			    generateLineNumber(70*5) + "                                                                      \n"+
+			    generateLineNumber(70*6) + "                          GSEGGLAE00041006Nsenha002                ";
+
 		area = area + enteredArea.substring(0, 3) +  "\n";
 
 		for (int i = 0; i < (enteredArea.length()); i++) {
@@ -990,7 +1047,7 @@ public class FXMLTableViewController implements Initializable{
 				aux = enteredArea.length() - begin;
 				end = begin + aux;
 			}
-			area = area + enteredArea.substring(begin, end) + "\n";
+			area = area + generateLineNumber((70 * (7 + i))) + enteredArea.substring(begin, end) + "\n";
 		}
 
 		return area;
@@ -1041,10 +1098,35 @@ public class FXMLTableViewController implements Initializable{
 				aux = enteredArea.length() - begin;
 				end = begin + aux;
 			}
-			area = area + enteredArea.substring(begin, end) + "\n";
+			area = area + generateLineNumber(begin) + enteredArea.substring(begin, end) + "\n";
 		}
 
 		return area;
+	}
+
+	private String generateLineNumber(int begin){
+		if(chLineNumber.isSelected()){
+			String lineNumber = new String();
+			begin++;
+			if (begin < 10)
+				lineNumber = "    " + begin;
+			else{
+				if(begin < 100)
+					lineNumber = "   " + begin;
+				else {
+					if(begin < 1000)
+						lineNumber = "  " + begin;
+					else {
+						if(begin < 10000)
+							lineNumber = " " + begin;
+						else
+							lineNumber =  "" + begin;
+					}
+				}
+			}
+			return lineNumber + ": ";
+		}
+		return "";
 	}
 
     /*
@@ -1092,75 +1174,192 @@ public class FXMLTableViewController implements Initializable{
 		);
 
 		bookArea.setText(
-				          "       05  RFINWJ6S-HEADER.                                             \n"
-						 +"           10 RFINWJ6S-COD-LAYOUT          PIC X(008)  VALUE 'RFINWJ6S'.\n"
-						 +"           10 RFINWJ6S-TAM-LAYOUT          PIC 9(005)  VALUE 00506.     \n"
-						 +"       05  RFINWJ6S-REGISTRO.                                           \n"
-						 +"           10 RFINWJ6S-BLOCO-SAIDA.                                     \n"
-						 +"              15 RFINWJ6S-S-CTPO-SISTC-REPAS      PIC 9(001).           \n"
-						 +"              15 RFINWJ6S-S-CEXTER-OPER-REPAS     PIC 9(010).           \n"
-						 +"              15 RFINWJ6S-S-CESTAG-REPAS-FINAN    PIC 9(003).           \n"
-						 +"              15 RFINWJ6S-S-IESTAG-REPAS-FINAN    PIC X(060).           \n"
-						 +"              15 RFINWJ6S-S-CSIT-REPAS-FINAN      PIC 9(003).           \n"
-						 +"              15 RFINWJ6S-S-NCARAC-PROG-REPAS     PIC 9(005).           \n"
-						 +"              15 RFINWJ6S-S-CREPAS-CSCIO-BCO      PIC X(001).           )\n"
-						 +"              15 RFINWJ6S-S-CCNPJ-FORNC           PIC 9(014).           \n"
-						 +"              15 RFINWJ6S-S-IPSSOA-REPAS-FINAN    PIC X(080).           \n"
-						 +"              15 RFINWJ6S-S-CCNPJ-FABR            PIC 9(014).           \n"
-						 +"              15 RFINWJ6S-S-IPSSOA-FABR           PIC X(080).           \n"
-						 +"              15 RFINWJ6S-S-IPSSOA-PROMO          PIC X(080).           \n"
-						 +"              15 RFINWJ6S-S-CEXTER-CONDC-OPER     PIC 9(004).           \n"
-						 +"              15 RFINWJ6S-S-IEXTER-OPER-REPAS     PIC X(060).           \n"
-						 +"              15 RFINWJ6S-S-CCONVE-LIM            PIC 9(005).           \n"
-						 +"              15 RFINWJ6S-S-CSEQ-CONVE-LIM        PIC 9(003).           \n"
-						 +"              15 RFINWJ6S-S-NOME-CONVENIO         PIC X(040).           \n"
-						 +"              15 RFINWJ6S-S-DVALDD-RESU-SOLTC     PIC X(010).           \n"
-						 +"              15 RFINWJ6S-S-VTOT-SDO-LIB          PIC 9(015)V99.        \n"
-						 +"              15 RFINWJ6S-S-QTDE-PARCELAS         PIC 9(003).           \n"
-						 +"              15 RFINWJ6S-S-LIST OCCURS 0 TO 60 TIMES                   \n"
-						 +"                 DEPENDING ON RFINWJ6S-S-QTDE-PARCELAS.                \n"
-//						 +"              15 RFINWJ6S-S-LIST OCCURS 3 TIMES.                        \n"
-						 + "                20 RFINWJ6S-S-DATA-PARCELA       PIC X(010).           \n"
-						 + "                20 RFINWJ6S-S-DATA-AMORTIZACAO   PIC X(010).           \n"
-						 +"              15 RFINWJ6S-S-VTOT                  PIC 9(015)V99.        \n"
-						 +"              15 RFINWJ6S-S-LIST2 OCCURS 3 TIMES.                        \n"
-//						 +"              15 RFINWJ6S-S-LIST OCCURS 0 TO 60 TIMES                   \n"
-//						 +"                 DEPENDING ON RFINWJ6S-S-QTDE-PARCELAS.                \n"
-						 + "                20 RFINWJ6S-S-DATA-PARCELA2       PIC X(010).           \n"
-						 + "                20 RFINWJ6S-S-DATA-AMORTIZACAO2   PIC X(010).           \n"
-						 +"              15 RFINWJ6S-S-VTOT2                  PIC 9(015)V99.        \n"
+				            "           05 RFINW12E-HEADER.                                         \n"
+						  + "             10 RFINW12E-COD-LAYOUT    PIC X(08)       VALUE 'RFINW12E'.\n"
+						  + "             10 RFINW12E-TAM-LAYOUT    PIC 9(05)       VALUE 01308.     \n"
+						  + "           05 RFINW12E-REGISTRO.                                        \n"
+						  + "             10 RFINW12E-BLOCO-ENTRADA.                                 \n"
+						  + "                15 RFINW12E-NCARAC-PROG-REPAS          PIC 9(005).      \n"
+						  + "                15 RFINW12E-FORMA-PGTO                 PIC 9(001).      \n"
+						  + "                15 RFINW12E-CPRODT-SERVC               PIC 9(008).      \n"
+						  + "                15 RFINW12E-CTPO-PROG                  PIC 9(001).      \n"
+						  + "                15 RFINW12E-CPROG-FINAN                PIC 9(008).      \n"
+						  + "                15 RFINW12E-CPROG-ORIGE                PIC 9(008).      \n"
+						  + "                15 RFINW12E-DINIC-VIG-PROG             PIC X(010).      \n"
+						  + "                15 RFINW12E-DFIM-VIG-PROG              PIC X(010).      \n"
+						  + "                15 RFINW12E-CFNALD-PROG-FINAN          PIC 9(002).      \n"
+						  + "                15 RFINW12E-CPROG-FONTE-REPAS          PIC 9(003).      \n"
+						  + "                15 RFINW12E-NSUB-PROG-REPAS            PIC 9(003).      \n"
+						  + "                15 RFINW12E-CTPO-RENDA-REPAS           PIC 9(001).      \n"
+						  + "                15 RFINW12E-PCOMPS-AGROP-REPAS         PIC 9(003)V9(04).\n"
+						  + "                15 RFINW12E-CPERM-AMPL-REPAS           PIC X(001).      \n"
+						  + "                15 RFINW12E-CUTILZ-ATVDD-REPAS         PIC X(001).      \n"
+						  + "                15 RFINW12E-CUTILZ-MUN-REPAS           PIC X(001).      \n"
+						  + "                15 RFINW12E-CPROG-CERTF-ENQUA          PIC X(001).      \n"
+						  + "                15 RFINW12E-VMIN-CERTF-REPAS           PIC 9(013)V9(02).\n"
+						  + "                15 RFINW12E-QMAX-IDADE-EQPMT           PIC 9(003).      \n"
+						  + "                15 RFINW12E-CPERM-INCTV-REPAS          PIC X(001).      \n"
+						  + "                15 RFINW12E-CEXCVD-CRRTT-REPAS         PIC X(001).      \n"
+						  + "                15 RFINW12E-CPROG-LIM-FINAN            PIC X(001).      \n"
+						  + "                15 RFINW12E-VLIM-FINAN-CLI             PIC 9(015)V9(02).\n"
+						  + "                15 RFINW12E-DCOMPT-CONSL               PIC X(010).      \n"
+						  + "                15 RFINW12E-DCOMPT-CONSL-CLI           PIC X(010).      \n"
+						  + "                15 RFINW12E-VLIM-CONTR-COLET           PIC 9(013)V9(02).\n"
+						  + "                15 RFINW12E-CFINAN-LIQDC-ANTER         PIC X(001).      \n"
+						  + "                15 RFINW12E-CCOMPS-EMPTO-REPAS         PIC X(001).      \n"
+						  + "                15 RFINW12E-CRENDA-NVEL-REPAS          PIC 9(001).      \n"
+						  + "                15 RFINW12E-CRENDA-JURO-REPAS          PIC 9(001).      \n"
+						  + "                15 RFINW12E-CUTILZ-PROG-ATVDD          PIC X(001).      \n"
+						  + "                15 RFINW12E-CGARTD-INVES-REPAS         PIC 9(001).      \n"
+						  + "                15 RFINW12E-PMIN-RISCO-REPAS           PIC 9(003)V9(04).\n"
+						  + "                15 RFINW12E-PMAX-RISCO-REPAS           PIC 9(003)V9(04).\n"
+						  + "                15 RFINW12E-FORMA-PAGTO                PIC 9(001).      \n"
+						  + "                15 RFINW12E-TMIN-CAREN-REPAS           PIC 9(003).      \n"
+						  + "                15 RFINW12E-TMAX-CAREN-REPAS           PIC 9(003).      \n"
+						  + "                15 RFINW12E-TMIN-AMOTZ-REPAS           PIC 9(003).      \n"
+						  + "                15 RFINW12E-TMAX-AMOTZ-REPAS           PIC 9(003).      \n"
+						  + "                15 RFINW12E-CTPO-SISTC-REPAS           PIC 9(001).      \n"
+						  + "                15 RFINW12E-VLIM-FINAN-SIMP            PIC 9(013)V9(02).\n"
+						  + "                15 RFINW12E-CPROG-LIM-SIMP             PIC X(001).      \n"
+						  + "                15 RFINW12E-DINIC-SIMP-REPAS           PIC X(010).      \n"
+						  + "                15 RFINW12E-DFIM-SIMP-REPAS            PIC X(010).      \n"
+						  + "                15 RFINW12E-TVALDD-DOCTO-FONTE         PIC 9(003).      \n"
+						  + "                15 RFINW12E-TMAX-SOLTC-PDIDO           PIC 9(003).      \n"
+						  + "                15 RFINW12E-CREGRA-MNUAL-RURAL         PIC X(001).      \n"
+						  + "                15 RFINW12E-CPROG-FSCAL-RURAL          PIC X(001).      \n"
+						  + "                15 RFINW12E-CPCELA-FSCAL-RURAL         PIC 9(005).      \n"
+						  + "                15 RFINW12E-CPRMSS-COMCZ-REPAS         PIC 9(001).      \n"
+						  + "                15 RFINW12E-CSISTC-DEPTO-REPAS         PIC 9(001).      \n"
+						  + "                15 RFINW12E-VLIM-DEPTO-REPAS           PIC 9(013)V9(02).\n"
+						  + "                15 RFINW12E-CSISTC-AG-REPAS            PIC 9(001).      \n"
+						  + "                15 RFINW12E-VLIM-AG-REPAS              PIC 9(013)V9(02).\n"
+						  + "                15 RFINW12E-CPRODT-PROG-DECLR          PIC X(001).      \n"
+						  + "                15 RFINW12E-VBASE-SOLTC-VIABL          PIC 9(013)V9(02).\n"
+						  + "                15 RFINW12E-TAVISO-LCTO-FUTUR          PIC 9(003).      \n"
+						  + "                15 RFINW12E-TENVIO-COBR-REPAS          PIC 9(003).      \n"
+						  + "                15 RFINW12E-TMAX-EXCUC-PROJ            PIC 9(003).      \n"
+						  + "                15 RFINW12E-TMIN-REFIN-REPAS           PIC 9(003).      \n"
+						  + "                15 RFINW12E-TTRNSF-CREDT-ATRSO         PIC 9(003).      \n"
+						  + "                15 RFINW12E-TTRNSF-LUCRO-PERDA         PIC 9(003).      \n"
+						  + "                15 RFINW12E-CSIT-PROG-REPAS            PIC X(001).      \n"
+						  + "                15 RFINW12E-CPRODT-EXIGE-BEM           PIC X(001).      \n"
+						  + "                15 RFINW12E-CPROG-COMPS-LIM            PIC X(001).      \n"
+						  + "                15 RFINW12E-CTPO-COMPV-REPAS           PIC 9(001).      \n"
+						  + "                15 RFINW12E-CATVDD-PRINC-REPAS         PIC X(001).      \n"
+						  + "                15 RFINW12E-CEXCVD-FABRT-REPAS         PIC X(001).      \n"
+						  + "                15 RFINW12E-CEXCVD-FORNC-REPAS         PIC X(001).      \n"
+						  + "                15 RFINW12E-CCOOP-PERM-SING            PIC X(001).      \n"
+						  + "                15 RFINW12E-CCOOP-PERM-FED             PIC X(001).      \n"
+						  + "                15 RFINW12E-CCOOP-PERM-CONF            PIC X(001).      \n"
+						  + "                15 RFINW12E-CCOOP-PERM-NA              PIC X(001).      \n"
+						  + "                15 RFINW12E-CEXIGE-LIM-COOP            PIC X(001).      \n"
+						  + "                15 RFINW12E-VLIM-SINGR-REPAS           PIC 9(013)V99.   \n"
+						  + "                15 RFINW12E-VLIM-CNTRL-REPAS           PIC 9(013)V99.   \n"
+						  + "                15 RFINW12E-VLIM-ASSOC-REPAS           PIC 9(013)V99.   \n"
+						  + "                15 RFINW12E-CPERM-SEG-REPAS            PIC X(001).      \n"
+						  + "                15 RFINW12E-CSEGUR-CONTR-REPAS         PIC 9(001).      \n"
+						  + "                15 RFINW12E-CNIVEL-PART-SEG            PIC X(001).      \n"
+						  + "                15 RFINW12E-CGARNT-REAL                PIC X(001).      \n"
+						  + "                15 RFINW12E-CGARNT-PESSOAL             PIC X(001).      \n"
+						  + "                15 RFINW12E-PGARNT-REAL-REPAS          PIC 9(003)V9(04).\n"
+						  + "                15 RFINW12E-CEXIGE-STUDO-VIABL         PIC X(001).      \n"
+						  + "                15 RFINW12E-CSIT-BEM                   PIC X(001).      \n"
+						  + "                15 RFINW12E-QTDE-OCOR-LIM              PIC 9(005).      \n"
+						  + "                15 RFINW12E-LISTA-LIM                  OCCURS 50 TIMES. \n"
+						  + "                   20 RFINW12E-CPROG-FINAN-LIM         PIC 9(008).      \n"
+						  + "                15 RFINW12E-QTDE-OCOR-SIST             PIC 9(005).      \n"
+						  + "                15 RFINW12E-LISTA-SIST                 OCCURS 50 TIMES. \n"
+						  + "                   20 RFINW12E-CPROG-FINAN-SIST        PIC 9(008).      \n"
+						  + "ARC             15 RFINW12E-CEXTER-PROG-BACEN          PIC 9(004).      \n"
+						  + ".               15 RFINW12E-TVALDD-DOCTO-COMPV         PIC 9(003).      \n"
+						  + ".               15 RFINW12E-TMAX-CAREN-AMOTZ           PIC 9(003).      \n"
+						  + "ARC             15 RFINW12E-TMIN-CAREN-AMOTZ           PIC 9(003).      \n"
+						  + "THIAGO          15 RFINW12E-VLIM-RECTA-OPER            PIC 9(015)V99.   \n"
+						  + "THIAGO          15 RFINW12E-VLIM-RECTA-AGROP           PIC 9(015)V99.   \n"
+						  + "IP60 T          15 RFINW12E-CSGMTO-EQPMT-REPAS         PIC 9(001).      \n"
+						  + "IP60 T          15 RFINW12E-CCLASF-EQPMT-REPAS         PIC 9(003).      \n"
+						  + "RLOS            15 RFINW12E-VMIN-PROG-REPAS            PIC 9(015)V9(02).\n"
+						  + ".               15 RFINW12E-VMAX-PROG-REPAS            PIC 9(015)V9(02).\n"
+						  + ".               15 RFINW12E-CUTILZ-GIRO-REPAS          PIC X(001).      \n"
+						  + ".               15 RFINW12E-CJURO-GARTD-REPAS          PIC X(001).      \n"
+						  + "RLOS            15 RFINW12E-TVALDD-FONTE-CRONO         PIC 9(003).      \n"
+						  + "ARC1            15 RFINW12E-CEXTER-SUB-BACEN           PIC 9(004).      \n"
+						  + "ARC1            15 RFINW12E-NPROG-BACEN-REPAS          PIC 9(004).      \n"
+						  + "ARC1            15 RFINW12E-NSUB-BACEN-REPAS           PIC 9(003).      \n"
+						  + "TND             15 RFINW12E-CFNALD-EXCVD-OPER          PIC 9(001).      \n"
+						  + "TND             15 RFINW12E-CPROG-EXIGE-PROJ           PIC X(001).      \n"
+						  + "TND             15 RFINW12E-CUTILZ-APOIO-RURAL         PIC X(001).      \n"
+						  + "TND             15 RFINW12E-CEXIGE-ELABO-PROJ          PIC X(001).      \n"
+						  + "TND             15 RFINW12E-VLIM-POR-CONTR-C           PIC 9(013)V9(02).\n"
 				);
 
 		commArea.setText(
-				            "00001: D9 C6 C9 D5 E6 D1 F6 E2 F0 F0 F5 F0 F6 F2 F0 F0 F0 F0 F0 F0  RFINWJ6S005062000000\n"
-						  + "00021: F1 F0 F0 F0 F0 F8 F0 C5 D4 40 D7 D9 D6 C3 C5 E2 E2 D6 40 C4  1000080EM PROCESSO D\n"
-						  + "00041: C5 40 D3 C9 C2 C5 D9 C1 C3 C1 D6 40 D5 D6 40 C2 D5 C4 C5 E2  E LIBERACAO NO BNDES\n"
-						  + "00061: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00081: 40 40 40 40 40 40 40 F0 F0 F1 F0 F1 F8 F8 F1 D5 F2 F0 F1 F2         00101881N2012\n"
-						  + "00101: F0 F5 F3 F1 F0 F0 F0 F1 F2 F5 D9 C1 E9 C1 D6 40 E3 C5 E2 E3  0531000125RAZAO TEST\n"
-						  + "00121: C5 40 E3 C5 E2 E3 C5 40 40 40 40 40 40 40 40 40 40 40 40 40  E TESTE             \n"
-						  + "00141: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00161: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00181: 40 40 40 40 40 40 40 40 40 40 F8 F4 F1 F4 F2 F2 F0 F8 F0 F0            8414220800\n"
-						  + "00201: F0 F1 F3 F5 C6 C1 C2 D9 C9 C3 C1 D5 E3 C5 40 C5 D8 E4 C9 D7  0135FABRICANTE EQUIP\n"
-						  + "00221: C1 D4 C5 D5 E3 D6 40 40 40 40 40 40 40 40 40 40 40 40 40 40  AMENTO              \n"
-						  + "00241: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00261: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00281: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00301: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00321: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00341: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00361: 40 40 40 40 F1 F9 F8 F7 E3 C5 E2 E3 C5 40 C3 D6 D5 C4 C9 C3      1987TESTE CONDIC\n"
-						  + "00381: C1 D6 F1 F2 F3 F1 40 40 40 40 40 40 40 40 40 40 40 40 40 40  AO1231              \n"
-						  + "00401: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00421: 40 40 40 40 40 40 40 40 F0 F0 F0 F0 F0 F0 F0 F0 40 40 40 40          00000000    \n"
-						  + "00441: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40                      \n"
-						  + "00461: 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 F1 F5 4B F1                  15.1\n"
-						  + "00481: F2 4B F2 F0 F1 F5 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F1 F0  2.201500000000000010\n"
-						  + "00501: F0 F0 F0 F0 F0 F2 F1 F5 4B F1 F2 4B F2 F0 F1 F5 F1 F6 4B F1  00000215.12.201516.1\n"
-						  + "00000: F2 4B F2 F0 F1 F5 F2 F5 4B F1 F2 4B F2 F0 F1 F5 F2 F6 4B F1  2.201525.12.201526.1\n"
-						  + "00000: F2 4B F2 F0 F1 F5 40 40 40 40 40 40 40 40 40 40 40 40 40 40  2.2015              \n"
-						  + "00000: 40 40 40 40 40 40            "
+				            "00001: D9 C6 C9 D5 E6 F1 F2 C5 F0 F1 F3 F1 F0 F0 F3 F2 F3 F6 F0 F0  RFINW12E013100323600\n"
+						  + "00021: F0 F0 F0 F1 F7 F2 F3 F1 F0 F0 F0 F0 F2 F8 F0 F9 F0 F0 F0 F0  00017231000028090000\n"
+						  + "00041: F0 F0 F0 F0 F0 F1 4B F0 F1 4B F2 F0 F1 F7 F3 F1 4B F1 F2 4B  000001.01.201731.12.\n"
+						  + "00061: F2 F0 F2 F1 F0 F0 F0 F0 F0 F0 F0 F0 F1 F0 F0 F0 F0 F0 F0 F0  20210000000010000000\n"
+						  + "00081: D5 D7 D7 40 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  NPP 0000000000000000\n"
+						  + "00101: F0 F0 D5 D5 D5 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00NNN000000000000000\n"
+						  + "00121: F0 F0 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40  00                  \n"
+						  + "00141: 40 40 F0 F0 F0 F0 F0 F0 F0 F0 F1 F0 F0 F0 F0 F0 F0 D5 D5 F1    000000001000000NN1\n"
+						  + "00161: F1 D5 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  1N000000000000000000\n"
+						  + "00181: F5 F0 F1 F0 F0 F0 F5 F0 F1 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  50100050100000000000\n"
+						  + "00201: F0 F0 F0 F0 F0 F0 D5 40 40 40 40 40 40 40 40 40 40 40 40 40  000000N             \n"
+						  + "00221: 40 40 40 40 40 40 40 F0 F0 F5 F0 F1 F0 D5 40 F0 F0 F0 F0 F0         005010N 00000\n"
+						  + "00241: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00261: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 D5 F0 F0 F0 F0 F0 F0  0000000000000N000000\n"
+						  + "00281: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00301: F0 F0 F0 F0 F0 F0 F0 C9 40 40 F0 D5 40 D5 D5 D5 D5 D5 40 F0  0000000I  0N NNNNN 0\n"
+						  + "00321: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00341: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00361: F0 F0 F0 F0 D5 F0 40 D5 E2 F0 F0 F0 F0 F0 F0 F0 D5 E4 F0 F0  0000N0 NS0000000NU00\n"
+						  + "00381: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00401: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00421: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00441: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00461: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00481: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00501: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00521: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00541: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00561: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00581: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00601: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00621: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00641: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00661: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00681: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00701: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00721: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00741: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00761: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00781: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00801: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00821: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00841: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00861: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00881: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00901: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00921: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00941: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00961: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "00981: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "01001: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "01021: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "01041: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "01061: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "01081: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "01101: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "01121: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "01141: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "01161: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000000000000000\n"
+						  + "01181: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F5 F0 F1 F0 F0 F0  00000000000000501000\n"
+						  + "01201: F5 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  50000000000000000000\n"
+						  + "01221: F0 F0 F0 F0 F0 F0 F0 F0 F0 F1 F0 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000010000000000\n"
+						  + "01241: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 F1 F0 F0 F0 F0 F0 F0 F0 F0 F0  00000000001000000000\n"
+						  + "01261: F0 F0 F0 F0 F0 F0 F1 F0 F0 F0 F0 F0 F0 40 D5 F0 F1 F0 F0 F0  0000001000000 N01000\n"
+						  + "01281: F0 F0 F0 F0 F0 F0 F0 F0 F0 F0 D5 D5 D5 F0 F0 F0 F0 F0 F0 F0  0000000000NNN0000000\n"
+						  + "01301: F0 F0 F0 F0 F0 F5 F0 F0 F0 F0  0000050000"
 						   );
 	}
 

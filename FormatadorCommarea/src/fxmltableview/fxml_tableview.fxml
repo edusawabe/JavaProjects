@@ -113,11 +113,12 @@
                                     <MaskTextField fx:id="fluxoField" GridPane.columnIndex="3" />
                                     <Label prefHeight="17.0" prefWidth="101.0" text="Fluxo:" GridPane.columnIndex="2" />
                                     <Button mnemonicParsing="false" onAction="#gerarAreaPorGlog" prefHeight="25.0" prefWidth="93.0" text="Gerar via Glog" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                    <CheckBox fx:id="chLineNumber" mnemonicParsing="false" prefHeight="17.0" prefWidth="87.0" text="Nº Linha" GridPane.columnIndex="1" />
                                  </children>
                               </GridPane>
                            </top>
                            <bottom>
-                              <TextArea fx:id="commArea" BorderPane.alignment="CENTER">
+                              <TextArea fx:id="commArea" onKeyPressed="#tratarCtrlC" BorderPane.alignment="CENTER">
                                  <BorderPane.margin>
                                     <Insets top="5.0" />
                                  </BorderPane.margin>
