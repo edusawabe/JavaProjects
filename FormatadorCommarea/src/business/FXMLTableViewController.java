@@ -537,7 +537,7 @@ public class FXMLTableViewController implements Initializable{
 		c.newListOccurs();
 		int posPonto = line.lastIndexOf('.');
 		int posOccurs = line.indexOf("OCCURS");
-		int posTo = line.indexOf("TO");
+		int posTo = line.indexOf(" TO ");
 		int posTimes = line.indexOf("TIMES");
 		int posDependingON = line.indexOf("DEPENDING ON");
 		if (posTo > 0)
