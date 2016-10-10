@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
-
+import org.apache.log4j.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,7 +24,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -83,6 +82,7 @@ public class FXMLTableViewController implements Initializable{
 	      private boolean development;
 	      private boolean hasOccurs;
 	      private ConfigManager configManager;
+	      final static Logger logger = Logger.getLogger(FXMLTableViewController.class);
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
