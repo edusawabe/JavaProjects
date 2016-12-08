@@ -14,6 +14,7 @@ public final class Constants {
     public Constants() {
     }
 
+    public static int MAX_MINUTES_INIT = 15;
     public static int MAX_MINUTES = 20;
     public static int MAX_MINUTES_BREAK = 15;
     public static int MAX_ROUNDS = 28;
