@@ -877,7 +877,7 @@ public class PokerTimerFXController implements Initializable{
 
 	@FXML
 	private void volta(Event evt){
-		int iRodada = listRodadas.getSelectionModel().getSelectedIndex();
+		int iRodada = currentRound;
 		if(iRodada > 0)
 			listRodadas.getSelectionModel().select(iRodada-1);
 		else
@@ -898,7 +898,7 @@ public class PokerTimerFXController implements Initializable{
 
 	@FXML
 	private void avanca(Event evt){
-		int iRodada = listRodadas.getSelectionModel().getSelectedIndex();
+		int iRodada = currentRound;
 		if(iRodada < Constants.MAX_ROUNDS)
 			listRodadas.getSelectionModel().select(iRodada+1);
 		else
@@ -1286,8 +1286,11 @@ public class PokerTimerFXController implements Initializable{
         	lbAnteSeguinte.setText(" ");
         	valorAnteSeguinte.setText("BREAK");
         }
-        listRodadas.getFocusModel().focus(currentRound);
-        listRodadas.scrollTo(currentRound);
+        if(!listRodadas.isFocused()){
+        	listRodadas.getFocusModel().focus(currentRound);
+        	listRodadas.scrollTo(currentRound);
+        	listRodadas.getSelectionModel().select(currentRound);
+        }
     }
 
     public void restartTimer() {
