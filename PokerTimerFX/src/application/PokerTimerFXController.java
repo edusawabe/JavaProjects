@@ -413,6 +413,7 @@ public class PokerTimerFXController implements Initializable{
 		ObservableList<String> copyList =  FXCollections.observableArrayList(oListJogadores);
 
 		int size = oListJogadores.size();
+		int players = oListJogadores.size();
 		int totalSize = oListJogadores.size();
 		int maxMesa = (totalSize/2) + 1;
 		int numero = gerador.nextInt(size);
@@ -424,17 +425,21 @@ public class PokerTimerFXController implements Initializable{
 			maxMesa = (totalSize/2) + 1;
 
 		while (size > 0 ){
-			if (llMesa1.size() < maxMesa && llMesa2.size() < maxMesa) {
-				if ((mesa % 2) == 0)
-					llMesa1.add(copyList.get(numero));
-				else
-					llMesa2.add(copyList.get(numero));
-			} else {
-				if (llMesa1.size() < maxMesa) {
-					llMesa1.add(copyList.get(numero));
+			if (players > Constants.MAX_PLAYERS_FINAL_TABLE){
+				if (llMesa1.size() < maxMesa && llMesa2.size() < maxMesa) {
+					if ((mesa % 2) == 0)
+						llMesa1.add(copyList.get(numero));
+					else
+						llMesa2.add(copyList.get(numero));
 				} else {
-					llMesa2.add(copyList.get(numero));
+					if (llMesa1.size() < maxMesa) {
+						llMesa1.add(copyList.get(numero));
+					} else {
+						llMesa2.add(copyList.get(numero));
+					}
 				}
+			}else{
+				llMesa1.add(copyList.get(numero));
 			}
 			copyList.remove(numero);
 			mesa = geradorMesa.nextInt(100);
@@ -674,6 +679,22 @@ public class PokerTimerFXController implements Initializable{
 			//inclui as informações do texto a abre a janela nova
 			rankingController.setListRanking(lRanking);
 			primaryStage.show();
+
+			Stage secondaryStage = new Stage();
+			GraficoAnualController graficoController;
+			FXMLLoader fxmlLoader2 = new FXMLLoader(getClass().getResource("GraficoAnual.fxml"));
+			//carrega o loader
+			Pane myPane2 = (Pane) fxmlLoader2.load();
+
+			//definindo a nova janela
+			Scene scene2 = new Scene(myPane2,900,600);
+			secondaryStage.setScene(scene2);
+			secondaryStage.setTitle("Ranking Anual - Gráfico");
+
+			//obtem o controller da nova janela
+			graficoController =  fxmlLoader2.<GraficoAnualController>getController();
+
+			secondaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
