@@ -11,6 +11,7 @@ public class ResultadoRodada {
 	double premiacao;
 	double pontuacaoEtapa;
 	int qtdeJogadores;
+	int qtderebuysEtapa;
 
 	public double getPontuacaoEtapa() {
 		return getPontuacaoJogadorEtapa();
@@ -83,5 +84,13 @@ public class ResultadoRodada {
 
 	public void setQtdeJogadores(int qtdeJogadores) {
 		this.qtdeJogadores = qtdeJogadores;
+	}
+
+	public int getQtderebuysEtapa() {
+		return qtderebuysEtapa;
+	}
+
+	public void setQtderebuysEtapa(int qtderebuysEtapa) {
+		this.qtderebuysEtapa = qtderebuysEtapa;
 	}
 }

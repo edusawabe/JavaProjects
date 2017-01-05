@@ -24,7 +24,7 @@ public final class Constants {
     public static int SECONDS_IN_MINUTE = 60;
     public static int TOTAL_ROUND_TIME =  MAX_MINUTES * SECONDS_IN_MINUTE;
     public static int TOTAL_BREAK_TIME =  MAX_MINUTES_BREAK * SECONDS_IN_MINUTE;
-    public static int CURRENT_MONTH =  0;
+    public static int CURRENT_MONTH =  12;
     public static int MAX_ROUND_REBUY = 8;
     public static int MAX_PLAYERS_FINAL_TABLE = 9;
 }

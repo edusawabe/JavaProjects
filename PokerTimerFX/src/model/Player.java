@@ -93,6 +93,7 @@ public class Player {
 			if (resultadosEtapas.isEmpty()) {
 				ConfigManager cfg = new ConfigManager();
 				resultadosEtapas.add(cfg.getPontuacaoJogadorEtapa(resultados.get(i)));
+				resultados.get(i).setPontuacaoEtapa(cfg.getPontuacaoJogadorEtapa(resultados.get(i)));
 			} else {
 				for (int j = 0; j < resultadosEtapas.size(); j++) {
 					if (resultadosEtapas.get(j).compareTo(new Double(resultados.get(i).getPontuacaoEtapa())) >= 0) {
