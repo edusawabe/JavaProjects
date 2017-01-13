@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.ResourceBundle;
 import org.apache.log4j.Logger;
 import javafx.collections.FXCollections;
@@ -91,6 +92,37 @@ public class FormatadorCommareaController implements Initializable{
 		hasOccurs = false;
 		initComponents();
 		fluxoField.setMask("********");
+        addFiltersListeners();
+	}
+
+	/*
+	 * Adicionando os filtros para tratamento de copy paste nos campos de textarea e textfield
+	 */
+	private void addFiltersListeners() {
+		commArea.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+            if( e.isControlDown() && e.getCode() == KeyCode.V) {
+                tratarPaste();
+            }
+        });
+        bookArea.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+            if( e.isControlDown() && e.getCode() == KeyCode.V) {
+            	tratarPaste();
+            }
+        });
+        fluxoField.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+            if( e.isControlDown() && e.getCode() == KeyCode.V) {
+            	tratarPasteFluxo();
+            }
+        });
+        commArea.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
+            if( e.isControlDown() && e.getCode() == KeyCode.C) {
+                tratarCopy();
+            }
+        });
+        fluxoField.textProperty().addListener((observable, oldValue, newValue) -> {
+            newValue = newValue.toUpperCase();
+            fluxoField.setText(newValue);
+        });
 	}
 
 	@SuppressWarnings("unchecked")
@@ -145,89 +177,6 @@ public class FormatadorCommareaController implements Initializable{
 		if (tfbookFile == null)
 			tfbookFile = new TextField();
 		tfbookFile.setPromptText("Book");
-		/*
-		commArea.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.C,KeyCombination.CONTROL_ANY), new Runnable() {
-
-			@Override
-			public void run() {
-			String[] lines = commArea.getText().split("\n");
-			Clipboard clipboard = Clipboard.getSystemClipboard();
-	        ClipboardContent content = new ClipboardContent();
-	        String sContent = new String();
-	        for (int i = 0; i < lines.length; i++) {
-	        	sContent = sContent + lines[i].substring(10, lines[i].length());
-			}
-	        content.putString(sContent);
-	        clipboard.setContent(content);
-			}
-		});
-		*/
-	}
-
-
-    /*
-     * ======================================================================================================
-     * Actions
-     * ======================================================================================================
-     */
-	@FXML
-	protected void tratarCtrlC(KeyEvent event) {
-		KeyCombination kb = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
-		ClipboardContent content = new ClipboardContent();
-
-		if (kb.match(event)) {
-			String[] lines = commArea.getSelectedText().split("\n");
-	        String sContent = new String();
-	        for (int i = 0; i < lines.length; i++) {
-	        	sContent = sContent + lines[i].substring(7, lines[i].length()) + "\n";
-			}
-	        content.putString("");
-	        Clipboard.getSystemClipboard().setContent(content);
-	        content.putString(sContent);
-	        Clipboard.getSystemClipboard().setContent(content);
-		}
-		/*
-		kb = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN);
-		if (kb.match(event)) {
-			Clipboard.getSystemClipboard().getSystemClipboard().getContentTypes();
-			String s  = Clipboard.getSystemClipboard().getString();
-			char[] c = s.toCharArray();
-			String s2 = new String();
-			for (int i = 0; i < c.length; i++) {
-				if((int)c[i] <= 126)
-					s2 = s2 + c[i];
-			}
-			//s.replaceAll("[^a-zA-Z0-9$%!]", replacement)
-			if((event.getSource()) instanceof TextArea)
-				((TextArea)event.getSource()).setText(s2);
-			if((event.getSource()) instanceof TextField)
-				((TextField)event.getSource()).setText(s2);
-		}
-		*/
-	}
-
-	@FXML
-	protected void tratarCtrlv(KeyEvent event) {
-		KeyCombination kb;
-		ClipboardContent content = new ClipboardContent();
-
-		kb = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN);
-		if (kb.match(event)) {
-			Clipboard.getSystemClipboard().getSystemClipboard().getContentTypes();
-			String s  = Clipboard.getSystemClipboard().getString();
-			char[] c = s.toCharArray();
-			String s2 = new String();
-			for (int i = 0; i < c.length; i++) {
-				if((int)c[i] > 126)
-					System.out.println("Erros");
-			}
-			//s.replaceAll("[^a-zA-Z0-9$%!]", replacement)
-			if((event.getSource()) instanceof TextArea)
-				((TextArea)event.getSource()).setText(s);
-			if((event.getSource()) instanceof TextField)
-				((TextField)event.getSource()).setText(s);
-
-		}
 	}
 
 	@FXML
@@ -918,9 +867,6 @@ public class FormatadorCommareaController implements Initializable{
 	/**
 	 *
 	 */
-	/**
-	 *
-	 */
 	private void generateTable(){
 		ObservableList<Pair<String,Object>> commAreaList = tableView.getItems();
 		commAreaList.clear();
@@ -1432,5 +1378,45 @@ public class FormatadorCommareaController implements Initializable{
 		}
 		return false;
 	}
+
+	/*
+	 * Auxiliares para tratamento de copy Paste
+	 */
+	private void tratarPaste() {
+		ClipboardContent content = new ClipboardContent();
+		String s  = Clipboard.getSystemClipboard().getString();
+		char[] c = s.toCharArray();
+		String s2 = new String();
+		for (int i = 0; i < c.length; i++) {
+			if((int)c[i] <= 126)
+				s2 = s2 + c[i];
+			else
+				break;
+		}
+		 content.putString(s2);
+		 Clipboard.getSystemClipboard().setContent(content);
+	}
+
+	private void tratarPasteFluxo() {
+		ClipboardContent content = new ClipboardContent();
+		String s  = Clipboard.getSystemClipboard().getString();
+		String s2 = s.substring(0, 8);
+		content.putString(s2);
+		Clipboard.getSystemClipboard().setContent(content);
+	}
+
+	private void tratarCopy() {
+		ClipboardContent content = new ClipboardContent();
+		String[] lines = commArea.getSelectedText().split("\n");
+		String sContent = new String();
+		for (int i = 0; i < lines.length; i++) {
+			sContent = sContent + lines[i].substring(7, lines[i].length()) + "\n";
+		}
+		content.putString("");
+		Clipboard.getSystemClipboard().setContent(content);
+		content.putString(sContent);
+		Clipboard.getSystemClipboard().setContent(content);
+	}
+
 
 }
