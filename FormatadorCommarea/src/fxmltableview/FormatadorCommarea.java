@@ -38,12 +38,12 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class FXMLTableView extends Application {
+public class FormatadorCommarea extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Gerador Commarea 3.0");
-        Pane myPane = (Pane)FXMLLoader.load(getClass().getResource("fxml_tableview.fxml"));
+        primaryStage.setTitle("Gerador Commarea 4.0");
+        Pane myPane = (Pane)FXMLLoader.load(getClass().getResource("FormatadorCommarea.fxml"));
         Scene myScene = new Scene(myPane);
         primaryStage.setScene(myScene);
         primaryStage.show();
