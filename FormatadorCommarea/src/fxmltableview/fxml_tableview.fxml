@@ -11,7 +11,7 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane alignment="CENTER" hgap="10.0" prefHeight="700.0" prefWidth="1024.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="business.FXMLTableViewController">
+<GridPane alignment="CENTER" hgap="10.0" prefHeight="700.0" prefWidth="1024.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="business.FormatadorCommareaController">
   <padding>
     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
   </padding>
@@ -69,7 +69,7 @@
                                           </CheckBox>
                                        </children>
                                     </HBox>
-                                    <TextArea fx:id="bookArea" prefHeight="288.0" prefWidth="492.0" VBox.vgrow="ALWAYS" />
+                                    <TextArea fx:id="bookArea" onKeyPressed="#tratarCtrlv" prefHeight="288.0" prefWidth="492.0" VBox.vgrow="ALWAYS" />
                                  </children>
                               </VBox>
                            </center>
@@ -110,7 +110,7 @@
                                     <Button fx:id="processButton" mnemonicParsing="false" onAction="#extrairSaidaAction" prefHeight="25.0" prefWidth="105.0" text="Extrair Saída" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
                                     <Button fx:id="gerarAreaButton" mnemonicParsing="false" onAction="#generateCommArea" prefHeight="25.0" prefWidth="101.0" text="Gerar Área" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
                                     <Button fx:id="gerarOccursButton" mnemonicParsing="false" onAction="#generateOccursTable" prefHeight="25.0" prefWidth="103.0" text="Gerar Occurs" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
-                                    <MaskTextField fx:id="fluxoField" GridPane.columnIndex="3" />
+                                    <MaskTextField fx:id="fluxoField" onKeyPressed="#tratarCtrlv" GridPane.columnIndex="3" />
                                     <Label prefHeight="17.0" prefWidth="101.0" text="Fluxo:" GridPane.columnIndex="2" />
                                     <Button mnemonicParsing="false" onAction="#gerarAreaPorGlog" prefHeight="25.0" prefWidth="93.0" text="Gerar via Glog" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                     <CheckBox fx:id="chLineNumber" mnemonicParsing="false" prefHeight="17.0" prefWidth="87.0" text="Nº Linha" GridPane.columnIndex="1" />
@@ -118,7 +118,7 @@
                               </GridPane>
                            </top>
                            <bottom>
-                              <TextArea fx:id="commArea" onKeyPressed="#tratarCtrlC" BorderPane.alignment="CENTER">
+                              <TextArea fx:id="commArea"  onKeyReleased="#tratarCtrlv" BorderPane.alignment="CENTER">
                                  <BorderPane.margin>
                                     <Insets top="5.0" />
                                  </BorderPane.margin>

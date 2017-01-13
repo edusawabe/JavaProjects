@@ -35,6 +35,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -54,7 +55,7 @@ import view.PairKeyFactory;
 import view.PairValueCell;
 import view.PairValueFactory;
 
-public class FXMLTableViewController implements Initializable{
+public class FormatadorCommareaController implements Initializable{
     @FXML private TableView<Pair<String,Object>> tableView;
     @FXML private TableColumn<Pair<String,Object>,String> campoColumn;
     @FXML private TableColumn<Pair<String,Object>,Object> valorColumn;
@@ -82,7 +83,7 @@ public class FXMLTableViewController implements Initializable{
 	      private boolean development;
 	      private boolean hasOccurs;
 	      private ConfigManager configManager;
-	      final static Logger logger = Logger.getLogger(FXMLTableViewController.class);
+	      final static Logger logger = Logger.getLogger(FormatadorCommareaController.class);
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -171,17 +172,61 @@ public class FXMLTableViewController implements Initializable{
      */
 	@FXML
 	protected void tratarCtrlC(KeyEvent event) {
-		KeyCombination k = new KeyCodeCombination(KeyCode.B, KeyCombination.CONTROL_DOWN);
-		if (k.match(event)) {
+		KeyCombination kb = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
+		ClipboardContent content = new ClipboardContent();
+
+		if (kb.match(event)) {
 			String[] lines = commArea.getSelectedText().split("\n");
-			//final Clipboard clipboard = Clipboard.getSystemClipboard();
-	        final ClipboardContent content = new ClipboardContent();
 	        String sContent = new String();
 	        for (int i = 0; i < lines.length; i++) {
 	        	sContent = sContent + lines[i].substring(7, lines[i].length()) + "\n";
 			}
+	        content.putString("");
+	        Clipboard.getSystemClipboard().setContent(content);
 	        content.putString(sContent);
 	        Clipboard.getSystemClipboard().setContent(content);
+		}
+		/*
+		kb = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN);
+		if (kb.match(event)) {
+			Clipboard.getSystemClipboard().getSystemClipboard().getContentTypes();
+			String s  = Clipboard.getSystemClipboard().getString();
+			char[] c = s.toCharArray();
+			String s2 = new String();
+			for (int i = 0; i < c.length; i++) {
+				if((int)c[i] <= 126)
+					s2 = s2 + c[i];
+			}
+			//s.replaceAll("[^a-zA-Z0-9$%!]", replacement)
+			if((event.getSource()) instanceof TextArea)
+				((TextArea)event.getSource()).setText(s2);
+			if((event.getSource()) instanceof TextField)
+				((TextField)event.getSource()).setText(s2);
+		}
+		*/
+	}
+
+	@FXML
+	protected void tratarCtrlv(KeyEvent event) {
+		KeyCombination kb;
+		ClipboardContent content = new ClipboardContent();
+
+		kb = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN);
+		if (kb.match(event)) {
+			Clipboard.getSystemClipboard().getSystemClipboard().getContentTypes();
+			String s  = Clipboard.getSystemClipboard().getString();
+			char[] c = s.toCharArray();
+			String s2 = new String();
+			for (int i = 0; i < c.length; i++) {
+				if((int)c[i] > 126)
+					System.out.println("Erros");
+			}
+			//s.replaceAll("[^a-zA-Z0-9$%!]", replacement)
+			if((event.getSource()) instanceof TextArea)
+				((TextArea)event.getSource()).setText(s);
+			if((event.getSource()) instanceof TextField)
+				((TextField)event.getSource()).setText(s);
+
 		}
 	}
 
