@@ -1223,9 +1223,9 @@ public class PokerTimerFXController implements Initializable{
 		llMesa2 = new LinkedList<>();
 
 		//Inicializa tempos
-        breakMinutes = 4 * Constants.MAX_MINUTES;
+        breakMinutes = 5 * Constants.MAX_MINUTES_INIT;
         seconds = 0;
-        minutes = Constants.MAX_MINUTES;
+        minutes = Constants.MAX_MINUTES_INIT;
         maxRound = minutes * Constants.SECONDS_IN_MINUTE;
 
         cbJogador.setItems(oListComboJogador);
@@ -1319,17 +1319,18 @@ public class PokerTimerFXController implements Initializable{
         currentSecond = 0;
         timerBar.setStyle("-fx-accent: #6699ff");
 
-        if (roundList.get(listRodadas.getSelectionModel().getSelectedIndex()).isBreakRound()) {
-            minutes = Constants.MAX_MINUTES_BREAK;
-            breakMinutes = Constants.MAX_MINUTES * 4 + Constants.MAX_MINUTES_BREAK;
-        } else {
-            int resto  = ((listRodadas.getSelectionModel().getSelectedIndex()+1) % 5);
+		listRodadas.getSelectionModel().select(currentRound);
+		timerBar.setStyle("-fx-accent: #6699ff");
 
-        	minutes = Constants.MAX_MINUTES;
-            int qtdeRounds = 0;
-            qtdeRounds = 5 - resto;
-            breakMinutes = Constants.MAX_MINUTES * qtdeRounds;
-        }
+		minutes = roundList.get(listRodadas.getSelectionModel().getSelectedIndex()).getMinutes();
+		breakMinutes = roundList.get(listRodadas.getSelectionModel().getSelectedIndex())
+				.getMinutesToBreak();
+		seconds = 0;
+
+		maxRound = minutes * Constants.SECONDS_IN_MINUTE;
+		setCurrentRound();
+		currentSecond = 0;
+
         timerBar.setProgress(0);
     }
 
@@ -1352,18 +1353,11 @@ public class PokerTimerFXController implements Initializable{
 					listRodadas.getSelectionModel().select(currentRound);
 					timerBar.setStyle("-fx-accent: #6699ff");
 
-					if (roundList.get(listRodadas.getSelectionModel().getSelectedIndex()).isBreakRound()) {
-						minutes = Constants.MAX_MINUTES_BREAK;
-						breakMinutes = Constants.MAX_MINUTES_BREAK + (4 * Constants.MAX_MINUTES);
-						seconds = 0;
-					} else {
-						minutes = Constants.MAX_MINUTES;
-						seconds = 0;
-			            int resto  = ((listRodadas.getSelectionModel().getSelectedIndex()+1) % 5);
-			            int qtdeRounds = 0;
-			            qtdeRounds = 5 - resto;
-			            breakMinutes = Constants.MAX_MINUTES * qtdeRounds;
-					}
+					minutes = roundList.get(listRodadas.getSelectionModel().getSelectedIndex()).getMinutes();
+					breakMinutes = roundList.get(listRodadas.getSelectionModel().getSelectedIndex())
+							.getMinutesToBreak();
+					seconds = 0;
+
 					maxRound = minutes * Constants.SECONDS_IN_MINUTE;
 					setCurrentRound();
 					currentSecond = 0;
@@ -1388,7 +1382,12 @@ public class PokerTimerFXController implements Initializable{
 					lbTimer.setText(minutes + ":" + seconds);
 				}
 			}
-			setBreakTime();
+			if(roundList.get(listRodadas.getSelectionModel().getSelectedIndex()).isBreakRound()){
+				breakMinutes = 0;
+				lbProximoBreak.setText("Break");
+			}
+			else
+				setBreakTime();
 		}
 		double dMax, dcurr;
 		dMax = maxRound;
