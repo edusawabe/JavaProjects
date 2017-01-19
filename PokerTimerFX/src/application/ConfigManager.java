@@ -100,6 +100,11 @@ public class ConfigManager {
         int[] lQtdeJogadoresRodada = new int[12];
         int[] lQtderebuysRodada = new int[12];
 
+        for (int i = 0; i < lQtderebuysRodada.length; i++) {
+        	lQtdeJogadoresRodada[i] = 0;
+        	lQtderebuysRodada[i] = 0;
+		}
+
         try {
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(confgFile),"Cp1252"));
             String line = reader.readLine();
@@ -115,10 +120,6 @@ public class ConfigManager {
                     p.setPlayerName(j.getNome());
                     p.setPlayerMail(j.getEmail());
                     results = j.getResults();
-                    for (int i = 0; i < lQtderebuysRodada.length; i++) {
-                    	lQtdeJogadoresRodada[i] = 0;
-                    	lQtderebuysRodada[i] = 0;
-					}
                     for (int i = 0; i < results.length; i++) {
                     	p.getResultados().add(new ResultadoRodada(results[i]));
                     	if(!(p.getResultados().get(i).getColocacao().equals("0") || p.getResultados().get(i).getColocacao().equals("00")))
@@ -531,10 +532,102 @@ public class ConfigManager {
 	public double getPontuacaoJogadorEtapa(int qtdJogadores, int rebuys, int pos, double premio){
 		double resultado = 0;
 		if (pos > 0){
+			// A:
 			resultado = ((3 * qtdJogadores) - (3 * (pos - 1)));
+
+			// B:
+			resultado = resultado + (premio * 0.6);
+
+			// C:
 			if (pos <= Constants.MAX_PLAYERS_FINAL_TABLE)
 				resultado = resultado + 20.00;
-			resultado = resultado + (premio * 0.6);
+
+			// D:
+			resultado = resultado + (rebuys * (-15.00));
+		}
+
+		BigDecimal bd = new BigDecimal(resultado);
+	    bd = bd.setScale(2, RoundingMode.HALF_UP);
+	    resultado = bd.doubleValue();
+
+		return resultado;
+	}
+
+	/*
+	 * Pontos = A + B + C + D
+			A: Pontos pela posição inversa:
+				( 3 * qtde de jogadores ) – ( 3 * (posição-1) )
+			B: Pontos pelo prêmio recebido
+				( 0,6 * prêmio recebido em dinheiro )
+			C: Cada um dos 8 jogadores da mesa final ganha 20 pontos
+			D: Cada Rebuy realizado vale -15 pontos
+	 */
+	public double getPontuacaoJogadorEtapa(int qtdJogadores, int rebuys, int pos, double premio, int qtdeRebuysRodada){
+		double resultado = 0;
+
+		if (pos > 0){
+			// A:
+			resultado = ((5 * qtdJogadores) - (5 * (pos - 1)));
+
+			// B:
+			switch (pos) {
+			case 1:
+				//if (pos <= Constants.MAX_PLAYERS_FINAL_TABLE)
+				//	resultado = resultado + 6.00;
+				resultado = resultado + 10*(qtdeRebuysRodada - rebuys);
+				break;
+			case 2:
+				//if (pos <= Constants.MAX_PLAYERS_FINAL_TABLE)
+				//	resultado = resultado + 8.00;
+				resultado = resultado + 8*(qtdeRebuysRodada - rebuys);
+				break;
+			case 3:
+				//if (pos <= Constants.MAX_PLAYERS_FINAL_TABLE)
+				//	resultado = resultado + 10.00;
+				resultado = resultado + 6*(qtdeRebuysRodada - rebuys);
+				break;
+			case 4:
+				if (pos <= Constants.MAX_PLAYERS_FINAL_TABLE)
+					resultado = resultado + 16.00;
+				resultado = resultado + 4*(qtdeRebuysRodada - rebuys);
+				break;
+			case 5:
+				if (pos <= Constants.MAX_PLAYERS_FINAL_TABLE)
+					resultado = resultado + 14.00;
+				resultado = resultado + 3*(qtdeRebuysRodada - rebuys);
+				break;
+			case 6:
+				if (pos <= Constants.MAX_PLAYERS_FINAL_TABLE)
+					resultado = resultado + 12.00;
+				resultado = resultado + 3*(qtdeRebuysRodada - rebuys);
+				break;
+			case 7:
+				if (pos <= Constants.MAX_PLAYERS_FINAL_TABLE)
+					resultado = resultado + 10.00;
+				resultado = resultado + 3*(qtdeRebuysRodada - rebuys);
+				break;
+			case 8:
+				if (pos <= Constants.MAX_PLAYERS_FINAL_TABLE)
+					resultado = resultado + 8.00;
+				resultado = resultado + 3*(qtdeRebuysRodada - rebuys);
+				break;
+			case 9:
+				if (pos <= Constants.MAX_PLAYERS_FINAL_TABLE)
+					resultado = resultado + 6.00;
+				resultado = resultado + 3*(qtdeRebuysRodada - rebuys);
+				break;
+			default:
+				resultado = resultado + 1*(qtdeRebuysRodada - rebuys);
+				break;
+			}
+
+			//if (pos <= Constants.MAX_PLAYERS_FINAL_TABLE)
+			//	resultado = resultado + 3*qtdeRebuysRodada;
+
+			// C:
+
+
+			// D:
 			resultado = resultado + (rebuys * (-15.00));
 		}
 
