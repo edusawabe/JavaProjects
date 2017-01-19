@@ -15,7 +15,9 @@ public class Round {
     private int bigBlind;
     private int ante;
     private boolean breakRound;
-    
+    private int minutesToBreak;
+    private int minutes;
+
     public Round (){
         smallBlind = 0;
         bigBlind = 0;
@@ -93,5 +95,21 @@ public class Round {
     public void setRoundName(String roundName) {
         this.roundName = roundName;
     }
-    
+
+	public int getMinutesToBreak() {
+		return minutesToBreak;
+	}
+
+	public void setMinutesToBreak(int minutesToBreak) {
+		this.minutesToBreak = minutesToBreak;
+	}
+
+	public int getMinutes() {
+		return minutes;
+	}
+
+	public void setMinutes(int minutes) {
+		this.minutes = minutes;
+	}
+
 }
