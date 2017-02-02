@@ -12,6 +12,16 @@ public class ProjecaoLine {
 	private SimpleStringProperty projecao3;
 	private SimpleStringProperty projecao4;
 	private SimpleStringProperty projecao5;
+	private SimpleStringProperty projecao6;
+	private SimpleStringProperty projecao7;
+	private SimpleStringProperty projecao8;
+	private SimpleStringProperty projecao9;
+	private SimpleStringProperty projecao10;
+	private SimpleStringProperty projecao11;
+	private SimpleStringProperty projecao12;
+	private SimpleStringProperty projecao13;
+	private SimpleStringProperty projecao14;
+	private SimpleStringProperty projecao15;
 
 	public ProjecaoLine() {
 		jogador = new SimpleStringProperty();
@@ -23,6 +33,17 @@ public class ProjecaoLine {
 		projecao3 = new SimpleStringProperty();
 		projecao4 = new SimpleStringProperty();
 		projecao5 = new SimpleStringProperty();
+		projecao6 = new SimpleStringProperty();
+		projecao7 = new SimpleStringProperty();
+		projecao8 = new SimpleStringProperty();
+		projecao9 = new SimpleStringProperty();
+		projecao10 = new SimpleStringProperty();
+		projecao11 = new SimpleStringProperty();
+		projecao12 = new SimpleStringProperty();
+		projecao13 = new SimpleStringProperty();
+		projecao14 = new SimpleStringProperty();
+		projecao15 = new SimpleStringProperty();
+
 	}
 
 	public String getJogador() {
@@ -78,5 +99,65 @@ public class ProjecaoLine {
 	}
 	public void setProjecao5(String projecao5) {
 		this.projecao5.set(projecao5);
+	}
+	public String getProjecao6() {
+		return projecao6.get();
+	}
+	public void setProjecao6(String projecao6) {
+		this.projecao6.set(projecao6);
+	}
+	public String getProjecao7() {
+		return projecao7.get();
+	}
+	public void setProjecao7(String projecao7) {
+		this.projecao7.set(projecao7);
+	}
+	public String getProjecao8() {
+		return projecao8.get();
+	}
+	public void setProjecao8(String projecao8) {
+		this.projecao8.set(projecao8);
+	}
+	public String getProjecao9() {
+		return projecao9.get();
+	}
+	public void setProjecao9(String projecao9) {
+		this.projecao9.set(projecao9);
+	}
+	public String getProjecao10() {
+		return projecao10.get();
+	}
+	public void setProjecao10(String projecao10) {
+		this.projecao10.set(projecao10);
+	}
+	public String getProjecao11() {
+		return projecao11.get();
+	}
+	public void setProjecao11(String projecao11) {
+		this.projecao11.set(projecao11);
+	}
+	public String getProjecao12() {
+		return projecao12.get();
+	}
+	public void setProjecao12(String projecao12) {
+		this.projecao12.set(projecao12);
+	}
+	public String getProjecao13() {
+		return projecao13.get();
+	}
+	public void setProjecao13(String projecao13) {
+		this.projecao13.set(projecao13);
+	}
+	public String getProjecao14() {
+		return projecao14.get();
+	}
+	public void setProjecao14(String projecao14) {
+		this.projecao14.set(projecao14);
+	}
+	public String getProjecao15() {
+		return projecao15.get();
+	}
+	public void setProjecao15(String projecao15) {
+		this.projecao15.set(projecao15);
 	}
 }

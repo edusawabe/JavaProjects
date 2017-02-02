@@ -19,9 +19,11 @@ public final class Util {
 	}
 
 	public static String completeZerosDouble(double num, int qtdeCasas){
+		boolean negative = false;
 		String ret = new String();
 		if (num < 0) {
-			return ret = "" + num;
+			negative = true;
+			num = num * -1;
 		}
 		ret = "" + num;
 		double compare = 10;
@@ -30,6 +32,9 @@ public final class Util {
 			if (num < compare)
 				ret = "0" + ret;
 			compare = (compare * 10);
+		}
+		if (negative) {
+			ret = "-" + ret;
 		}
 		return ret;
 	}

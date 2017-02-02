@@ -38,7 +38,10 @@ import util.Util;
  */
 public class ConfigManager {
     private String configFileName;
+    private String actualStateFileName;
+    private String playersFileName;
     private LinkedList<Player> listPlayer;
+    private LinkedList<String> registeredPlayers;
 
     public LinkedList<Player> getListPlayer() {
 		return listPlayer;
@@ -51,6 +54,16 @@ public class ConfigManager {
 	//public void readFile(ListView<String> jltJogando){
 	public void readFile(){
 		File confgFile  = new File(configFileName);
+		if(!confgFile.exists()){
+			try {
+				listPlayer = new LinkedList<Player>();
+				confgFile.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+			}
         BufferedReader reader;
         String[] results;
         listPlayer = new LinkedList<>();
@@ -261,27 +274,27 @@ public class ConfigManager {
 								r.setRebuys(rebuys);
 								switch (pos) {
 								case 1:
-									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos, total1l));
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos,oListRebuys.size()));
 									r.setPremiacao(total1l);
 									break;
 								case 2:
-									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos, total2l));
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos,oListRebuys.size()));
 									r.setPremiacao(total2l);
 									break;
 								case 3:
-									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos, total3l));
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos,oListRebuys.size()));
 									r.setPremiacao(total3l);
 									break;
 								case 4:
-									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos, total4l));
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos,oListRebuys.size()));
 									r.setPremiacao(total4l);
 									break;
 								case 5:
-									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos, total5l));
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos,oListRebuys.size()));
 									r.setPremiacao(total5l);
 									break;
 								default:
-									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos, 0.00));
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos,oListRebuys.size()));
 									r.setPremiacao(0.00);
 									break;
 								}
@@ -315,209 +328,204 @@ public class ConfigManager {
         }
 	}
 
-	public ObservableList<ProjecaoLine> projetarResultado(ObservableList<String> oListRebuys, ObservableList<String> oListFora, int totalJogadores
-			, double total1l, double total2l, double total3l, double total4l, double total5l){
 
+	public ObservableList<ProjecaoLine> projetarResultado(ObservableList<String> oListRebuys,
+			ObservableList<String> oListFora, int totalJogadores) {
 		ObservableList<ProjecaoLine> projecaoList = FXCollections.observableArrayList();
 		ObservableList<ProjecaoLine> projecaoListOrdered = FXCollections.observableArrayList();
-		File confgFile  = new File(configFileName);
+		File confgFile = new File(configFileName);
 		Date date = new Date();
 		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
 		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(6, 7));
-		if(Constants.CURRENT_MONTH > 0)
+		if (Constants.CURRENT_MONTH > 0)
 			mesEtapa = Constants.CURRENT_MONTH;
-        BufferedReader reader;
-        int cont = 0;
-        int qtdeJogadoresTotal = 0;
-        int posAtual = 0;
-        LinkedList<Player> lPlayer = new LinkedList<Player>();
-        JogadorConfigFile j = new JogadorConfigFile();
-        String[] results;
-		double soma = 0.0;
+		int cont = 0;
+		int qtdeJogadoresTotal = 0;
+		int posAtual = 0;
 
-        try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(confgFile),"Cp1252"));
-            String line = reader.readLine();
-            String readLines = new String();
-            String backupLine = new String();
-            int m = 0;
-            double projecao = 0;
-            while (line != null) {
-				backupLine += line + "\n";
-				readLines = readLines + line + "\n";
-				if(cont > 1){
-					line = reader.readLine();
-					if (line == null)
-						break;
-				}
-				if (line.equals("#Jogadores")) {
-					cont++;
-					line = reader.readLine();
-					while (line != null && (!line.equals("#Jogadores")) && cont < 2) {
-						posAtual = 0;
-						m = 0;
-						j.parseFileLine(line);
-						Player p = new Player();
-						p.setPlayerName(j.getNome());
-						p.setPlayerMail(j.getEmail());
-						results = j.getResults();
-						ArrayList<ResultadoRodada> aResults = new ArrayList<ResultadoRodada>();;
-						for (int i = 0; i < oListFora.size(); i++) {
-							if(oListFora.get(i).equals(p.getPlayerName())){
-								posAtual = totalJogadores - m;
-								break;
-							}
-							m++;
-						}
-						for (int i = 0; i < results.length; i++) {
-							aResults.add(new ResultadoRodada());
-							aResults.get(i).getResultadoFromFileLine(results[i]);
-							if (!aResults.get(i).getColocacao().equals("0") && !aResults.get(i).getColocacao().equals("00"))
-								qtdeJogadoresTotal++;
-						}
-						p.setResultados(aResults);
-						int rebuys = 0;
-						for (int i = 0; i < oListRebuys.size(); i++) {
-							if(oListRebuys.get(i).equals(p.getPlayerName()))
-								rebuys++;
-						}
+		// Faz a leitura dos jogadores do arquivo de configuração
+		getPlayers();
+		// seta a lista com os jogadores lidos
+		LinkedList<Player> lPlayer = getListPlayer();
 
-						for (int i = 0; i < results.length; i++) {
-							ResultadoRodada r = new ResultadoRodada();
-							ProjecaoLine pl = new ProjecaoLine();
-							pl.setJogador(j.getNome());
-							p.updatePontuacaoTotal();
-							pl.setAtual(Util.completeZerosDouble(p.getPontuacaoTotal(), 3));
-							r.getResultadoFromFileLine(results[i]);
-							if ((i+1) == mesEtapa){
-								for (int k = 0; k < 5; k++) {
-									r.setColocacao(Util.completeZeros(k+1, 1));
-									r.setRebuys(rebuys);
-									switch (k+1) {
-									case 1:
-										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total1l));
-										r.setPremiacao(total1l);
-										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
-										pl.setProjecao1(Util.completeZerosDouble(projecao, 3));
-										break;
-									case 2:
-										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total2l));
-										r.setPremiacao(total2l);
-										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
-										pl.setProjecao2(Util.completeZerosDouble(projecao, 3));
-										break;
-									case 3:
-										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total3l));
-										r.setPremiacao(total3l);
-										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
-										pl.setProjecao3(Util.completeZerosDouble(projecao, 3));
-										break;
-									case 4:
-										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total4l));
-										r.setPremiacao(total4l);
-										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
-										pl.setProjecao4(Util.completeZerosDouble(projecao, 3));
-										break;
-									case 5:
-										r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k+1, total5l));
-										r.setPremiacao(total5l);
-										projecao =  Util.arredondar(r.getPontuacaoEtapa() + p.getPontuacaoTotal());
-										pl.setProjecao5(Util.completeZerosDouble(projecao, 3));
-										break;
-									}
+		double projecao = 0;
+		// Pega cada jogador do arquivo de configuração
+		// verificar se está jogando
+		// quantidade de rebuys dele
+		// e a posição atual
+		for (int l = 0; l < lPlayer.size(); l++) {
+			Player p = lPlayer.get(l);
+			ArrayList<ResultadoRodada> aResults = p.getResultados();
 
-									switch (posAtual) {
-									case 1:
-										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total1l));
-										soma = getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total1l);
-										break;
-									case 2:
-										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total2l));
-										soma = getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total2l);
-										break;
-									case 3:
-										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total3l));
-										soma = getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total3l);
-										break;
-									case 4:
-										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total4l));
-										soma = getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total4l);
-										break;
-									case 5:
-										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total5l));
-										soma = getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, total5l);
-										break;
-									default:
-										pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / " + getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, 0));
-										soma = getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, 0);
-										break;
-									}
-									results[mesEtapa -1] = r.getResultLine();
-								}
-								soma = soma + p.getPontuacaoTotal();
-								pl.setPosRodada(""+Util.completeZerosDouble(Util.arredondar(soma),3));
-								projecaoList.add(pl);
-							}
-							else
-								if ((i+1) >  mesEtapa)
-									break;
-						}
-						readLines = readLines + j.generateFileLine() + "\n";
-						line = reader.readLine();
-						//if(!line.equals("#Jogadores"))
-						//	backupLine += line + "\n";
-					}
+			posAtual = 0;
+			projecao = 0;
+			// Obtem a posicao atual
+			for (int i = 0; i < oListFora.size(); i++) {
+				if (oListFora.get(i).equals(p.getPlayerName())) {
+					posAtual = totalJogadores - i;
+					break;
 				}
 			}
-            Double itemOrdenado;
-            Double itemLista;
 
-			for (int l = 0; l < projecaoList.size(); l++) {
-				if (l == 0) {
-					projecaoListOrdered.add(projecaoList.get(l));
-				}
-				else {
-					itemLista = new Double(projecaoList.get(l).getAtual());
-					for (int l2 = 0; l2 < projecaoListOrdered.size(); l2++) {
-						itemOrdenado = new Double(projecaoListOrdered.get(l2).getAtual());
-						if (itemOrdenado.compareTo(itemLista) <= 0) {
-							projecaoListOrdered.add(l2, projecaoList.get(l));
-							break;
-						} else {
-							if (Double.parseDouble(projecaoListOrdered.get(l2).getAtual()) == 0
-									&& Double.parseDouble(projecaoList.get(l).getAtual()) < 0) {
-								projecaoListOrdered.add(l2, projecaoList.get(l));
-								break;
-							}
-							if(itemLista.compareTo(new Double("0")) == 0) {
-								projecaoListOrdered.add(projecaoList.get(l));
-								break;
-							}
-							if (itemOrdenado.compareTo(itemLista) > 0
-									&& l2 == (projecaoListOrdered.size() - 1)) {
-								projecaoListOrdered.add(projecaoList.get(l));
-								break;
-							}
-						}
-					}
+			int rebuys = 0;
+			// Obtem a quantidade de rebuys
+			for (int i = 0; i < oListRebuys.size(); i++) {
+				if (oListRebuys.get(i).equals(p.getPlayerName())) {
+					rebuys++;
 				}
 			}
-            reader.close();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
-        for (int k = 0; k < projecaoListOrdered.size(); k++) {
-        	int h = k+1;
-        	if(h < 10)
-        		projecaoListOrdered.get(k).setJogador("0" + h + "º - " + projecaoListOrdered.get(k).getJogador());
-        	else
-        		projecaoListOrdered.get(k).setJogador(h + "º - " + projecaoListOrdered.get(k).getJogador());
+			ProjecaoLine pl = new ProjecaoLine();
+			pl.setJogador(p.getPlayerName());
+			pl.setAtual(Util.completeZerosDouble(p.getPontuacaoTotal(), 3));
+
+			double soma = 0;
+			for (int k = 0; k < 15; k++) {
+				projecao = Util
+						.arredondar(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k + 1, oListRebuys.size())
+								+ p.getPontuacaoTotal());
+				switch (k + 1) {
+				case 1:
+					pl.setProjecao1(Util.completeZerosDouble(projecao, 3));
+					break;
+				case 2:
+					pl.setProjecao2(Util.completeZerosDouble(projecao, 3));
+					break;
+				case 3:
+					pl.setProjecao3(Util.completeZerosDouble(projecao, 3));
+					break;
+				case 4:
+					pl.setProjecao4(Util.completeZerosDouble(projecao, 3));
+					break;
+				case 5:
+					pl.setProjecao5(Util.completeZerosDouble(projecao, 3));
+					break;
+				case 6:
+					pl.setProjecao6(Util.completeZerosDouble(projecao, 3));
+					break;
+				case 7:
+					pl.setProjecao7(Util.completeZerosDouble(projecao, 3));
+					break;
+				case 8:
+					pl.setProjecao8(Util.completeZerosDouble(projecao, 3));
+					break;
+				case 9:
+					pl.setProjecao9(Util.completeZerosDouble(projecao, 3));
+					break;
+				case 10:
+					pl.setProjecao10(Util.completeZerosDouble(projecao, 3));
+					break;
+				case 11:
+					pl.setProjecao11(Util.completeZerosDouble(projecao, 3));
+					break;
+				case 12:
+					pl.setProjecao12(Util.completeZerosDouble(projecao, 3));
+					break;
+				case 13:
+					pl.setProjecao13(Util.completeZerosDouble(projecao, 3));
+					break;
+				case 14:
+					pl.setProjecao14(Util.completeZerosDouble(projecao, 3));
+					break;
+				default:
+					pl.setProjecao15(Util.completeZerosDouble(projecao, 3));
+					break;
+				}
+			}
+			pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / "
+					+ getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, oListRebuys.size()));
+			soma = getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, oListRebuys.size());
+			soma = soma + p.getPontuacaoTotal();
+			pl.setPosRodada("" + Util.completeZerosDouble(Util.arredondar(soma), 3));
+			projecaoList.add(pl);
 		}
 
-        return projecaoListOrdered;
+		Double itemOrdenado;
+		Double itemLista;
+
+		for (int l1 = 0; l1 < projecaoList.size(); l1++) {
+			if (l1 == 0) {
+				projecaoListOrdered.add(projecaoList.get(l1));
+			} else {
+				itemLista = new Double(projecaoList.get(l1).getAtual());
+				for (int l2 = 0; l2 < projecaoListOrdered.size(); l2++) {
+					itemOrdenado = new Double(projecaoListOrdered.get(l2).getAtual());
+					if (itemOrdenado.compareTo(itemLista) <= 0) {
+						projecaoListOrdered.add(l2, projecaoList.get(l1));
+						break;
+					} else {
+						if (Double.parseDouble(projecaoListOrdered.get(l2).getAtual()) == 0
+								&& Double.parseDouble(projecaoList.get(l1).getAtual()) < 0) {
+							projecaoListOrdered.add(l2, projecaoList.get(l1));
+							break;
+						}
+						if (itemLista.compareTo(new Double("0")) == 0) {
+							projecaoListOrdered.add(projecaoList.get(l1));
+							break;
+						}
+						if (itemOrdenado.compareTo(itemLista) > 0 && l2 == (projecaoListOrdered.size() - 1)) {
+							projecaoListOrdered.add(projecaoList.get(l1));
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		for (int k = 0; k < projecaoListOrdered.size(); k++) {
+			int h = k + 1;
+			if (h < 10)
+				projecaoListOrdered.get(k).setJogador("0" + h + "º - " + projecaoListOrdered.get(k).getJogador());
+			else
+				projecaoListOrdered.get(k).setJogador(h + "º - " + projecaoListOrdered.get(k).getJogador());
+		}
+
+		return projecaoListOrdered;
+	}
+
+
+	private void readPlayers() {
+		File f = new File(playersFileName);
+		registeredPlayers = new LinkedList<String>();
+		boolean playerExists;
+		if(f.exists()) {
+			try {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(playersFileName),"Cp1252"));
+	            String line = reader.readLine();
+	            while(line != null){
+	            	registeredPlayers.add(line);
+	            	playerExists = false;
+	            	if(listPlayer.isEmpty()){
+	            		addPlayer(line);
+	            	}
+	            	for (int i = 0; i < listPlayer.size(); i++) {
+	            		if(listPlayer.get(i).getPlayerName().equals(line)){
+	            			playerExists = true;
+	            		}
+	            		if(!playerExists){
+	            			addPlayer(line);
+	            		}
+					}
+	            	line = reader.readLine();
+	            }
+	            reader.close();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void readActualStateFile() {
+		File f = new File(actualStateFileName);
+		if(f.exists()){
+
+		}
+		else
+			readPlayers();
 	}
 
 	/*
@@ -562,7 +570,7 @@ public class ConfigManager {
 			C: Cada um dos 8 jogadores da mesa final ganha 20 pontos
 			D: Cada Rebuy realizado vale -15 pontos
 	 */
-	public double getPontuacaoJogadorEtapa(int qtdJogadores, int rebuys, int pos, double premio, int qtdeRebuysRodada){
+	public double getPontuacaoJogadorEtapa(int qtdJogadores, int rebuys, int pos, int qtdeRebuysRodada){
 		double resultado = 0;
 
 		if (pos > 0){
@@ -685,4 +693,24 @@ public class ConfigManager {
     public void setConfigFileName(String configFileName) {
         this.configFileName = configFileName;
     }
+
+	public String getActualStateFileName() {
+		return actualStateFileName;
+	}
+
+	public void setActualStateFileName(String actualStateFileName) {
+		this.actualStateFileName = actualStateFileName;
+	}
+
+	public String getPlayersFileName() {
+		return playersFileName;
+	}
+
+	public void setPlayersFileName(String playersFileName) {
+		this.playersFileName = playersFileName;
+	}
+
+	public LinkedList<String> getRegisteredPlayers() {
+		return registeredPlayers;
+	}
 }

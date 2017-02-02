@@ -57,7 +57,7 @@ public class ResultadoRodada {
 	public double getPontuacaoJogadorEtapa(){
 		ConfigManager config = new ConfigManager();
 		if(qtderebuysEtapa > 0)
-			return config.getPontuacaoJogadorEtapa(qtdeJogadores, rebuys, Integer.parseInt(colocacao), premiacao, qtderebuysEtapa);
+			return config.getPontuacaoJogadorEtapa(qtdeJogadores, rebuys, Integer.parseInt(colocacao), qtderebuysEtapa);
 		else
 			return config.getPontuacaoJogadorEtapa(this);
 	}

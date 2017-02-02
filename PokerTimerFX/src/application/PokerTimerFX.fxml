@@ -454,7 +454,7 @@
                               </VBox>
                               <VBox alignment="TOP_CENTER" layoutX="452.0" layoutY="10.0" prefHeight="200.0">
                                  <children>
-                                    <Label fx:id="lbMesa21" alignment="CENTER" text="Mesa 3">
+                                    <Label fx:id="lbMesa3" alignment="CENTER" text="Mesa 3">
                                        <font>
                                           <Font name="System Bold" size="14.0" />
                                        </font>

@@ -36,6 +36,26 @@ public class ProjecaoController implements Initializable{
 		@FXML
 		private TableColumn cProjecao5;
 		@FXML
+		private TableColumn cProjecao6;
+		@FXML
+		private TableColumn cProjecao7;
+		@FXML
+		private TableColumn cProjecao8;
+		@FXML
+		private TableColumn cProjecao9;
+		@FXML
+		private TableColumn cProjecao10;
+		@FXML
+		private TableColumn cProjecao11;
+		@FXML
+		private TableColumn cProjecao12;
+		@FXML
+		private TableColumn cProjecao13;
+		@FXML
+		private TableColumn cProjecao14;
+		@FXML
+		private TableColumn cProjecao15;
+		@FXML
 		private Label label1;
 		@FXML
 		private Label label2;
@@ -64,6 +84,16 @@ public class ProjecaoController implements Initializable{
 			cProjecao3.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao3"));
 			cProjecao4.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao4"));
 			cProjecao5.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao5"));
+			cProjecao6.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao6"));
+			cProjecao7.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao7"));
+			cProjecao8.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao8"));
+			cProjecao9.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao9"));
+			cProjecao10.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao10"));
+			cProjecao11.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao11"));
+			cProjecao12.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao12"));
+			cProjecao13.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao13"));
+			cProjecao14.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao14"));
+			cProjecao15.setCellValueFactory(new PropertyValueFactory<ProjecaoLine, String>("projecao15"));
 		}
 
 		public TableView<ProjecaoLine> gettProjecao() {

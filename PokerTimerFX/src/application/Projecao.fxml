@@ -34,6 +34,16 @@
                         <TableColumn fx:id="cProjecao3" text="Projeção 3º" />
                         <TableColumn fx:id="cProjecao4" text="Projeção 4º" />
                         <TableColumn fx:id="cProjecao5" text="Projeção 5º" />
+                        <TableColumn fx:id="cProjecao6" text="Projeção 6º" />
+                        <TableColumn fx:id="cProjecao7" text="Projeção 7º" />
+                        <TableColumn fx:id="cProjecao8" text="Projeção 8º" />
+                        <TableColumn fx:id="cProjecao9" text="Projeção 9º" />
+                        <TableColumn fx:id="cProjecao10" text="Projeção 10º" />
+                        <TableColumn fx:id="cProjecao11" text="Projeção 11º" />
+                        <TableColumn fx:id="cProjecao12" text="Projeção 12º" />
+                        <TableColumn fx:id="cProjecao13" text="Projeção 13º" />
+                        <TableColumn fx:id="cProjecao14" text="Projeção 14º" />
+                        <TableColumn fx:id="cProjecao15" text="Projeção 15º" />
                     </columns>
                   </TableView>
                </content>

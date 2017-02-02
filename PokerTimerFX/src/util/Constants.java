@@ -22,7 +22,7 @@ public final class Constants {
     public static double REBUY_VALUE = 30.00;
     public static int MAX_REBUY = 99999999;
     public static int SECONDS_IN_MINUTE = 60;
-    public static int CURRENT_MONTH =  12;
+    public static int CURRENT_MONTH =  0;
     public static int MAX_ROUND_REBUY = 10;
     public static int MAX_PLAYERS_FINAL_TABLE = 9;
     public static int LAST_BREAK_ROUND = 20;
