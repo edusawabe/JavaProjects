@@ -44,6 +44,7 @@
                         <TableColumn fx:id="cProjecao13" text="Projeção 13º" />
                         <TableColumn fx:id="cProjecao14" text="Projeção 14º" />
                         <TableColumn fx:id="cProjecao15" text="Projeção 15º" />
+                        <TableColumn fx:id="cProjecaoSelecionada" text="Projeção Selecionada" />
                     </columns>
                   </TableView>
                </content>
@@ -55,14 +56,17 @@
          <top>
             <GridPane BorderPane.alignment="CENTER">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="454.0" minWidth="10.0" prefWidth="182.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="738.0" minWidth="10.0" prefWidth="738.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="182.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <Label alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="182.0" text="Premiação Anual:">
@@ -85,7 +89,7 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
-                  <Label fx:id="label1" alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="42.0" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Label fx:id="label1" alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="42.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -93,7 +97,7 @@
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label fx:id="label2" alignment="BOTTOM_LEFT" layoutX="192.0" layoutY="42.0" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <Label fx:id="label2" alignment="BOTTOM_LEFT" layoutX="192.0" layoutY="42.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -101,7 +105,7 @@
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label fx:id="label3" alignment="BOTTOM_LEFT" layoutX="192.0" layoutY="72.0" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <Label fx:id="label3" alignment="BOTTOM_LEFT" layoutX="192.0" layoutY="72.0" text="SDFSFSDFSFSDFSDFSDF" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="3">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -109,7 +113,7 @@
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label fx:id="labelAnual" alignment="BOTTOM_LEFT" layoutX="197.0" layoutY="42.0" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1">
+                  <Label fx:id="labelAnual" alignment="BOTTOM_LEFT" layoutX="197.0" layoutY="42.0" GridPane.columnIndex="1">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -117,6 +121,75 @@
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Label>
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="102.0" prefHeight="27.0" prefWidth="181.0" text="4º:" GridPane.rowIndex="4">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="132.0" prefHeight="27.0" prefWidth="181.0" text="5º:" GridPane.rowIndex="5">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="label4" alignment="BOTTOM_LEFT" layoutX="202.0" layoutY="102.0" text="SDFSFSDFSFSDFSDFSDF" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="label5" alignment="BOTTOM_LEFT" layoutX="202.0" layoutY="132.0" text="SDFSFSDFSFSDFSDFSDF" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="182.0" text="Projetar Colocação:" GridPane.rowIndex="6">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                     <children>
+                        <ComboBox fx:id="cbColocacao" onAction="#tratarCombo">
+                           <HBox.margin>
+                              <Insets top="2.0" />
+                           </HBox.margin>
+                        </ComboBox>
+                        <Label text="Projetar Com Mais Rebuy:">
+                           <HBox.margin>
+                              <Insets left="10.0" top="5.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="txQtdeRebuys" prefHeight="25.0" prefWidth="82.0" promptText="# Rebuys">
+                           <HBox.margin>
+                              <Insets left="10.0" top="2.0" />
+                           </HBox.margin>
+                        </TextField>
+                        <ComboBox fx:id="cbJogadores" prefWidth="150.0">
+                           <HBox.margin>
+                              <Insets left="10.0" top="2.0" />
+                           </HBox.margin>
+                        </ComboBox>
+                        <Button mnemonicParsing="false" onAction="#projetar" text="Projetar">
+                           <HBox.margin>
+                              <Insets left="10.0" top="2.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </HBox>
                </children>
                <BorderPane.margin>
                   <Insets />

@@ -330,7 +330,7 @@ public class ConfigManager {
 
 
 	public ObservableList<ProjecaoLine> projetarResultado(ObservableList<String> oListRebuys,
-			ObservableList<String> oListFora, int totalJogadores) {
+			ObservableList<String> oListFora, ObservableList<String> oListJogadores, int totalJogadores, int colocaocaoPersonilizada, int rebuysMais, String jogadorRebuys) {
 		ObservableList<ProjecaoLine> projecaoList = FXCollections.observableArrayList();
 		ObservableList<ProjecaoLine> projecaoListOrdered = FXCollections.observableArrayList();
 		File confgFile = new File(configFileName);
@@ -342,6 +342,8 @@ public class ConfigManager {
 		int cont = 0;
 		int qtdeJogadoresTotal = 0;
 		int posAtual = 0;
+		boolean jogando = false;
+		double soma = 0;
 
 		// Faz a leitura dos jogadores do arquivo de configuração
 		getPlayers();
@@ -356,6 +358,7 @@ public class ConfigManager {
 		for (int l = 0; l < lPlayer.size(); l++) {
 			Player p = lPlayer.get(l);
 			ArrayList<ResultadoRodada> aResults = p.getResultados();
+			jogando = false;
 
 			posAtual = 0;
 			projecao = 0;
@@ -375,15 +378,44 @@ public class ConfigManager {
 				}
 			}
 
+			// verifica jogador jogando
+			for (int i = 0; i < oListFora.size(); i++) {
+				if (oListFora.get(i).equals(p.getPlayerName())) {
+					jogando = true;
+					break;
+				}
+			}
+
+			if (!jogando) {
+				// Obtem a posicao atual
+				for (int i = 0; i < oListJogadores.size(); i++) {
+					if (oListJogadores.get(i).equals(p.getPlayerName())) {
+						jogando = true;
+						break;
+					}
+				}
+			}
+
+			if (p.getPlayerName().equals(jogadorRebuys)){
+				rebuys = rebuys + rebuysMais;
+			}
+
 			ProjecaoLine pl = new ProjecaoLine();
 			pl.setJogador(p.getPlayerName());
 			pl.setAtual(Util.completeZerosDouble(p.getPontuacaoTotal(), 3));
 
-			double soma = 0;
+			soma = 0;
 			for (int k = 0; k < 15; k++) {
-				projecao = Util
-						.arredondar(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k + 1, oListRebuys.size())
-								+ p.getPontuacaoTotal());
+				if(jogando){
+					projecao = Util
+							.arredondar(getPontuacaoJogadorEtapa(totalJogadores, rebuys, k + 1, oListRebuys.size())
+									+ p.getPontuacaoTotal());
+				}
+				else{
+					projecao = Util
+							.arredondar(0.00
+									+ p.getPontuacaoTotal());
+				}
 				switch (k + 1) {
 				case 1:
 					pl.setProjecao1(Util.completeZerosDouble(projecao, 3));
@@ -432,11 +464,24 @@ public class ConfigManager {
 					break;
 				}
 			}
-			pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / "
-					+ getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, oListRebuys.size()));
-			soma = getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, oListRebuys.size());
-			soma = soma + p.getPontuacaoTotal();
-			pl.setPosRodada("" + Util.completeZerosDouble(Util.arredondar(soma), 3));
+			if(jogando){
+				pl.setNestaRodada(Util.completeZeros(posAtual, 2) + "º" + " / "
+						+ getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, oListRebuys.size()));
+				soma = getPontuacaoJogadorEtapa(totalJogadores, rebuys, posAtual, oListRebuys.size());
+				soma = soma + p.getPontuacaoTotal();
+				pl.setPosRodada("" + Util.completeZerosDouble(Util.arredondar(soma), 3));
+				projecao = Util
+						.arredondar(getPontuacaoJogadorEtapa(totalJogadores, rebuys, colocaocaoPersonilizada, oListRebuys.size())
+								+ p.getPontuacaoTotal());
+				pl.setProjecaoCustom(Util.completeZerosDouble(projecao, 3));
+			}else{
+				pl.setNestaRodada("");
+				soma = 0.00;
+				soma = soma + p.getPontuacaoTotal();
+				pl.setPosRodada("" + Util.completeZerosDouble(Util.arredondar(soma), 3));
+				projecao = 0.00;
+				pl.setProjecaoCustom(Util.completeZerosDouble(projecao, 3));
+			}
 			projecaoList.add(pl);
 		}
 
@@ -486,6 +531,7 @@ public class ConfigManager {
 
 	private void readPlayers() {
 		File f = new File(playersFileName);
+		f.getAbsolutePath();
 		registeredPlayers = new LinkedList<String>();
 		boolean playerExists;
 		if(f.exists()) {
@@ -659,14 +705,16 @@ public class ConfigManager {
 		int qtdJogadores;
 		int rebuys;
 		int pos;
+		int rebuysEtapa;
 		double premio;
 
 		pos = Integer.parseInt(r.getColocacao());
 		qtdJogadores = r.getQtdeJogadores();
 		rebuys = r.getRebuys();
 		premio = r.getPremiacao();
+		rebuysEtapa = r.getQtderebuysEtapa();
 
-		return getPontuacaoJogadorEtapa(qtdJogadores, rebuys, pos, premio);
+		return getPontuacaoJogadorEtapa(qtdJogadores, rebuys, pos, rebuysEtapa);
 	}
 
 	public String getMailList(){

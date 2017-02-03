@@ -26,4 +26,5 @@ public final class Constants {
     public static int MAX_ROUND_REBUY = 10;
     public static int MAX_PLAYERS_FINAL_TABLE = 9;
     public static int LAST_BREAK_ROUND = 20;
+    public static double SUBSCRIPTION_VALUE = 25.00;
 }

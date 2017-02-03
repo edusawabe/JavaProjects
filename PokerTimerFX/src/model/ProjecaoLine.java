@@ -22,6 +22,7 @@ public class ProjecaoLine {
 	private SimpleStringProperty projecao13;
 	private SimpleStringProperty projecao14;
 	private SimpleStringProperty projecao15;
+	private SimpleStringProperty projecaoCustom;
 
 	public ProjecaoLine() {
 		jogador = new SimpleStringProperty();
@@ -43,6 +44,7 @@ public class ProjecaoLine {
 		projecao13 = new SimpleStringProperty();
 		projecao14 = new SimpleStringProperty();
 		projecao15 = new SimpleStringProperty();
+		projecaoCustom = new SimpleStringProperty();
 
 	}
 
@@ -159,5 +161,13 @@ public class ProjecaoLine {
 	}
 	public void setProjecao15(String projecao15) {
 		this.projecao15.set(projecao15);
+	}
+
+	public String getProjecaoCustom() {
+		return projecaoCustom.get();
+	}
+
+	public void setProjecaoCustom(String projecaoCustom) {
+		this.projecaoCustom.set(projecaoCustom);
 	}
 }

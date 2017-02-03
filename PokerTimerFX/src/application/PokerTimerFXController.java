@@ -503,10 +503,12 @@ public class PokerTimerFXController implements Initializable{
 		}
     	totalJogadoresAno = totalJogadoresAno + oListJogadores.size() + oListFora.size();
 
-    	double premioTotal = (totalJogadoresAno * 15);
-    	double premio1 = premioTotal * 0.6;
-    	double premio2 = premioTotal * 0.3;
-    	double premio3 = premioTotal * 0.1;
+    	double premioTotal = (totalJogadoresAno * Constants.SUBSCRIPTION_VALUE);
+    	double premio1 = premioTotal * 0.45;
+    	double premio2 = premioTotal * 0.25;
+    	double premio3 = premioTotal * 0.15;
+    	double premio4 = premioTotal * 0.10;
+    	double premio5 = premioTotal * 0.05;
 
     	//obtem Loader
     	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Projecao.fxml"));
@@ -519,8 +521,8 @@ public class PokerTimerFXController implements Initializable{
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Projeções");
 
-			lprojecaoLine = configManager.projetarResultado(oListRebuys, oListFora, oListFora.size() + oListJogadores.size());
-			lprojecaoLine = ordenarProjecaoRodada(lprojecaoLine);
+			lprojecaoLine = configManager.projetarResultado(oListRebuys, oListFora, oListJogadores, oListFora.size() + oListJogadores.size(),0,0,"");
+			//lprojecaoLine = ordenarProjecaoRodada(lprojecaoLine);
 
 			// obtem o controller da nova janela
 			projecaoController = fxmlLoader.<ProjecaoController> getController();
@@ -529,11 +531,27 @@ public class PokerTimerFXController implements Initializable{
 			projecaoController.gettProjecao().setItems(lprojecaoLine);
 
 			projecaoController.setListProjecaoLines(lprojecaoLine);
+			projecaoController.getoListFora().addAll(oListFora);
+			projecaoController.getoListJogadores().addAll(oListJogadores);
+			projecaoController.getoListRebuys().addAll(oListRebuys);
+			projecaoController.setConfigManager(configManager);
+			projecaoController.getoListJogando().addAll(oListJogadores);
+			projecaoController.getoListJogando().addAll(oListFora);
+			projecaoController.sortoListJogando();
+			projecaoController.getCbJogadores().setItems(projecaoController.getoListJogando());
 
 			projecaoController.getLabel1().setText("R$ "+ Math.round(premio1));
 			projecaoController.getLabel2().setText("R$ "+Math.round(premio2));
 			projecaoController.getLabel3().setText("R$ "+Math.round(premio3));
+			projecaoController.getLabel4().setText("R$ "+Math.round(premio4));
+			projecaoController.getLabel5().setText("R$ "+Math.round(premio5));
 			projecaoController.getLabelAnual().setText("R$ "+Math.round(premioTotal));
+
+			for (int i = 0; i < oListJogadores.size() + oListFora.size(); i++) {
+				projecaoController.getListComboColocacao().add((i+1) + "º");
+			}
+
+			projecaoController.getCbColocacao().getItems().addAll(projecaoController.getListComboColocacao());
 
 			primaryStage.show();
 		} catch(Exception e) {
@@ -765,7 +783,7 @@ public class PokerTimerFXController implements Initializable{
 		int pos;
 		pos = gerador.nextInt(oListJogadoresMesa2.size()+1);
 		oListJogadoresMesa2.add(pos, cbJogador.getSelectionModel().getSelectedItem());
-		addJogadorLista(cbJogador.getSelectionModel().getSelectedItem(), oListJogadores);
+		Util.addJogadorListaOrdenadamente(cbJogador.getSelectionModel().getSelectedItem(), oListJogadores);
 		oListComboJogador.remove(cbJogador.getSelectionModel().getSelectedIndex());
 		cbJogador.setItems(oListComboJogador);
 		listMesa2.setItems(oListJogadoresMesa2);
@@ -775,7 +793,7 @@ public class PokerTimerFXController implements Initializable{
 		int pos;
 		pos = gerador.nextInt(oListJogadoresMesa1.size()+1);
 		oListJogadoresMesa1.add(pos, cbJogador.getSelectionModel().getSelectedItem());
-		addJogadorLista(cbJogador.getSelectionModel().getSelectedItem(), oListJogadores);
+		Util.addJogadorListaOrdenadamente(cbJogador.getSelectionModel().getSelectedItem(), oListJogadores);
 		oListComboJogador.remove(cbJogador.getSelectionModel().getSelectedIndex());
 		cbJogador.setItems(oListComboJogador);
 		listMesa1.setItems(oListJogadoresMesa1);
@@ -792,11 +810,11 @@ public class PokerTimerFXController implements Initializable{
 		//Se existe, remove jogador do combo e adiociona na lista de jogadores
 		//Senão apenas adiciona na lista de jogadores
 		if (index >= 0){
-			addJogadorLista(cbJogador.getItems().get(index), oListJogadores);
+			Util.addJogadorListaOrdenadamente(cbJogador.getItems().get(index), oListJogadores);
 			cbJogador.getItems().remove(index);
 		}
 		else {
-			addJogadorLista(cbJogador.editorProperty().get().getText(), oListJogadores);
+			Util.addJogadorListaOrdenadamente(cbJogador.editorProperty().get().getText(), oListJogadores);
 		}
 		listJogadores.setItems(oListJogadores);
 		cbJogador.setItems(oListComboJogador);
@@ -832,7 +850,7 @@ public class PokerTimerFXController implements Initializable{
 			listJogadores.setItems(oListJogadores);
 
 			//Adiciona na lista de jogadores do Combo ordenadamente
-			addJogadorLista(jogador, oListComboJogador);
+			Util.addJogadorListaOrdenadamente(jogador, oListComboJogador);
 			cbJogador.setItems(oListComboJogador);
 		}
 	}
@@ -1115,7 +1133,7 @@ public class PokerTimerFXController implements Initializable{
 		}
 		else{
 			playCancelElimina();
-			addJogadorLista(oListFora.get(i), oListJogadores);
+			Util.addJogadorListaOrdenadamente(oListFora.get(i), oListJogadores);
 			oListFora.remove(i);
 			oListJogadoresMesa1.clear();
 			oListJogadoresMesa1.addAll(oListJogadoresMesa1Bk);
@@ -1124,24 +1142,6 @@ public class PokerTimerFXController implements Initializable{
 			atualizarEstatisticas();
 		}
 		listJogadores.requestFocus();
-	}
-
-	private void addJogadorLista(String jogador, ObservableList<String> l) {
-		boolean added = false;
-		if(l.size() == 0)
-			l.add(jogador);
-		else{
-			for (int i = 0; i < l.size(); i++) {
-				if (jogador.compareTo(l.get(i)) < 0) {
-					l.add(i, jogador);
-					added = true;
-					break;
-				}
-			}
-			if(!added)
-				l.add(jogador);
-
-		}
 	}
 
 	private void retornarJogadorMesa(String jogador, ObservableList<String> l, LinkedList<String> lOriginal) {
@@ -1607,7 +1607,7 @@ public class PokerTimerFXController implements Initializable{
         	statsMedia.setText("" + (((totalJogadores + totalRebuy) * 3000)/totalJogando));
     }
 
-	private ObservableList<ProjecaoLine> ordenarProjecaoRodada(ObservableList<ProjecaoLine> l) {
+	public ObservableList<ProjecaoLine> ordenarProjecaoRodada(ObservableList<ProjecaoLine> l) {
 		LinkedList<ProjecaoLine> lOrdered = new LinkedList<ProjecaoLine>();
 		Double d1 = new Double(0.0);
 		Double d2 = new Double(0.0);
@@ -1630,10 +1630,6 @@ public class PokerTimerFXController implements Initializable{
 						lOrdered.add(j, p);
 						break;
 					} else {
-						if (d2 < 0 && d1.equals(new Double(0.0))) {
-							lOrdered.add(j, p);
-							break;
-						}
 						if (d1 > d2 && j == (lOrdered.size() - 1)) {
 							lOrdered.add(p);
 							break;
@@ -1727,5 +1723,21 @@ public class PokerTimerFXController implements Initializable{
 	         }
 	     }
 	 }
+
+	public ObservableList<String> getoListRebuys() {
+		return oListRebuys;
+	}
+
+	public ObservableList<String> getoListFora() {
+		return oListFora;
+	}
+
+	public ConfigManager getConfigManager() {
+		return configManager;
+	}
+
+	public ObservableList<String> getoListJogadores() {
+		return oListJogadores;
+	}
 
 }
