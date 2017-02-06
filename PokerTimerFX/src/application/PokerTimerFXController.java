@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.ResourceBundle;
+
+import com.sun.javafx.css.Style;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -40,6 +43,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -152,11 +156,13 @@ public class PokerTimerFXController implements Initializable{
 	@FXML
 	private AnchorPane parent;
 	@FXML
-	private HBox painelInferior;
-	@FXML
 	private VBox painelInferiorJogadores;
 	@FXML
 	private HBox hbBotoesJogadores;
+	@FXML
+	private HBox hbInferior;
+	@FXML
+	private HBox hbSuperior;
 
 	private ConfigManager configManager;
 
@@ -200,6 +206,7 @@ public class PokerTimerFXController implements Initializable{
     private int currentSelection;
     private int lastInput;
     private String lastSelectedName;
+    private int hidePainelInferior;
 
 	public PokerTimerFXController() {
 		lastKey = "";
@@ -1409,6 +1416,7 @@ public class PokerTimerFXController implements Initializable{
 		timerBar.setProgress((dMax - (dMax - dcurr))/dMax);
 
 		atualizarEstatisticas();
+		tratarTamanho();
 	}
 
 	private void setBreakTime() {
@@ -1606,6 +1614,24 @@ public class PokerTimerFXController implements Initializable{
         if (totalJogando > 0)
         	statsMedia.setText("" + (((totalJogadores + totalRebuy) * 3000)/totalJogando));
     }
+
+	private void tratarTamanho(){
+		if(hidePainelInferior < 2){
+			hidePainelInferior++;
+		}
+		else{
+			hbInferior.setPrefHeight(1);
+			lbTimer.setFont(lbTimer.getFont().font("System", FontWeight.BOLD, 150));
+			lbTimer.setStyle("Bold");
+		}
+	}
+
+	@FXML
+	private void mousePainelInferior(Event evt){
+		hidePainelInferior = 0;
+		hbInferior.setPrefHeight(HBox.USE_COMPUTED_SIZE);
+		lbTimer.setFont(lbTimer.getFont().font("System", FontWeight.BOLD, 130));
+	}
 
 	public ObservableList<ProjecaoLine> ordenarProjecaoRodada(ObservableList<ProjecaoLine> l) {
 		LinkedList<ProjecaoLine> lOrdered = new LinkedList<ProjecaoLine>();
