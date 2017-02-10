@@ -207,6 +207,8 @@ public class PokerTimerFXController implements Initializable{
     private int lastInput;
     private String lastSelectedName;
     private int hidePainelInferior;
+    private TimerWindowController timerWindowController;
+	private Stage primaryStageTimer;
 
 	public PokerTimerFXController() {
 		lastKey = "";
@@ -560,6 +562,48 @@ public class PokerTimerFXController implements Initializable{
 
 			projecaoController.getCbColocacao().getItems().addAll(projecaoController.getListComboColocacao());
 
+			for (int i = projecaoController.getoListJogando().size()+1; i < 16; i++) {
+				switch (i) {
+				case 10:
+					for (int j = 0; j < projecaoController.gettProjecao().getColumns().size(); j++) {
+						if (projecaoController.gettProjecao().getColumns().get(j).getId().equals("cProjecao10"))
+							projecaoController.gettProjecao().getColumns().get(j).setVisible(false);
+					}
+					break;
+				case 11:
+					for (int j = 0; j < projecaoController.gettProjecao().getColumns().size(); j++) {
+						if (projecaoController.gettProjecao().getColumns().get(j).getId().equals("cProjecao11"))
+							projecaoController.gettProjecao().getColumns().get(j).setVisible(false);
+					}
+					break;
+				case 12:
+					for (int j = 0; j < projecaoController.gettProjecao().getColumns().size(); j++) {
+						if (projecaoController.gettProjecao().getColumns().get(j).getId().equals("cProjecao12"))
+							projecaoController.gettProjecao().getColumns().get(j).setVisible(false);
+					}
+					break;
+				case 13:
+					for (int j = 0; j < projecaoController.gettProjecao().getColumns().size(); j++) {
+						if (projecaoController.gettProjecao().getColumns().get(j).getId().equals("cProjecao13"))
+							projecaoController.gettProjecao().getColumns().get(j).setVisible(false);
+					}
+					break;
+				case 14:
+					for (int j = 0; j < projecaoController.gettProjecao().getColumns().size(); j++) {
+						if (projecaoController.gettProjecao().getColumns().get(j).getId().equals("cProjecao14"))
+							projecaoController.gettProjecao().getColumns().get(j).setVisible(false);
+					}
+					break;
+				case 15:
+					for (int j = 0; j < projecaoController.gettProjecao().getColumns().size(); j++) {
+						if (projecaoController.gettProjecao().getColumns().get(j).getId().equals("cProjecao15"))
+							projecaoController.gettProjecao().getColumns().get(j).setVisible(false);
+					}
+					break;
+				default:
+					break;
+				}
+			}
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -603,7 +647,8 @@ public class PokerTimerFXController implements Initializable{
 		//alert.getDialogPane().setContent(webView);
 		TextArea t = new TextArea();
 		t.setFont(new Font("Courrier New", 12));
-		t.setText(msg + "\n\n\n" + configManager.getMailList());
+		//t.setText(msg + "\n\n\n" + configManager.getMailList());
+		t.setText(msg);
 		alert.getDialogPane().setContent(t);
 		alert.setWidth(800);
 		alert.setHeight(600);
@@ -1268,6 +1313,23 @@ public class PokerTimerFXController implements Initializable{
 			if(lp.get(i).isPlayed() && !found)
 				oListComboJogador.add(lp.get(i).getPlayerName());
 		}
+
+    	//obtem Loader
+    	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TimerWindow.fxml"));
+    	primaryStageTimer  = new Stage();
+		try {
+			//carrega o loader
+			Pane myPane = (Pane) fxmlLoader.load();
+			// obtem o controller da nova janela
+			timerWindowController = fxmlLoader.<TimerWindowController> getController();
+			// definindo a nova janela
+			Scene scene = new Scene(myPane, 800, 600);
+			primaryStageTimer.setScene(scene);
+			primaryStageTimer.setTitle("Timer");
+			primaryStageTimer.show();
+			} catch(Exception e){
+				e.printStackTrace();
+			}
 	}
 
     private void setRound(){
@@ -1296,7 +1358,7 @@ public class PokerTimerFXController implements Initializable{
             	lbAnteAtual.setText("Ante:");
             }
 
-        if (currentRound < Constants.MAX_ROUNDS){
+        if (currentRound < roundList.size()){
             if (roundList.get(currentRound+1).getBigBlind() != 0)
                 bigSeguinte.setText("" + roundList.get(currentRound+1).getBigBlind());
             else
@@ -1613,24 +1675,64 @@ public class PokerTimerFXController implements Initializable{
         statsPremio5.setText("R$ " + total5l);
         if (totalJogando > 0)
         	statsMedia.setText("" + (((totalJogadores + totalRebuy) * 3000)/totalJogando));
+
+        if(timerWindowController != null){
+	        timerWindowController.getLbTimer().setText(lbTimer.getText());
+	        timerWindowController.getPbProgress().setProgress(timerBar.getProgress());
+			timerWindowController.getLbBlindsAtual().setText(
+					"Atual: " + smallAtual.getText() + "/" + bigAtual.getText() + " Ante: " + valorAnteAtual.getText());
+			timerWindowController.getLbBlindsProxima().setText("Próxima: " + smallSeguinte.getText() + "/"
+					+ bigSeguinte.getText() + " Ante: " + valorAnteSeguinte.getText());
+			timerWindowController.getLbProxBreak().setText("Próximo Break: " + lbProximoBreak.getText());
+	        if(currentRound > Constants.LAST_BREAK_ROUND)
+	        	timerWindowController.getLbProxBreak().setText("Próximo Break: ");
+        }
+        if(currentRound > Constants.LAST_BREAK_ROUND)
+        	lbProximoBreak.setText("");
     }
 
 	private void tratarTamanho(){
-		if(hidePainelInferior < 2){
+/*		if(hidePainelInferior < 2){
 			hidePainelInferior++;
 		}
 		else{
 			hbInferior.setPrefHeight(1);
 			lbTimer.setFont(lbTimer.getFont().font("System", FontWeight.BOLD, 150));
 			lbTimer.setStyle("Bold");
+		}*/
+	}
+
+	@FXML
+	private void abrirTimer(Event evt){
+		if(primaryStageTimer == null){
+	    	//obtem Loader
+	    	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TimerWindow.fxml"));
+	    	Stage primaryStage  = new Stage();
+			try {
+				//carrega o loader
+				Pane myPane = (Pane) fxmlLoader.load();
+				// obtem o controller da nova janela
+				timerWindowController = fxmlLoader.<TimerWindowController> getController();
+				// definindo a nova janela
+				Scene scene = new Scene(myPane, 800, 600);
+				primaryStageTimer.setScene(scene);
+				primaryStageTimer.setTitle("Timer");
+				primaryStageTimer.show();
+				} catch(Exception e){
+					e.printStackTrace();
+				}
+		}
+		else{
+			if(!primaryStageTimer.isShowing())
+				primaryStageTimer.show();
 		}
 	}
 
 	@FXML
 	private void mousePainelInferior(Event evt){
-		hidePainelInferior = 0;
+/*		hidePainelInferior = 0;
 		hbInferior.setPrefHeight(HBox.USE_COMPUTED_SIZE);
-		lbTimer.setFont(lbTimer.getFont().font("System", FontWeight.BOLD, 130));
+		lbTimer.setFont(lbTimer.getFont().font("System", FontWeight.BOLD, 130));*/
 	}
 
 	public ObservableList<ProjecaoLine> ordenarProjecaoRodada(ObservableList<ProjecaoLine> l) {
