@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="600.0" prefWidth="820.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="infoExtractor.MainGUIController">
+   <children>
+      <BorderPane prefHeight="313.0" prefWidth="396.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <MenuBar BorderPane.alignment="CENTER">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                        <MenuItem mnemonicParsing="false" onAction="#abrirPastaPDC" text="Abrir PDC" />
+                        <MenuItem mnemonicParsing="false" onAction="#abrirPastaProjeto" text="Abrir Projeto" />
+                        <MenuItem mnemonicParsing="false" onAction="#abrirPastaTelaComponente" text="Abrir Tela Componente" />
+                    <MenuItem fx:id="miClose" mnemonicParsing="false" text="Close">
+                           <accelerator>
+                              <KeyCodeCombination alt="ANY" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </top>
+         <bottom>
+            <VBox BorderPane.alignment="CENTER">
+               <children>
+                  <HBox minWidth="800.0" prefHeight="45.0" prefWidth="800.0">
+                     <children>
+                        <Label text="Arquivos Processados:">
+                           <HBox.margin>
+                              <Insets left="10.0" right="10.0" top="20.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <StackPane>
+                           <children>
+                              <ProgressBar fx:id="pbProcessados" prefHeight="25.0" prefWidth="594.0" progress="0.0" />
+                              <Label fx:id="lbProcessados" alignment="CENTER" prefHeight="20.0" prefWidth="440.0" text="0/0">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets top="10.0" />
+                           </HBox.margin>
+                        </StackPane>
+                        <Button mnemonicParsing="false" onAction="#btnReport" text="Exportar">
+                           <HBox.margin>
+                              <Insets left="10.0" top="15.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </bottom>
+         <center>
+            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label fx:id="lbPDCDir" prefHeight="20.0" prefWidth="764.0" text="Diretório PDC                       :">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" top="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lbProjectDir" layoutX="20.0" layoutY="15.0" prefHeight="20.0" prefWidth="764.0" text="Diretório Projeto                  :">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lbTelaComponenteDir" layoutX="20.0" layoutY="35.0" prefHeight="20.0" prefWidth="764.0" text="Diretório Tela Componente :">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TableView fx:id="tvProcessosPDC" prefHeight="1000.0" prefWidth="800.0">
+                    <columns>
+                      <TableColumn fx:id="tcArquivo" maxWidth="-1.0" minWidth="350.0" prefWidth="350.0" text="Arquivo" />
+                      <TableColumn fx:id="tcProcessoPDC" maxWidth="-1.0" minWidth="350.0" prefWidth="350.0" text="Processo PDC" />
+                        <TableColumn fx:id="tcFluxo" prefWidth="100.0" text="Fluxo" />
+                    </columns>
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin>
+                  </TableView>
+               </children>
+            </VBox>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>
