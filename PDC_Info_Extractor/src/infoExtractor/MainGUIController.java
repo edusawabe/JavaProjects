@@ -11,6 +11,8 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -78,6 +80,8 @@ public class MainGUIController implements Initializable{
 	private int irow;
 	private int indProjeto;
 	private int indComponente;
+	private Workbook wb = new XSSFWorkbook();
+
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
