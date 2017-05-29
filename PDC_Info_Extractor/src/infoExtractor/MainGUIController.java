@@ -1,9 +1,12 @@
 package infoExtractor;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
@@ -11,8 +14,19 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.sl.draw.binding.CTTransform2D;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.AreaReference;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFTable;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTable;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableColumn;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableColumns;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableStyleInfo;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -80,7 +94,11 @@ public class MainGUIController implements Initializable{
 	private int irow;
 	private int indProjeto;
 	private int indComponente;
-	private Workbook wb = new XSSFWorkbook();
+	private Workbook wb;
+	private XSSFSheet sheet;
+	private XSSFTable table;
+	private CTTable cttable;
+	private ExcelManager excelManager = new ExcelManager();
 
 
 	@Override
@@ -192,36 +210,23 @@ public class MainGUIController implements Initializable{
 
 	@FXML
 	private void btnReport(ActionEvent event) {
-		String processo = null;
-		String fluxo = null;
+		excelManager.setFileName("c:\\export\\testExport.xlsx");
+		excelManager.setSheetName("Processos PDC");
+		excelManager.getlConlumns().add("Processo PDC");
+		excelManager.getlConlumns().add("Fluxo");
+		excelManager.getlConlumns().add("Projeto");
+		excelManager.getlConlumns().add("Bean");
 
-		totalFiles = beanFilesProjeto.size() + beanFilesTelaComponente.size();
+		excelManager.getlRowValue().clear();
 
 		exportProcess = new Timeline();
 		exportProcess.setCycleCount(Timeline.INDEFINITE);
-		indFile = 0;
-		indComponente = 0;
-		indProjeto = 0;
-		irow = 0;
-		workbook = new HSSFWorkbook();
-        spreadsheet = workbook.createSheet("Processos PDC");
-        row = spreadsheet.createRow(irow);
-        cell = row.createCell(1);
-        cell.setCellValue("Processo PDC");
-        cell = row.createCell(2);
-        cell.setCellValue("Fluxo");
-        cell = row.createCell(3);
-        cell.setCellValue("Projeto");
-        cell = row.createCell(4);
-        cell.setCellValue("Bean");
-    	logger.info("Inicio da Exportação - Total de Arquivos a serem analisados: " + totalFiles);
-
 		exportProcess.getKeyFrames().add(new KeyFrame(Duration.seconds(0.005), new EventHandler() {
 			// KeyFrame event handler
 			@Override
 			public void handle(Event event) {
 				try {
-					doExportProcess();
+					doExportProcessList();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -230,6 +235,9 @@ public class MainGUIController implements Initializable{
 		}));
 		exportProcess.playFromStart();
 	}
+
+
+
 	private void doExportProcess() {
 		String ret = null;
 		File parent = null;
@@ -339,4 +347,95 @@ public class MainGUIController implements Initializable{
 	    	exportProcess.stop();
 	    }
 	}
+
+	private void doExportProcessList() {
+		String ret = null;
+		File parent = null;
+		String oldParent = null;
+		int end = 0;
+		String processo = null;
+		String fluxo = null;
+		boolean notFound;
+
+	    try {
+	    	if(indFile < totalFiles){
+	    		indFile++;
+				if (indProjeto < beanFilesProjeto.size()) {
+					logger.info("Verificando Arquivo Projeto(" + indProjeto + ")"
+							+ beanFilesProjeto.get(indProjeto).getAbsolutePath());
+					for (int i = 0; i < olTvProcessosPDC.size(); i++) {
+						processo = ((PDCTableLine) olTvProcessosPDC.get(i)).getProcessoPDC();
+						fluxo = ((PDCTableLine) olTvProcessosPDC.get(i)).getFluxo();
+						ret = InfoExtractor.getPDCProcessCall(beanFilesProjeto.get(indProjeto).getAbsolutePath(),
+								processo);
+						if (ret != null) {
+							irow++;
+							olTvProcessosPDC.get(i).setFound(true);
+							excelManager.getlRowValue().add(new LinkedList<String>());
+							excelManager.getlRowValue().getLast().add(olTvProcessosPDC.get(i).getProcessoPDC());
+							excelManager.getlRowValue().getLast().add(olTvProcessosPDC.get(i).getFluxo());
+							logger.info("Arquivo com chamada PDC Identificado(" + indProjeto + "): Processo: "
+									+ processo + " Arquivo: " + beanFilesProjeto.get(indProjeto).getAbsolutePath());
+							parent = beanFilesProjeto.get(indProjeto).getParentFile();
+							end = beanFilesProjeto.get(indProjeto).getPath().indexOf('\\');
+							end = beanFilesProjeto.get(indProjeto).getPath().indexOf('\\', end + 1);
+							end = beanFilesProjeto.get(indProjeto).getPath().indexOf('\\', end + 1);
+							excelManager.getlRowValue().getLast().add(beanFilesProjeto.get(indProjeto).getPath().substring(0, end));
+							excelManager.getlRowValue().getLast().add(ret);
+						}
+					}
+					indProjeto++;
+				} else{
+					if (indComponente < beanFilesTelaComponente.size()){
+						logger.info("Verificando Arquivo Tela Componente(" + indComponente + ")"
+								+ beanFilesTelaComponente.get(indComponente).getAbsolutePath());
+						for (int i = 0; i < olTvProcessosPDC.size(); i++) {
+							processo = ((PDCTableLine) olTvProcessosPDC.get(i)).getProcessoPDC();
+							fluxo = ((PDCTableLine) olTvProcessosPDC.get(i)).getFluxo();
+							ret = InfoExtractor.getPDCProcessCall(
+									beanFilesTelaComponente.get(indComponente).getAbsolutePath(), processo);
+							if (ret != null) {
+								irow++;
+								olTvProcessosPDC.get(i).setFound(true);
+
+								irow++;
+								olTvProcessosPDC.get(i).setFound(true);
+								excelManager.getlRowValue().add(new LinkedList<String>());
+								excelManager.getlRowValue().getLast().add(olTvProcessosPDC.get(i).getProcessoPDC());
+								excelManager.getlRowValue().getLast().add(olTvProcessosPDC.get(i).getFluxo());
+								logger.info("Arquivo com chamada PDC Identificado(" + indComponente + "): Processo: "
+										+ processo + " Arquivo: " + beanFilesTelaComponente.get(indComponente).getAbsolutePath());
+								parent = beanFilesTelaComponente.get(indComponente).getParentFile();
+								end = beanFilesTelaComponente.get(indComponente).getPath().indexOf('\\');
+								end = beanFilesTelaComponente.get(indComponente).getPath().indexOf('\\', end + 1);
+								end = beanFilesTelaComponente.get(indComponente).getPath().indexOf('\\', end + 1);
+								excelManager.getlRowValue().getLast().add(beanFilesTelaComponente.get(indComponente).getPath().substring(0, end));
+								excelManager.getlRowValue().getLast().add(ret);
+							}
+						}
+						indComponente++;
+					}
+				}
+				ds = Double.parseDouble("" + totalFiles);
+				di = Double.parseDouble("" + indFile);
+				di = di + 1;
+				pbProcessados.setProgress(di / ds);
+				lbProcessados.setText("Processos Verificados: " + (indFile + 1) + "/" + totalFiles);
+				tvProcessosPDC.scrollTo(indFile);
+			}
+	    	else {
+	    		exportProcess.stop();
+	    		excelManager.generateExcelFile();
+	    		Alert alert = new Alert(AlertType.INFORMATION);
+			    alert.setTitle("Exportação");
+			    alert.setContentText("Exportação Realizada com Sucesso!\n\nArquivo disponível em:\n"+excelManager.getFileName());
+			    alert.show();
+		        logger.info("Processos Exportados com Sucesso");
+	        }
+	    } catch (Exception e) {
+	    	logger.error("Erro na Exportação", e);
+	    	exportProcess.stop();
+	    }
+	}
+
 }
