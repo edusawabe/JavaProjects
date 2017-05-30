@@ -54,6 +54,7 @@ public class ConfigManager {
 	//public void readFile(ListView<String> jltJogando){
 	public void readFile(){
 		File confgFile  = new File(configFileName);
+		boolean playerAdded = false;
 		if(!confgFile.exists()){
 			try {
 				listPlayer = new LinkedList<Player>();
@@ -71,7 +72,7 @@ public class ConfigManager {
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(confgFile),"Cp1252"));
             String line = reader.readLine();
             while (line != null) {
-                if (line.equals("#Jogadores"))
+                if (line.contains("#Jogadores"))
                     line = reader.readLine();
                 if (line == null)
                     break;
@@ -94,10 +95,27 @@ public class ConfigManager {
                     if (line == null)
                         break;
                 }
-                reader.close();
-                return;
             }
             reader.close();
+
+            if(listPlayer.size() > 0){
+            	LinkedList<Player> ltmp = new LinkedList<Player>();
+            	for (int i = 0; i < listPlayer.size(); i++) {
+            		playerAdded = false;
+					for (int j = 0; j < ltmp.size(); j++) {
+						if(listPlayer.get(i).getPlayerName().compareTo(ltmp.get(j).getPlayerName()) < 0){
+							ltmp.add(j,listPlayer.get(i));
+							playerAdded = true;
+							break;
+						}
+					}
+					if(!playerAdded){
+						ltmp.add(listPlayer.get(i));
+					}
+				}
+            	listPlayer.clear();
+            	listPlayer.addAll(ltmp);
+            }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -122,7 +140,7 @@ public class ConfigManager {
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(confgFile),"Cp1252"));
             String line = reader.readLine();
             while (line != null) {
-                if (line.equals("#Jogadores"))
+                if (line.contains("#Jogadores"))
                     line = reader.readLine();
                 if (line == null)
                     break;
@@ -182,7 +200,7 @@ public class ConfigManager {
             String backupLine = new String();
             while (line != null) {
 				backupLine += line + "\n";
-				if (line.equals("#Jogadores"))
+				if (line.contains("#Jogadores"))
 					cont++;
 				else
 					j.parseFileLine(line);
@@ -246,10 +264,10 @@ public class ConfigManager {
 					if (line == null)
 						break;
 				}
-				if (line.equals("#Jogadores")) {
+				if (line.contains("#Jogadores")) {
 					cont++;
 					line = reader.readLine();
-					while (line != null && (!line.equals("#Jogadores")) && cont < 2) {
+					while (line != null && (!line.contains("#Jogadores")) && cont < 2) {
 						j.parseFileLine(line);
 						Player p = new Player();
 						p.setPlayerName(j.getNome());
@@ -306,7 +324,7 @@ public class ConfigManager {
 						}
 						readLines = readLines + j.generateFileLine() + "\n";
 						line = reader.readLine();
-						if(!line.equals("#Jogadores"))
+						if(!line.contains("#Jogadores"))
 							backupLine += line + "\n";
 					}
 				}

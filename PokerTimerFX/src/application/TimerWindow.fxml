@@ -16,7 +16,7 @@
                   <ProgressBar fx:id="pbProgress" progress="0.39" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
                   <Label fx:id="lbTimer" alignment="CENTER" contentDisplay="CENTER" text="20:00" textAlignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                      <font>
-                        <Font name="System Bold" size="240.0" />
+                        <Font name="System Bold" size="200.0" />
                      </font>
                   </Label>
                </children>
@@ -36,6 +36,11 @@
                            </font>
                         </Label>
                         <Label fx:id="lbProxBreak" alignment="CENTER" contentDisplay="CENTER" prefWidth="2000.0" text="Próximo Break: 01:20:00">
+                           <font>
+                              <Font name="System Bold" size="70.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lbMediaFichas" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="201.0" prefWidth="2000.0" text="Próximo Break: 01:20:00">
                            <font>
                               <Font name="System Bold" size="70.0" />
                            </font>

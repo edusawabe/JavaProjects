@@ -19,6 +19,8 @@ public class TimerWindowController implements Initializable{
 	private ProgressBar pbProgress;
 	@FXML
 	private Label lbProxBreak;
+	@FXML
+	private Label lbMediaFichas;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -44,6 +46,10 @@ public class TimerWindowController implements Initializable{
 
 	public Label getLbProxBreak() {
 		return lbProxBreak;
+	}
+
+	public Label getLbMediaFichas() {
+		return lbMediaFichas;
 	}
 
 }

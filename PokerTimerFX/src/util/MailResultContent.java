@@ -32,7 +32,8 @@ public class MailResultContent {
     private int rebuys;
 
     public void updateRebuys(){
-	    for (int i = 0; i < rebuy.size(); i++) {
+    	rebuys = 0;
+    	for (int i = 0; i < rebuy.size(); i++) {
 	    	if(!rebuy.get(i).contains("BREAK"))
 	    		rebuys++;
 		}

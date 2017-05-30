@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.ResourceBundle;
 
+import org.apache.log4j.Logger;
+
 import com.sun.javafx.css.Style;
 
 import javafx.animation.KeyFrame;
@@ -209,6 +211,7 @@ public class PokerTimerFXController implements Initializable{
     private int hidePainelInferior;
     private TimerWindowController timerWindowController;
 	private Stage primaryStageTimer;
+	private final static Logger logger = Logger.getLogger(PokerTimerFXController.class);
 
 	public PokerTimerFXController() {
 		lastKey = "";
@@ -1216,6 +1219,7 @@ public class PokerTimerFXController implements Initializable{
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		logger.info("Iniciando GUI");
 		//ConfigManager obtem a lista de jogadores cadastrados
 		configManager = new ConfigManager();
 		configManager.setConfigFileName("./config.txt");
@@ -1478,7 +1482,6 @@ public class PokerTimerFXController implements Initializable{
 		timerBar.setProgress((dMax - (dMax - dcurr))/dMax);
 
 		atualizarEstatisticas();
-		tratarTamanho();
 	}
 
 	private void setBreakTime() {
@@ -1686,21 +1689,11 @@ public class PokerTimerFXController implements Initializable{
 			timerWindowController.getLbProxBreak().setText("Próximo Break: " + lbProximoBreak.getText());
 	        if(currentRound > Constants.LAST_BREAK_ROUND)
 	        	timerWindowController.getLbProxBreak().setText("Próximo Break: ");
+	        timerWindowController.getLbMediaFichas().setText("Média Fichas: " + statsMedia.getText());
         }
         if(currentRound > Constants.LAST_BREAK_ROUND)
         	lbProximoBreak.setText("");
     }
-
-	private void tratarTamanho(){
-/*		if(hidePainelInferior < 2){
-			hidePainelInferior++;
-		}
-		else{
-			hbInferior.setPrefHeight(1);
-			lbTimer.setFont(lbTimer.getFont().font("System", FontWeight.BOLD, 150));
-			lbTimer.setStyle("Bold");
-		}*/
-	}
 
 	@FXML
 	private void abrirTimer(Event evt){
