@@ -8,6 +8,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -30,8 +32,11 @@ import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableStyleInfo;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -99,6 +104,7 @@ public class MainGUIController implements Initializable{
 	private XSSFTable table;
 	private CTTable cttable;
 	private ExcelManager excelManager = new ExcelManager();
+	private Task exportWorker;
 
 
 	@Override
@@ -219,6 +225,29 @@ public class MainGUIController implements Initializable{
 
 		excelManager.getlRowValue().clear();
 
+		executeService();
+
+		lbProcessados.setText("Arquivos Processados: " + indFile + "/" + totalFiles);
+		pbProcessados.setProgress(0);
+
+		exportWorker = createWorker();
+
+		pbProcessados.progressProperty().unbind();
+		pbProcessados.progressProperty().bind(exportWorker.progressProperty());
+		lbProcessados.textProperty().unbind();
+		lbProcessados.textProperty().bind(exportWorker.messageProperty());
+
+		exportWorker.messageProperty().addListener(new ChangeListener<String>() {
+            @Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				// TODO Auto-generated method stub
+
+			}
+        });
+
+        new Thread(exportWorker).start();
+
+		/*
 		exportProcess = new Timeline();
 		exportProcess.setCycleCount(Timeline.INDEFINITE);
 		exportProcess.getKeyFrames().add(new KeyFrame(Duration.seconds(0.005), new EventHandler() {
@@ -234,8 +263,119 @@ public class MainGUIController implements Initializable{
 			}
 		}));
 		exportProcess.playFromStart();
+		*/
 	}
 
+
+    public Task createWorker() {
+        return new Task() {
+            @Override
+            protected Object call() throws Exception {
+                while(true){
+                	String ret = null;
+            		int end = 0;
+            		String processo = null;
+            		try {
+            	    	if(indFile < totalFiles){
+            	    		indFile++;
+            				if (indProjeto < beanFilesProjeto.size()) {
+            					logger.info("Verificando Arquivo Projeto(" + indProjeto + ")"
+            							+ beanFilesProjeto.get(indProjeto).getAbsolutePath());
+            					for (int i = 0; i < olTvProcessosPDC.size(); i++) {
+            						processo = ((PDCTableLine) olTvProcessosPDC.get(i)).getProcessoPDC();
+            						ret = InfoExtractor.getPDCProcessCall(beanFilesProjeto.get(indProjeto).getAbsolutePath(),
+            								processo);
+            						if (ret != null) {
+            							irow++;
+            							olTvProcessosPDC.get(i).setFound(true);
+            							excelManager.getlRowValue().add(new LinkedList<String>());
+            							excelManager.getlRowValue().getLast().add(olTvProcessosPDC.get(i).getProcessoPDC());
+            							excelManager.getlRowValue().getLast().add(olTvProcessosPDC.get(i).getFluxo());
+            							logger.info("Arquivo com chamada PDC Identificado(" + indProjeto + "): Processo: "
+            									+ processo + " Arquivo: " + beanFilesProjeto.get(indProjeto).getAbsolutePath());
+            							end = beanFilesProjeto.get(indProjeto).getPath().indexOf('\\');
+            							end = beanFilesProjeto.get(indProjeto).getPath().indexOf('\\', end + 1);
+            							end = beanFilesProjeto.get(indProjeto).getPath().indexOf('\\', end + 1);
+            							excelManager.getlRowValue().getLast().add(beanFilesProjeto.get(indProjeto).getPath().substring(0, end));
+            							excelManager.getlRowValue().getLast().add(ret);
+            						}
+            					}
+            					indProjeto++;
+            				} else{
+            					if (indComponente < beanFilesTelaComponente.size()){
+            						logger.info("Verificando Arquivo Tela Componente(" + indComponente + ")"
+            								+ beanFilesTelaComponente.get(indComponente).getAbsolutePath());
+            						for (int i = 0; i < olTvProcessosPDC.size(); i++) {
+            							processo = ((PDCTableLine) olTvProcessosPDC.get(i)).getProcessoPDC();
+            							ret = InfoExtractor.getPDCProcessCall(
+            									beanFilesTelaComponente.get(indComponente).getAbsolutePath(), processo);
+            							if (ret != null) {
+            								irow++;
+            								olTvProcessosPDC.get(i).setFound(true);
+
+            								irow++;
+            								olTvProcessosPDC.get(i).setFound(true);
+            								excelManager.getlRowValue().add(new LinkedList<String>());
+            								excelManager.getlRowValue().getLast().add(olTvProcessosPDC.get(i).getProcessoPDC());
+            								excelManager.getlRowValue().getLast().add(olTvProcessosPDC.get(i).getFluxo());
+            								logger.info("Arquivo com chamada PDC Identificado(" + indComponente + "): Processo: "
+            										+ processo + " Arquivo: " + beanFilesTelaComponente.get(indComponente).getAbsolutePath());
+            								end = beanFilesTelaComponente.get(indComponente).getPath().indexOf('\\');
+            								end = beanFilesTelaComponente.get(indComponente).getPath().indexOf('\\', end + 1);
+            								end = beanFilesTelaComponente.get(indComponente).getPath().indexOf('\\', end + 1);
+            								excelManager.getlRowValue().getLast().add(beanFilesTelaComponente.get(indComponente).getPath().substring(0, end));
+            								excelManager.getlRowValue().getLast().add(ret);
+            							}
+            						}
+            						indComponente++;
+            					}
+            				}
+            				ds = Double.parseDouble("" + totalFiles);
+            				di = Double.parseDouble("" + indFile);
+            				di = di + 1;
+            				//pbProcessados.setProgress(di / ds);
+            				updateProgress(di, ds);
+            				updateMessage("Processos Verificados: " + (indFile + 1) + "/" + totalFiles);
+            				//lbProcessados.setText("Processos Verificados: " + (indFile + 1) + "/" + totalFiles);
+            				tvProcessosPDC.scrollTo(indFile);
+            			}
+            	    	else {
+            	    		excelManager.generateExcelFile();
+            	    		Alert alert = new Alert(AlertType.INFORMATION);
+            			    alert.setTitle("Exportação");
+            			    alert.setContentText("Exportação Realizada com Sucesso!\n\nArquivo disponível em:\n"+excelManager.getFileName());
+            			    alert.show();
+            		        logger.info("Processos Exportados com Sucesso");
+            		        break;
+            	        }
+            	    } catch (Exception e) {
+            	    	logger.error("Erro na Exportação", e);
+            	    	exportProcess.stop();
+            	    }
+                }
+                return true;
+            }
+        };
+    }
+
+	private void executeService(){
+		Task<Void> progressTask = new Task<Void>() {
+			@Override
+			public Void call(){
+				if(indFile < totalFiles){
+					ds = Double.parseDouble("" + totalFiles + 1);
+					di = Double.parseDouble("" + indFile);
+					di = di + 1;
+					pbProcessados.setProgress(di / ds);
+					lbProcessados.setText("Processos Verificados: " + (indFile + 1) + "/" + totalFiles + 1);
+					tvProcessosPDC.scrollTo(indFile);
+				}
+				else
+					return null;
+				return null;
+			}
+		};
+	}
 
 
 	private void doExportProcess() {
@@ -350,14 +490,9 @@ public class MainGUIController implements Initializable{
 
 	private void doExportProcessList() {
 		String ret = null;
-		File parent = null;
-		String oldParent = null;
 		int end = 0;
 		String processo = null;
-		String fluxo = null;
-		boolean notFound;
-
-	    try {
+		try {
 	    	if(indFile < totalFiles){
 	    		indFile++;
 				if (indProjeto < beanFilesProjeto.size()) {
@@ -365,7 +500,6 @@ public class MainGUIController implements Initializable{
 							+ beanFilesProjeto.get(indProjeto).getAbsolutePath());
 					for (int i = 0; i < olTvProcessosPDC.size(); i++) {
 						processo = ((PDCTableLine) olTvProcessosPDC.get(i)).getProcessoPDC();
-						fluxo = ((PDCTableLine) olTvProcessosPDC.get(i)).getFluxo();
 						ret = InfoExtractor.getPDCProcessCall(beanFilesProjeto.get(indProjeto).getAbsolutePath(),
 								processo);
 						if (ret != null) {
@@ -376,7 +510,6 @@ public class MainGUIController implements Initializable{
 							excelManager.getlRowValue().getLast().add(olTvProcessosPDC.get(i).getFluxo());
 							logger.info("Arquivo com chamada PDC Identificado(" + indProjeto + "): Processo: "
 									+ processo + " Arquivo: " + beanFilesProjeto.get(indProjeto).getAbsolutePath());
-							parent = beanFilesProjeto.get(indProjeto).getParentFile();
 							end = beanFilesProjeto.get(indProjeto).getPath().indexOf('\\');
 							end = beanFilesProjeto.get(indProjeto).getPath().indexOf('\\', end + 1);
 							end = beanFilesProjeto.get(indProjeto).getPath().indexOf('\\', end + 1);
@@ -391,7 +524,6 @@ public class MainGUIController implements Initializable{
 								+ beanFilesTelaComponente.get(indComponente).getAbsolutePath());
 						for (int i = 0; i < olTvProcessosPDC.size(); i++) {
 							processo = ((PDCTableLine) olTvProcessosPDC.get(i)).getProcessoPDC();
-							fluxo = ((PDCTableLine) olTvProcessosPDC.get(i)).getFluxo();
 							ret = InfoExtractor.getPDCProcessCall(
 									beanFilesTelaComponente.get(indComponente).getAbsolutePath(), processo);
 							if (ret != null) {
@@ -405,7 +537,6 @@ public class MainGUIController implements Initializable{
 								excelManager.getlRowValue().getLast().add(olTvProcessosPDC.get(i).getFluxo());
 								logger.info("Arquivo com chamada PDC Identificado(" + indComponente + "): Processo: "
 										+ processo + " Arquivo: " + beanFilesTelaComponente.get(indComponente).getAbsolutePath());
-								parent = beanFilesTelaComponente.get(indComponente).getParentFile();
 								end = beanFilesTelaComponente.get(indComponente).getPath().indexOf('\\');
 								end = beanFilesTelaComponente.get(indComponente).getPath().indexOf('\\', end + 1);
 								end = beanFilesTelaComponente.get(indComponente).getPath().indexOf('\\', end + 1);
