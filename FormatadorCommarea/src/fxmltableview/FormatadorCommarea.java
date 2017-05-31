@@ -49,7 +49,7 @@ public class FormatadorCommarea extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
     	logger.info("Iniciando App");
-        primaryStage.setTitle("Gerador Commarea 4.1");
+        primaryStage.setTitle("Gerador Commarea 5.0");
         Pane myPane = (Pane)FXMLLoader.load(getClass().getResource("FormatadorCommarea.fxml"));
         Scene myScene = new Scene(myPane);
         primaryStage.setScene(myScene);
