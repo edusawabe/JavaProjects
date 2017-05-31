@@ -23,6 +23,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -114,6 +115,7 @@ public class FormatadorCommareaController implements Initializable{
         // new Background(images...)
         Background background = new Background(backgroundImage);
         exportarButton.setBackground(background);
+        exportarButton.setOpaqueInsets(new Insets(10, 10, 10, 10));
         //exportarButton.setText("Exportar");
 	}
 
@@ -463,6 +465,7 @@ public class FormatadorCommareaController implements Initializable{
 		excelManager.setFileName("./Export.xlsx");
 		excelManager.getlConlumns().add("Campo");
 		excelManager.getlConlumns().add("Valor");
+		excelManager.getlConlumns().add("Válido?");
 
 		ObservableList<Pair<String, Object>> oList = this.tableView.getItems();
 		Pair<String, Object> item;
@@ -471,6 +474,13 @@ public class FormatadorCommareaController implements Initializable{
 			excelManager.getlRowValue().add(new LinkedList<String>());
 			excelManager.getlRowValue().getLast().add(item.getKey());
 			excelManager.getlRowValue().getLast().add((String) item.getValue());
+			if(item.getKey().replaceAll(" ", "").contains("PIC9"))
+				if(containsOnlyNumbers((String) item.getValue()))
+					excelManager.getlRowValue().getLast().add("OK");
+				else
+					excelManager.getlRowValue().getLast().add("NOK");
+			else
+				excelManager.getlRowValue().getLast().add("OK");
 		}
 
 		excelManager.generateExcelFile();
@@ -482,6 +492,20 @@ public class FormatadorCommareaController implements Initializable{
 
 	}
 
+	 private boolean containsOnlyNumbers(String str) {
+	        //It can't contain only numbers if it's null or empty...
+	        if (str == null || str.length() == 0)
+	            return false;
+
+	        for (int i = 0; i < str.length(); i++) {
+
+	            //If we find a non-digit character we return false.
+	            if (!Character.isDigit(str.charAt(i)))
+	                return false;
+	        }
+
+	        return true;
+	    }
 
 	private void setRadiosSaida() {
     		entradaRadio.setSelected(false);

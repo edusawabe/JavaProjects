@@ -5,10 +5,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.AreaReference;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFTable;
@@ -91,6 +94,12 @@ public class ExcelManager {
 			{
 				XSSFCell localXSSFCell = row2.createCell(j);
 				localXSSFCell.setCellValue(lRowValue.get(i).get(j));
+				/*
+				XSSFCellStyle style1 = (XSSFCellStyle) wb.createCellStyle();
+			    style1.setFillForegroundColor(new XSSFColor(new java.awt.Color(128, 0, 128)));
+			    style1.setFillPattern(CellStyle.SOLID_FOREGROUND);
+				localXSSFCell.setCellStyle(style1);
+				*/
 			}
 		}
 
