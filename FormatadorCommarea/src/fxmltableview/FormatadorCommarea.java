@@ -32,6 +32,10 @@
 
 package fxmltableview;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
+import org.apache.log4j.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -40,9 +44,12 @@ import javafx.stage.Stage;
 
 public class FormatadorCommarea extends Application {
 
+	private final static Logger logger = Logger.getLogger(FormatadorCommarea.class);
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Gerador Commarea 4.0");
+    	logger.info("Iniciando App");
+        primaryStage.setTitle("Gerador Commarea 4.1");
         Pane myPane = (Pane)FXMLLoader.load(getClass().getResource("FormatadorCommarea.fxml"));
         Scene myScene = new Scene(myPane);
         primaryStage.setScene(myScene);
@@ -50,6 +57,15 @@ public class FormatadorCommarea extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args);
+        try {
+        	launch(args);
+		} catch (Exception e) {
+	        ByteArrayOutputStream os = new ByteArrayOutputStream();
+	        e.printStackTrace(new PrintStream(os));
+
+	        logger.error(new String(os.toByteArray()));
+	        logger.error(e.getStackTrace());
+		}
+
     }
 }

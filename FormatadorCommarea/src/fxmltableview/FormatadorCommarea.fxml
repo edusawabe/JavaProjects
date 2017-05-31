@@ -118,7 +118,7 @@
                               </GridPane>
                            </top>
                            <bottom>
-                              <TextArea fx:id="commArea"  BorderPane.alignment="CENTER">
+                              <TextArea fx:id="commArea" BorderPane.alignment="CENTER">
                                  <BorderPane.margin>
                                     <Insets top="5.0" />
                                  </BorderPane.margin>
@@ -131,11 +131,20 @@
             </SplitPane>
          </top>
       </BorderPane>
-      <Button alignment="CENTER" mnemonicParsing="false" onAction="#abrirTXT" text="Abrir txt" textAlignment="CENTER" GridPane.rowIndex="3">
-         <GridPane.margin>
-            <Insets left="500.0" />
-         </GridPane.margin>
-      </Button>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="3">
+         <children>
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#abrirTXT" text="Abrir txt" textAlignment="CENTER">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="exportarButton" mnemonicParsing="false" onAction="#exportarTabelaExcel">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
    </children>
    <columnConstraints>
       <ColumnConstraints hgrow="ALWAYS" />

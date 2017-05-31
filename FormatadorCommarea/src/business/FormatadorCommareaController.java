@@ -5,14 +5,16 @@
 package business;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.ResourceBundle;
 import org.apache.log4j.Logger;
 import javafx.collections.FXCollections;
@@ -25,7 +27,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.Pane;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
@@ -34,13 +35,18 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -49,6 +55,7 @@ import javafx.util.Pair;
 import model.Campo;
 import model.ListItem;
 import util.ConfigManager;
+import util.ExcelManager;
 import util.HashMapHexAscii;
 import util.Util;
 import view.MaskTextField;
@@ -78,6 +85,7 @@ public class FormatadorCommareaController implements Initializable{
 	@FXML private Button gerarAreaButton;
 	@FXML private Button processButton;
 	@FXML private Button gerarOccursButton;
+	@FXML private Button exportarButton;
 	@FXML private CheckBox incluirFinal;
 	@FXML private TextCommAreaController txtController;
 	      private TextArea txtArea;
@@ -88,11 +96,25 @@ public class FormatadorCommareaController implements Initializable{
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		logger.info("Inicializando GUI");
+		logger.error("teste erro GUI");
 		development = true;
 		hasOccurs = false;
 		initComponents();
 		fluxoField.setMask("********");
         addFiltersListeners();
+        /*exportarButton.setStyle("-fx-background-image: url('/images/excel.png')");*/
+
+     // new Image(url)
+        Image image = new Image(FormatadorCommareaController.class.getResource("/images/excel.png").toString());
+        // new BackgroundSize(width, height, widthAsPercentage, heightAsPercentage, contain, cover)
+        BackgroundSize backgroundSize = new BackgroundSize(40, 40, true, true, true, false);
+        // new BackgroundImage(image, repeatX, repeatY, position, size)
+        BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
+        // new Background(images...)
+        Background background = new Background(backgroundImage);
+        exportarButton.setBackground(background);
+        //exportarButton.setText("Exportar");
 	}
 
 	/*
@@ -186,30 +208,34 @@ public class FormatadorCommareaController implements Initializable{
 
 	@FXML
 	protected void gerarAreaPorGlog(ActionEvent event) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Erro");
-		alert.setHeaderText("Campos Obrigatórios Não Preenchidos");
+		try{
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Erro");
+			alert.setHeaderText("Campos Obrigatórios Não Preenchidos");
 
-		if (!yy03Radio.isSelected() && !yy06Radio.isSelected()){
-			if (alert.getContentText().isEmpty())
-				alert.setContentText("Favor Selecionar o tipo de Área");
-			else
-				alert.setContentText(alert.getContentText() + "\nFavor Selecionar o tipo de Área");
-		}
-		if (yy06Radio.isSelected() && fluxoField.getText().isEmpty()){
-			if (alert.getContentText().isEmpty())
-				alert.setContentText("Favor Preencher o Fluxo");
-			else
-				alert.setContentText(alert.getContentText() + "\nFavor Preencher o Fluxo");
-		}
-		if (alert.getContentText().isEmpty()) {
-			if(yy03Radio.isSelected())
-				commArea.setText(breakLinesYY03(getCommareaByHex()));
-			if(yy06Radio.isSelected())
-				commArea.setText(breakLinesYY06(getCommareaByHex()));
-		}
-		else{
-			alert.show();
+			if (!yy03Radio.isSelected() && !yy06Radio.isSelected()){
+				if (alert.getContentText().isEmpty())
+					alert.setContentText("Favor Selecionar o tipo de Área");
+				else
+					alert.setContentText(alert.getContentText() + "\nFavor Selecionar o tipo de Área");
+			}
+			if (yy06Radio.isSelected() && fluxoField.getText().isEmpty()){
+				if (alert.getContentText().isEmpty())
+					alert.setContentText("Favor Preencher o Fluxo");
+				else
+					alert.setContentText(alert.getContentText() + "\nFavor Preencher o Fluxo");
+			}
+			if (alert.getContentText().isEmpty()) {
+				if(yy03Radio.isSelected())
+					commArea.setText(breakLinesYY03(getCommareaByHex()));
+				if(yy06Radio.isSelected())
+					commArea.setText(breakLinesYY06(getCommareaByHex()));
+			}
+			else{
+				alert.show();
+			}
+		}catch (Exception e){
+			logger.error(e.getMessage());
 		}
 	}
 
@@ -295,43 +321,49 @@ public class FormatadorCommareaController implements Initializable{
 
 	@FXML
 	protected void extrairSaidaAction(ActionEvent event) {
-		development = false;
-		initComponents();
+		try {
+			development = false;
+			initComponents();
 
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setHeaderText("Campos Obrigatórios Não Preenchidos");
-		alert.setTitle("Erro");
-		alert.setContentText("");
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setHeaderText("Campos Obrigatórios Não Preenchidos");
+			alert.setTitle("Erro");
+			alert.setContentText("");
 
-		if (bookArea.getText().isEmpty() && commArea.getText().isEmpty()) {
-			alert.setContentText("Favor Preencher o Book e a Commarea");
-		} else {
-			if (bookArea.getText().isEmpty()) {
-				alert.setContentText("Favor Preencher o Book");
+			if (bookArea.getText().isEmpty() && commArea.getText().isEmpty()) {
+				alert.setContentText("Favor Preencher o Book e a Commarea");
+			} else {
+				if (bookArea.getText().isEmpty()) {
+					alert.setContentText("Favor Preencher o Book");
+				}
+				if (commArea.getText().isEmpty()) {
+					alert.setContentText("Favor Preenchera Commarea");
+				}
 			}
-			if (commArea.getText().isEmpty()) {
-				alert.setContentText("Favor Preenchera Commarea");
+			if (!glogRadio.isSelected() && !textoRadio.isSelected()){
+				alert.setContentText("Favor Selecionar o tipo de Área");
 			}
-		}
-		if (!glogRadio.isSelected() && !textoRadio.isSelected()){
-			alert.setContentText("Favor Selecionar o tipo de Área");
-		}
-		if (alert.getContentText().isEmpty()) {
-			process();
-			if (glogRadio.isSelected())
-				processGlog();
-			if (textoRadio.isSelected())
-				processText();
-			saidaRadio.setSelected(true);
-			setRadiosSaida();
-			processButton.setDisable(false);
-		}
-		else{
-			alert.show();
-			saidaRadio.setSelected(true);
-			setRadiosSaida();
-			processButton.setDisable(false);
-			glogRadio.requestFocus();
+			if (alert.getContentText().isEmpty()) {
+				process();
+				if (glogRadio.isSelected())
+					processGlog();
+				if (textoRadio.isSelected())
+					processText();
+				saidaRadio.setSelected(true);
+				setRadiosSaida();
+				processButton.setDisable(false);
+			}
+			else{
+				alert.show();
+				saidaRadio.setSelected(true);
+				setRadiosSaida();
+				processButton.setDisable(false);
+				glogRadio.requestFocus();
+			}
+		} catch (Exception e) {
+	        ByteArrayOutputStream os = new ByteArrayOutputStream();
+	        e.printStackTrace(new PrintStream(os));
+	        logger.error(new String(os.toByteArray()));
 		}
 	}
 
@@ -393,6 +425,7 @@ public class FormatadorCommareaController implements Initializable{
     @FXML
     private void abrirTXT(ActionEvent event){
     	Stage primaryStage = new Stage();
+
     	//obtem Loader
     	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TextCommArea.fxml"));
 		try {
@@ -408,7 +441,6 @@ public class FormatadorCommareaController implements Initializable{
 				item = oList.get(i);
 				text = text + item.getKey() + "\t" +(String)item.getValue() + "\n";
 			}
-
 			//definindo a nova janela
 			Scene scene = new Scene(myPane);
 			primaryStage.setScene(scene);
@@ -424,6 +456,32 @@ public class FormatadorCommareaController implements Initializable{
 			e.printStackTrace();
 		}
     }
+
+	@FXML
+	private void exportarTabelaExcel(ActionEvent event) {
+		ExcelManager excelManager = new ExcelManager();
+		excelManager.setFileName("./Export.xlsx");
+		excelManager.getlConlumns().add("Campo");
+		excelManager.getlConlumns().add("Valor");
+
+		ObservableList<Pair<String, Object>> oList = this.tableView.getItems();
+		Pair<String, Object> item;
+		for (int i = 0; i < oList.size(); i++) {
+			item = oList.get(i);
+			excelManager.getlRowValue().add(new LinkedList<String>());
+			excelManager.getlRowValue().getLast().add(item.getKey());
+			excelManager.getlRowValue().getLast().add((String) item.getValue());
+		}
+
+		excelManager.generateExcelFile();
+		Alert al = new Alert(AlertType.INFORMATION);
+		al.setContentText("Arquivo Gerado com Sucesso: " + excelManager.getFileName().replaceAll("./", ""));
+		al.setTitle("Exportação Realizada");
+		al.setHeaderText("Exportação");
+		al.show();
+
+	}
+
 
 	private void setRadiosSaida() {
     		entradaRadio.setSelected(false);
@@ -503,6 +561,9 @@ public class FormatadorCommareaController implements Initializable{
 					}
 					i = aux;
 				} else {
+					//esvazia o campo de ocurs para identificar fim da lista de ocurs
+					if(occursCampo != null)
+						occursCampo = null;
 					if (bookLine[i].contains("OCCURS")) {
 						if (bookLine[i].contains("."))
 							occursCampo = processOccursLine(bookLine[i]);
@@ -1021,7 +1082,7 @@ public class FormatadorCommareaController implements Initializable{
 		area =
 				generateLineNumber(0) + "FRWKGL010021600"+ sCommAreaSize +"                                51174335457216TERM\n"+
 			    generateLineNumber(70) + "00011                 "+ fluxo +"0023700001050TERM0001       012008121215\n"+
-			    generateLineNumber(70*2) + "4737NNNIEA700013                       E                              \n"+
+			    generateLineNumber(70*2) + "4737NNNIEI910940                       E                              \n"+
 			    generateLineNumber(70*3) + "217230GSEGGLAA00230                    EI910940                       \n"+
 			    generateLineNumber(70*4) + "NN                                                                    \n"+
 			    generateLineNumber(70*5) + "                                                                      \n"+
@@ -1383,26 +1444,34 @@ public class FormatadorCommareaController implements Initializable{
 	 * Auxiliares para tratamento de copy Paste
 	 */
 	private void tratarPaste() {
-		ClipboardContent content = new ClipboardContent();
-		String s  = Clipboard.getSystemClipboard().getString();
-		char[] c = s.toCharArray();
-		String s2 = new String();
-		for (int i = 0; i < c.length; i++) {
-			if((int)c[i] <= 126)
-				s2 = s2 + c[i];
-			else
-				break;
-		}
-		 content.putString(s2);
-		 Clipboard.getSystemClipboard().setContent(content);
+		/*return;
+		try {
+			ClipboardContent content = new ClipboardContent();
+			String s  = Clipboard.getSystemClipboard().getString();
+			String[] lines = s.split("\n");
+			String s2 = new String();
+
+			for (int i = 0; i < lines.length; i++) {
+					s2 = lines[i] + "\n";
+				}
+			 content.putString(s2);
+			 Clipboard.getSystemClipboard().setContent(content);
+		} catch (Exception e) {
+			logger.error("Erro paste", e);
+		}*/
 	}
 
 	private void tratarPasteFluxo() {
-		ClipboardContent content = new ClipboardContent();
-		String s  = Clipboard.getSystemClipboard().getString();
-		String s2 = s.substring(0, 8);
-		content.putString(s2);
-		Clipboard.getSystemClipboard().setContent(content);
+		try {
+			ClipboardContent content = new ClipboardContent();
+			String s  = Clipboard.getSystemClipboard().getString();
+			String s2 = s.substring(0, 8);
+			content.putString(s2);
+			Clipboard.getSystemClipboard().setContent(content);
+		} catch (Exception e) {
+			logger.error("Erro paste fluxo", e);
+		}
+
 	}
 
 	private void tratarCopy() {
