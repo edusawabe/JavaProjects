@@ -47,6 +47,11 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
@@ -115,7 +120,8 @@ public class FormatadorCommareaController implements Initializable{
         // new Background(images...)
         Background background = new Background(backgroundImage);
         exportarButton.setBackground(background);
-        exportarButton.setOpaqueInsets(new Insets(10, 10, 10, 10));
+        //exportarButton.setOpaqueInsets(new Insets(10, 10, 10, 10));
+        exportarButton.setBorder(new Border(new BorderStroke(null, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.FULL)));
         //exportarButton.setText("Exportar");
 	}
 
