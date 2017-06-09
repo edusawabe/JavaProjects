@@ -21,7 +21,7 @@ public class Main extends Application {
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			//scene.getStylesheets().add(getClass().getResource("applicationBlack.css").toExternalForm());
 			primaryStage.setScene(scene);
-			primaryStage.setTitle("Poker Timer 5.1");
+			primaryStage.setTitle("Poker Timer 6.0");
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
