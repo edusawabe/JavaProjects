@@ -136,8 +136,6 @@ public class PokerTimerFXController implements Initializable{
 	@FXML
 	private ListView<String> listMesa2;
 	@FXML
-	private ListView<String> listMesa3;
-	@FXML
 	private Button btAdicionaJogador;
 	@FXML
 	private Button btExcluirJogador;
@@ -177,7 +175,6 @@ public class PokerTimerFXController implements Initializable{
 	private ObservableList<String> oListComboJogador = FXCollections.observableArrayList();
 	private ObservableList<String> oListJogadoresMesa1 = FXCollections.observableArrayList();
 	private ObservableList<String> oListJogadoresMesa2 = FXCollections.observableArrayList();
-	private ObservableList<String> oListJogadoresMesa3 = FXCollections.observableArrayList();
 
 	private ObservableList<String> oListJogadoresBk = FXCollections.observableArrayList();
 	private ObservableList<String> oListRebuysBk = FXCollections.observableArrayList();
@@ -186,7 +183,6 @@ public class PokerTimerFXController implements Initializable{
 	private ObservableList<String> oListComboJogadorBk = FXCollections.observableArrayList();
 	private ObservableList<String> oListJogadoresMesa1Bk = FXCollections.observableArrayList();
 	private ObservableList<String> oListJogadoresMesa2Bk = FXCollections.observableArrayList();
-	private ObservableList<String> oListJogadoresMesa3Bk = FXCollections.observableArrayList();
 
     private boolean paused;
     private boolean play;
@@ -206,13 +202,13 @@ public class PokerTimerFXController implements Initializable{
     private double total5l = 0;
     private LinkedList<String> llMesa1;
     private LinkedList<String> llMesa2;
-    private LinkedList<String> llMesa3;
     private Timeline updateGuitask;
     private String lastKey;
     private String inputName;
     private int currentSelection;
     private int lastInput;
     private String lastSelectedName;
+    private int hidePainelInferior;
     private TimerWindowController timerWindowController;
 	private Stage primaryStageTimer;
 	private final static Logger logger = Logger.getLogger(PokerTimerFXController.class);
@@ -330,12 +326,10 @@ public class PokerTimerFXController implements Initializable{
 
 	@FXML
 	private void trocarJogadorMesa(Event evt) {
-		listMesa1.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-		listMesa2.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-		listMesa3.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+		listMesa1.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		listMesa2.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		if (listMesa1.getSelectionModel().getSelectedIndex() < 0
-				&& listMesa2.getSelectionModel().getSelectedIndex() < 0
-				&& listMesa3.getSelectionModel().getSelectedIndex() < 0) {
+				&& listMesa2.getSelectionModel().getSelectedIndex() < 0) {
 
 			Alert alError = new Alert(AlertType.ERROR);
 			alError.setTitle("Selecionar Jogador");
@@ -1690,7 +1684,7 @@ public class PokerTimerFXController implements Initializable{
         	statsMedia.setText("" + (((totalJogadores + totalRebuy) * 3000)/totalJogando));
 
         if(timerWindowController != null){
-	        timerWindowController.getLbTimer().setText(lbTimer.getText() + "\n" + "Média Fichas: " + statsMedia.getText());
+	        timerWindowController.getLbTimer().setText(lbTimer.getText());
 	        timerWindowController.getPbProgress().setProgress(timerBar.getProgress());
 			timerWindowController.getLbBlindsAtual().setText(
 					"Atual: " + smallAtual.getText() + "/" + bigAtual.getText() + " Ante: " + valorAnteAtual.getText());
@@ -1699,7 +1693,16 @@ public class PokerTimerFXController implements Initializable{
 			timerWindowController.getLbProxBreak().setText("Próximo Break: " + lbProximoBreak.getText());
 	        if(currentRound > Constants.LAST_BREAK_ROUND)
 	        	timerWindowController.getLbProxBreak().setText("Próximo Break: ");
-	        //timerWindowController.getLbMediaFichas().setText("Média Fichas: " + statsMedia.getText());
+	        timerWindowController.setTextLbJogando(statsJogando.getText());
+	        timerWindowController.setTextLbRebuys(statsRebuys.getText());
+	        timerWindowController.setTextLbFora(statsFora.getText());
+	        timerWindowController.setTextLbMediaFichas(statsMedia.getText());
+	        timerWindowController.setTextLbTotalArrecadado(statsTotalArrecadado.getText());
+	        timerWindowController.setTextLbPos1(statsPremio1.getText());
+	        timerWindowController.setTextLbPos2(statsPremio2.getText());
+	        timerWindowController.setTextLbPos3(statsPremio3.getText());
+	        timerWindowController.setTextLbPos4(statsPremio4.getText());
+	        timerWindowController.setTextLbPos5(statsPremio5.getText());
         }
         if(currentRound > Constants.LAST_BREAK_ROUND)
         	lbProximoBreak.setText("");
