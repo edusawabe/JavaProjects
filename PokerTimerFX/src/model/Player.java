@@ -88,7 +88,7 @@ public class Player {
 		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(3, 5));
 		boolean added;
 
-		for (int i = 0; i < resultados.size(); i++) {
+		for (int i = 0; i < mesEtapa; i++) {
 			added = false;
 			if (resultadosEtapas.isEmpty()) {
 				ConfigManager cfg = new ConfigManager();

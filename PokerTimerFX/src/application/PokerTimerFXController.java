@@ -972,16 +972,15 @@ public class PokerTimerFXController implements Initializable{
 			listRodadas.getSelectionModel().select(iRodada-1);
 		else
 			listRodadas.getSelectionModel().select(0);
-		iRodada = listRodadas.getSelectionModel().getSelectedIndex();
-		setCurrentRound();
-		if (iRodada > Constants.MAX_ROUND_REBUY) {
-			btAdicionaRebuy.setDisable(true);
-			btExcluirRebuy.setDisable(true);
-			btAdicionaNaoInscrito.setDisable(true);
-		} else {
+		currentRound = listRodadas.getSelectionModel().getSelectedIndex();
+		if (roundList.get(currentRound).isRebuyAllowed()) {
 			btAdicionaRebuy.setDisable(false);
 			btExcluirRebuy.setDisable(false);
 			btAdicionaNaoInscrito.setDisable(false);
+		} else {
+			btAdicionaRebuy.setDisable(true);
+			btExcluirRebuy.setDisable(true);
+			btAdicionaNaoInscrito.setDisable(true);
 		}
 		restartTimer();
 	}
@@ -993,16 +992,15 @@ public class PokerTimerFXController implements Initializable{
 			listRodadas.getSelectionModel().select(iRodada+1);
 		else
 			listRodadas.getSelectionModel().select(Constants.MAX_ROUNDS);
-		iRodada = listRodadas.getSelectionModel().getSelectedIndex();
-		setCurrentRound();
-		if (iRodada > Constants.MAX_ROUND_REBUY) {
-			btAdicionaRebuy.setDisable(true);
-			btExcluirRebuy.setDisable(true);
-			btAdicionaNaoInscrito.setDisable(true);
-		} else {
+		currentRound = listRodadas.getSelectionModel().getSelectedIndex();
+		if (roundList.get(currentRound).isRebuyAllowed()) {
 			btAdicionaRebuy.setDisable(false);
 			btExcluirRebuy.setDisable(false);
 			btAdicionaNaoInscrito.setDisable(false);
+		} else {
+			btAdicionaRebuy.setDisable(true);
+			btExcluirRebuy.setDisable(true);
+			btAdicionaNaoInscrito.setDisable(true);
 		}
 		restartTimer();
 	}
@@ -1522,10 +1520,12 @@ public class PokerTimerFXController implements Initializable{
 
 	private void setCurrentRound(){
 		currentRound = listRodadas.getSelectionModel().getSelectedIndex();
-		int round = (currentRound + 1)/5;
+		int lastRound = currentRound - 1;
 
-		if(roundList.get(currentRound).isBreakRound() && round < 3)
-    		oListRebuys.add("========= BREAK " + round + "===========");
+		if(lastRound > 0)
+			if(roundList.get(lastRound).isBreakRound() && roundList.get(lastRound).isRebuyAllowed())
+				if(!oListRebuys.contains("========= BREAK " + roundList.get(lastRound).getBreakRoundNumber() +" ==========="))
+					oListRebuys.add("========= BREAK " + roundList.get(lastRound).getBreakRoundNumber() +" ===========");
 
         if (roundList.get(currentRound).getBigBlind() != 0)
             bigAtual.setText("" + roundList.get(currentRound).getBigBlind());
