@@ -76,12 +76,12 @@
                   </Label>
                   <Label fx:id="lbMediaFichas" layoutX="10.0" layoutY="160.0" text="Média Fichas:">
                      <font>
-                        <Font name="System Bold" size="48.0" />
+                        <Font name="System Bold" size="42.0" />
                      </font>
                   </Label>
                   <Label fx:id="lbTotalArrecadado" layoutX="10.0" layoutY="230.0" text="Total Arrecadado:">
                      <font>
-                        <Font name="System Bold" size="40.0" />
+                        <Font name="System Bold" size="38.0" />
                      </font>
                   </Label>
                   <Label fx:id="lbPos1" layoutX="10.0" layoutY="300.0" text="1º:">
