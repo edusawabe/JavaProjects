@@ -1224,9 +1224,9 @@ public class PokerTimerFXController implements Initializable{
 		logger.info("Iniciando GUI");
 		//ConfigManager obtem a lista de jogadores cadastrados
 		configManager = new ConfigManager();
-		configManager.setConfigFileName("./config.txt");
-		configManager.setPlayersFileName("./StagePlayers.txt");
-		configManager.setActualStateFileName("./ActualState.txt");
+		configManager.setConfigFileName(Constants.CONFIG_FILE_NAME);
+		configManager.setPlayersFileName(Constants.STAGE_PLAYERS_FILE_NAME);
+		configManager.setActualStateFileName(Constants.ACTUAL_STATE_FILE_NAME);
 		configManager.readFile();
 		configManager.readActualStateFile();
 		configManager.getListPlayer().clear();

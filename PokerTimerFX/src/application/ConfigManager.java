@@ -186,7 +186,7 @@ public class ConfigManager {
 		File confgFile  = new File(configFileName);
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss");
 		Date date = new Date();
-		String[] configBackup = configFileName.split("\\.t");
+		String[] configBackup = configFileName.split(Constants.CONFIG_FILE_NAME_SPLIT);
         BufferedReader reader;
         BufferedWriter writer;
         BufferedWriter writer2;
@@ -243,7 +243,7 @@ public class ConfigManager {
 		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(3, 5));
 		if(Constants.CURRENT_MONTH > 0)
 			mesEtapa = Constants.CURRENT_MONTH;
-		String[] configBackup = configFileName.split("\\.t");
+		String[] configBackup = configFileName.split(Constants.CONFIG_FILE_NAME_SPLIT);
         BufferedReader reader;
         BufferedWriter writer;
         BufferedWriter writer2;

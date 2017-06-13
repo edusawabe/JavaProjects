@@ -15,6 +15,7 @@ import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import model.Player;
+import util.Constants;
 
 public class GraficoAnualController implements Initializable{
 	private final String[] mes = {"Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"};
@@ -28,7 +29,7 @@ public class GraficoAnualController implements Initializable{
 		graficoLinha = new LineChart(
 				new CategoryAxis(), new NumberAxis());
 		ConfigManager configManager = new ConfigManager();
-		configManager.setConfigFileName("./config.txt");
+		configManager.setConfigFileName(Constants.CONFIG_FILE_NAME);
 		configManager.readFile();
 		configManager.getPlayers();
 		LinkedList<Player> list = configManager.getListPlayer();
