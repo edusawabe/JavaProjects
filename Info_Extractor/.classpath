@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0_111"/>
+	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Jars/poi-3.15/lib/commons-codec-1.10.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/poi-3.15/lib/commons-collections4-4.1.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/poi-3.15/ooxml-lib/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/poi-3.15/poi-3.15.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/poi-3.15/poi-ooxml-3.15.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/poi-3.15/poi-ooxml-schemas-3.15.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
