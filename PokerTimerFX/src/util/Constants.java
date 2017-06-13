@@ -27,4 +27,8 @@ public final class Constants {
     public static int MAX_PLAYERS_FINAL_TABLE = 9;
     public static int LAST_BREAK_ROUND = 20;
     public static double SUBSCRIPTION_VALUE = 25.00;
+    public static String CONFIG_FILE_NAME = "./config.csv";
+    public static String CONFIG_FILE_NAME_SPLIT = "\\.c";
+    public static String STAGE_PLAYERS_FILE_NAME = "./StagePlayers.txt";
+    public static String ACTUAL_STATE_FILE_NAME = "./ActualState.txt";
 }
