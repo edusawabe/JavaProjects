@@ -228,12 +228,19 @@ public class PokerTimerFXController implements Initializable{
 	@FXML
 	private void tratarEventosTeclado(KeyEvent evt){
 		lastInput = 3;
-		if(listJogadores.isFocused()){
+		if (listJogadores.isFocused()){
+			String olTmp;
+			String inTmp;
 			inputName = inputName + ((KeyEvent) evt).getCharacter();
+			inTmp = inputName.toLowerCase();
 			for (int i = currentSelection; i < oListJogadores.size(); i++) {
-				if(oListJogadores.get(i).startsWith(inputName)){
-					if(lastSelectedName.equals(oListJogadores.get(i)))
+				olTmp = oListJogadores.get(i).toLowerCase();
+				if(olTmp.startsWith(inTmp)){
+					if(lastSelectedName.equals(oListJogadores.get(i))){
 						currentSelection = i + 1;
+						listJogadores.scrollTo(i);
+						lastSelectedName = oListJogadores.get(i);
+					}
 					else {
 						listJogadores.getSelectionModel().select(i);
 						listJogadores.scrollTo(i);
