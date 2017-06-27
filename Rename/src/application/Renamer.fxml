@@ -27,28 +27,9 @@
          <children>
             <VBox>
                <children>
-                  <HBox>
-                     <children>
-                        <Label text="Renomear Todos:">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                        </Label>
-                        <RadioButton fx:id="rbTodosSim" mnemonicParsing="false" onAction="#renomearTodosSimSelected" text="Sim">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </RadioButton>
-                        <RadioButton fx:id="rbTodosNao" mnemonicParsing="false" onAction="#renomearTodosNaoSelected" text="Não">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </RadioButton>
-                     </children>
-                  </HBox>
                   <HBox layoutX="10.0" layoutY="37.0">
                      <children>
-                        <Label text="Extensão:            ">
+                        <Label text="Extensão:    ">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -56,34 +37,34 @@
                               <Insets top="5.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField fx:id="tfExtensao" disable="true" onKeyReleased="#habilitarIniciaisFinais" prefHeight="25.0" prefWidth="103.0" promptText="Extensão">
+                        <RadioButton fx:id="rbSubstituir" mnemonicParsing="false" onAction="#substituirAction" text="Substituir">
+                           <HBox.margin>
+                              <Insets left="10.0" top="5.0" />
+                           </HBox.margin>
+                        </RadioButton>
+                        <RadioButton fx:id="rbIncluir" layoutX="227.0" layoutY="15.0" mnemonicParsing="false" onAction="#incluirAction" text="Incluir">
+                           <HBox.margin>
+                              <Insets left="10.0" top="5.0" />
+                           </HBox.margin>
+                        </RadioButton>
+                        <RadioButton fx:id="rbRemover" layoutX="309.0" layoutY="15.0" mnemonicParsing="false" onAction="#removerAction" text="Remover">
+                           <HBox.margin>
+                              <Insets left="10.0" top="5.0" />
+                           </HBox.margin>
+                        </RadioButton>
+                        <TextField fx:id="tfExtensao" disable="true" onKeyReleased="#renomear" prefHeight="25.0" prefWidth="103.0" promptText="Extensão">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
                         </TextField>
-                        <RadioButton fx:id="rbSubstituir" disable="true" mnemonicParsing="false" onAction="#substituirAction" text="Substituir">
-                           <HBox.margin>
-                              <Insets left="10.0" top="5.0" />
-                           </HBox.margin>
-                        </RadioButton>
-                        <RadioButton fx:id="rbIncluir" disable="true" layoutX="227.0" layoutY="15.0" mnemonicParsing="false" onAction="#incluirAction" text="Incluir">
-                           <HBox.margin>
-                              <Insets left="10.0" top="5.0" />
-                           </HBox.margin>
-                        </RadioButton>
-                        <RadioButton fx:id="rbRemover" disable="true" layoutX="309.0" layoutY="15.0" mnemonicParsing="false" onAction="#removerAction" text="Remover">
-                           <HBox.margin>
-                              <Insets left="10.0" top="5.0" />
-                           </HBox.margin>
-                        </RadioButton>
                      </children>
                      <VBox.margin>
-                        <Insets top="10.0" />
+                        <Insets />
                      </VBox.margin>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="37.0">
                      <children>
-                        <Label text="Renomear:          ">
+                        <Label text="Renomear:  ">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -91,7 +72,7 @@
                               <Insets top="5.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField fx:id="tfQtdeCaracter" disable="true" onKeyReleased="#habilitarIniciaisFinais" prefHeight="25.0" prefWidth="103.0" promptText="Qtde. Caracteres">
+                        <TextField fx:id="tfQtdeCaracter" onKeyReleased="#habilitarIniciaisFinais" prefHeight="25.0" prefWidth="103.0" promptText="Qtde. Caracteres">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -113,7 +94,7 @@
                   </HBox>
                   <HBox layoutX="10.0" layoutY="10.0">
                      <children>
-                        <Label text="Padrão:               ">
+                        <Label text="Novo Texto:">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -121,7 +102,7 @@
                               <Insets top="5.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField fx:id="tfPadrao" disable="true" onKeyReleased="#renomear" prefHeight="25.0" prefWidth="197.0">
+                        <TextField fx:id="tfNovoTexto" disable="true" onKeyReleased="#renomear" prefHeight="25.0" prefWidth="197.0">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -161,52 +142,19 @@
                         <Insets top="5.0" />
                      </VBox.margin>
                   </HBox>
+                  <TableView fx:id="tvArquivos" editable="true" onKeyPressed="#renomear" VBox.vgrow="ALWAYS">
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                     <columns>
+                        <TableColumn fx:id="tcSelecionado" prefWidth="75.0" />
+                     </columns>
+                  </TableView>
                </children>
                <VBox.margin>
                   <Insets />
                </VBox.margin>
             </VBox>
-            <HBox VBox.vgrow="ALWAYS">
-               <children>
-                  <VBox HBox.hgrow="ALWAYS">
-                     <children>
-                        <Label text="Atual:">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                        </Label>
-                        <ListView fx:id="lvAntes" onInputMethodTextChanged="#itemSelecionado" onKeyReleased="#itemSelecionado" onMouseClicked="#itemSelecionado">
-                           <VBox.margin>
-                              <Insets right="5.0" />
-                           </VBox.margin>
-                        </ListView>
-                     </children>
-                  </VBox>
-                  <VBox HBox.hgrow="ALWAYS">
-                     <children>
-                        <Label text="Após a Alteração:">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                        </Label>
-                        <ListView fx:id="lvDepois" />
-                     </children>
-                     <HBox.margin>
-                        <Insets left="5.0" />
-                     </HBox.margin>
-                  </VBox>
-               </children>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </HBox>
-            <TableView fx:id="tvArquivos" editable="true" prefHeight="200.0" prefWidth="200.0">
-              <columns>
-                <TableColumn fx:id="tcSelecionado" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" resizable="false" />
-                <TableColumn fx:id="tcAtual" maxWidth="-1.0" minWidth="-Infinity" prefWidth="-1.0" text="Atual" />
-                  <TableColumn fx:id="tcApos" maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="Após Alteração" />
-              </columns>
-            </TableView>
          </children>
       </VBox>
    </children>

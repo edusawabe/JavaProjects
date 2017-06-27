@@ -4,11 +4,9 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javax.swing.text.TabableView;
-
-import br.org.util.validator.MaskTextField;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -20,7 +18,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
@@ -30,15 +27,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.DirectoryChooser;
+import javafx.util.Callback;
 import model.RenameModel;
 
 public class RenamerController implements Initializable{
-	@FXML
-	private RadioButton rbTodosSim;
-	@FXML
-	private RadioButton rbTodosNao;
-	@FXML
-	private TextField tfExtensao;
 	@FXML
 	private RadioButton rbSubstituir;
 	@FXML
@@ -46,21 +38,19 @@ public class RenamerController implements Initializable{
 	@FXML
 	private RadioButton rbRemover;
 	@FXML
+	private TextField tfExtensao;
+	@FXML
 	private TextField tfQtdeCaracter;
 	@FXML
 	private RadioButton rbIniciais;
 	@FXML
 	private RadioButton rbFinais;
 	@FXML
-	private TextField tfPadrao;
+	private TextField tfNovoTexto;
 	@FXML
 	private Button btRenomear;
 	@FXML
 	private Label lbDiretorio;
-	@FXML
-	private ListView<String> lvAntes;
-	@FXML
-	private ListView<String> lvDepois;
 	@FXML
 	private TableView<RenameModel> tvArquivos;
 	@FXML
@@ -70,27 +60,37 @@ public class RenamerController implements Initializable{
 	@FXML
 	private TableColumn<RenameModel, String> tcApos;
 
-	private ObservableList<String> olAntes = FXCollections.observableArrayList();
-	private ObservableList<String> olDepois = FXCollections.observableArrayList();
 	private ObservableList<RenameModel> olTabelaArquivos = FXCollections.observableArrayList();
 	private File dir;
+	private CheckBox cb;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		tcSelecionado.setCellValueFactory(new PropertyValueFactory<RenameModel, Boolean>("selecionado"));
-		tcSelecionado.setCellFactory(column -> new CheckBoxTableCell());
-		tcSelecionado.setEditable(true);
-		tcAtual.setCellValueFactory(new PropertyValueFactory<RenameModel, String>("nomeAtual"));
-		tcApos.setCellValueFactory(new PropertyValueFactory<RenameModel, String>("nomeApos"));
+		tcAtual = new TableColumn<>("Atual");
+		tcApos = new TableColumn<>("Apos");
+
+		//Criando checkbox
+		cb = new CheckBox();
+
+		//Tabela Editavel
+		tvArquivos.setEditable(true);
+
+		 //Make one column use checkboxes instead of text
+		tcSelecionado.setCellFactory(CheckBoxTableCell.forTableColumn(tcSelecionado));
+
+		 //Change ValueFactory for each column
+		tcSelecionado.setCellValueFactory(new PropertyValueFactory<>("selected"));
+		tcAtual.setCellValueFactory(new PropertyValueFactory<>("nomeAtual"));
+		tcApos.setCellValueFactory(new PropertyValueFactory<>("nomeApos"));
 		tvArquivos.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 		 // Header CheckBox
-        CheckBox cb = new CheckBox();
-        cb.setUserData(tcSelecionado);
-        cb.setOnAction(handleSelectAllCheckbox());
-        tcSelecionado.setGraphic(cb);
+		tcSelecionado.setGraphic(cb);
+        cb.setOnAction(e -> handleSelectAllCheckbox(e));
 
-        tvArquivos.getItems().clear();
+        tcSelecionado.setText("");
+
+        tvArquivos.getColumns().addAll(tcAtual, tcApos);
         tvArquivos.setItems(olTabelaArquivos);
 	}
 
@@ -98,23 +98,11 @@ public class RenamerController implements Initializable{
      *
      * @return
      */
-	private EventHandler<ActionEvent> handleSelectAllCheckbox() {
-		return new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				CheckBox cb = (CheckBox) event.getSource();
-				TableColumn column = (TableColumn) cb.getUserData();
-				if (cb.isSelected()) {
-					for (RenameModel c : olTabelaArquivos) {
-						c.setSelecionado(true);
-					}
-				} else {
-					for (RenameModel c : olTabelaArquivos) {
-						c.setSelecionado(false);
-					}
-				}
-			}
-		};
+	private void handleSelectAllCheckbox(ActionEvent e) {
+		for (RenameModel c : olTabelaArquivos) {
+			c.setSelected(((CheckBox) e.getSource()).isSelected());
+		}
+		resetTable(e);
 	}
 
 	@FXML
@@ -131,159 +119,125 @@ public class RenamerController implements Initializable{
 
 	private void doOpen(File dir){
 		File[] files = dir.listFiles();
-		olAntes.clear();
-		olDepois.clear();
+		tvArquivos.getItems().clear();
 
 		for (int i = 0; i < files.length; i++) {
 			if(files[i].isFile()){
-				olAntes.add(files[i].getName());
-				olDepois.add(files[i].getName());
 				RenameModel item = new RenameModel();
-				item.setSelecionado(false);
+				item.setSelected(false);
 				item.setNomeAtual(files[i].getName());
 				item.setNomeApos(files[i].getName());
 				olTabelaArquivos.add(item);
 			}
 		}
-
-		lvAntes.setItems(olAntes);
-		lvDepois.setItems(olDepois);
 		tvArquivos.setItems(olTabelaArquivos);
 	}
 
-	@FXML
-	private void renomearTodosSimSelected(Event ev){
-		rbTodosNao.setSelected(false);
-		if(!rbTodosNao.isSelected() && !rbTodosSim.isSelected()){
-			tfExtensao.setDisable(true);
-			tfQtdeCaracter.setDisable(true);
-			rbSubstituir.setDisable(true);
-			rbIncluir.setDisable(true);
-			rbRemover.setDisable(true);
-		}else{
-			tfExtensao.setDisable(false);
-			tfQtdeCaracter.setDisable(false);
-			rbSubstituir.setDisable(false);
-			rbIncluir.setDisable(false);
-			rbRemover.setDisable(false);
+	private void resetTable(Event evt){
+		for (int i = 0; i < olTabelaArquivos.size(); i++) {
+			olTabelaArquivos.get(i).setNomeApos(olTabelaArquivos.get(i).getNomeAtual());
 		}
-	}
-
-	@FXML
-	private void renomearTodosNaoSelected(Event ev){
-		rbTodosSim.setSelected(false);
-		if(!rbTodosNao.isSelected() && !rbTodosSim.isSelected()){
-			tfExtensao.setDisable(true);
-			tfQtdeCaracter.setDisable(true);
-			rbSubstituir.setDisable(true);
-			rbIncluir.setDisable(true);
-			rbRemover.setDisable(true);
-		}else{
-			tfExtensao.setDisable(false);
-			tfQtdeCaracter.setDisable(false);
-			rbSubstituir.setDisable(false);
-			rbIncluir.setDisable(false);
-			rbRemover.setDisable(false);
-		}
+		renomear(evt);
 	}
 
 	@FXML
 	private void substituirAction(Event evt){
+		btRenomear.setDisable(true);
+
 		if(rbSubstituir.isSelected()){
 			rbIncluir.setSelected(false);
 			rbRemover.setSelected(false);
-			btRenomear.setDisable(false);
+			tfExtensao.setDisable(false);
+			if(tfExtensao.getText().isEmpty())
+				btRenomear.setDisable(true);
+			else
+				btRenomear.setDisable(false);
 		}
-		if(!rbSubstituir.isSelected() && !rbIncluir.isSelected() && !rbRemover.isSelected())
+		if(!rbSubstituir.isSelected() && !rbIncluir.isSelected() && !rbRemover.isSelected()){
 			btRenomear.setDisable(true);
+			tfExtensao.setDisable(true);
+		}
+		resetTable(evt);
 	}
 
 	@FXML
 	private void incluirAction(Event evt){
+		btRenomear.setDisable(true);
+
 		if(rbIncluir.isSelected()){
 			rbSubstituir.setSelected(false);
 			rbRemover.setSelected(false);
-			btRenomear.setDisable(false);
+			tfExtensao.setDisable(false);
+			if(tfExtensao.getText().isEmpty())
+				btRenomear.setDisable(true);
+			else
+				btRenomear.setDisable(false);
 		}
-		if(!rbSubstituir.isSelected() && !rbIncluir.isSelected() && !rbRemover.isSelected())
+		if(!rbSubstituir.isSelected() && !rbIncluir.isSelected() && !rbRemover.isSelected()){
 			btRenomear.setDisable(true);
+			tfExtensao.setDisable(true);
+		}
+		resetTable(evt);
 	}
 
 	@FXML
 	private void removerAction(Event evt){
+
+		btRenomear.setDisable(true);
+		tfExtensao.clear();
+		tfExtensao.setDisable(true);
+
 		if(rbRemover.isSelected()){
 			rbIncluir.setSelected(false);
 			rbSubstituir.setSelected(false);
-			btRenomear.setDisable(false);
 		}
-		if(!rbSubstituir.isSelected() && !rbIncluir.isSelected() && !rbRemover.isSelected())
+		if(!rbSubstituir.isSelected() && !rbIncluir.isSelected() && !rbRemover.isSelected()){
 			btRenomear.setDisable(true);
+			tfExtensao.setDisable(true);
+		}
+		resetTable(evt);
 	}
 
 	@FXML
 	private void iniciaisAction(Event evt){
+		btRenomear.setDisable(true);
+
 		if(rbIniciais.isSelected()){
 			rbFinais.setSelected(false);
-			btRenomear.setDisable(false);
+			tfNovoTexto.setDisable(false);
+			if(tfNovoTexto.getText().isEmpty())
+				btRenomear.setDisable(true);
+			else
+				btRenomear.setDisable(false);
 		}
-		if(!rbIniciais.isSelected() && !rbFinais.isSelected())
+		if(!rbIniciais.isSelected() && !rbFinais.isSelected()){
 			btRenomear.setDisable(true);
+			tfNovoTexto.setDisable(true);
+		}
+		resetTable(evt);
 	}
 
 	@FXML
 	private void finaisAction(Event evt){
+		btRenomear.setDisable(true);
+
 		if(rbFinais.isSelected()){
 			rbIniciais.setSelected(false);
-			btRenomear.setDisable(false);
+			tfNovoTexto.setDisable(false);
+			if(tfNovoTexto.getText().isEmpty())
+				btRenomear.setDisable(true);
+			else
+				btRenomear.setDisable(false);
 		}
-		if(!rbIniciais.isSelected() && !rbFinais.isSelected())
+		if(!rbIniciais.isSelected() && !rbFinais.isSelected()){
 			btRenomear.setDisable(true);
+			tfNovoTexto.setDisable(true);
+		}
+		resetTable(evt);
 	}
 
 	@FXML
 	private void renomear(Event ev){
-		Alert al = new Alert(AlertType.ERROR);
-		if(!rbTodosNao.isSelected() && !rbTodosSim.isSelected())
-		{
-			al.setAlertType(AlertType.ERROR);
-			al.setTitle("Selecione Renomear Todos Sim\\Não");
-			al.setContentText("Favor selecionar se será realizada a renomeação de todos os arquivos: Sim\\Não");
-			al.show();
-			return;
-		}
-		if(rbTodosSim.isSelected())
-			renomearTodos();
-		if(rbTodosNao.isSelected())
-			renomearSelecionados();
-	}
-
-	@FXML
-	private void habilitarIniciaisFinais(Event evt){
-		if(tfQtdeCaracter.getText().isEmpty()){
-			rbIniciais.setSelected(false);
-			rbFinais.setSelected(false);
-			rbIniciais.setDisable(true);
-			rbFinais.setDisable(true);
-			tfPadrao.setDisable(true);
-		} else {
-			rbIniciais.setSelected(false);
-			rbFinais.setSelected(false);
-			rbIniciais.setDisable(false);
-			rbFinais.setDisable(false);
-			tfPadrao.setDisable(false);
-			try {
-				int qtdeCar = Integer.parseInt(tfQtdeCaracter.getText());
-			}
-			catch (Exception e) {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Quantidade de Carateres Inválida");
-				alert.setContentText("A Informação de Quantidade de Caracteres é inválida");
-				alert.show();
-			}
-		}
-	}
-
-	private void renomearTodos(){
 		if(rbSubstituir.isSelected())
 			substituirExtensao();
 
@@ -293,57 +247,84 @@ public class RenamerController implements Initializable{
 		if(rbRemover.isSelected())
 			removerExtensao();
 
-		lvDepois.setItems(olDepois);
+		tvArquivos.refresh();
 	}
 
-	private void renomearSelecionados(){
+	@FXML
+	private void habilitarIniciaisFinais(Event evt){
+		tfNovoTexto.setDisable(true);
 
+		if(tfQtdeCaracter.getText().isEmpty()){
+			rbIniciais.setSelected(false);
+			rbFinais.setSelected(false);
+			rbIniciais.setDisable(true);
+			rbFinais.setDisable(true);
+			btRenomear.setDisable(true);
+		} else {
+			rbIniciais.setSelected(false);
+			rbFinais.setSelected(false);
+			rbIniciais.setDisable(false);
+			rbFinais.setDisable(false);
+			if(tfNovoTexto.getText().isEmpty())
+				btRenomear.setDisable(true);
+			else
+				btRenomear.setDisable(false);
+			try {
+				int qtdeCar = Integer.parseInt(tfQtdeCaracter.getText());
+			}
+			catch (Exception e) {
+				btRenomear.setDisable(true);
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Quantidade de Carateres Inválida");
+				alert.setContentText("A Informação de Quantidade de Caracteres é inválida");
+				alert.show();
+			}
+		}
 	}
 
 	private void substituirExtensao() {
 		int posPonto;
 
-		for (int i = 0; i < olAntes.size(); i++) {
-			String item = olAntes.get(i);
-			posPonto = olAntes.get(i).lastIndexOf('.');
-			if (posPonto > 0) {
-				item = item.substring(0, posPonto);
-				item = item + "." + tfExtensao.getText().replace(".", "");
-				olDepois.set(i, item);
+		for (int i = 0; i < olTabelaArquivos.size(); i++) {
+			if (olTabelaArquivos.get(i).selectedProperty().get()) {
+				String item = olTabelaArquivos.get(i).getNomeAtual();
+				posPonto = item.lastIndexOf('.');
+				if (posPonto > 0) {
+					item = item.substring(0, posPonto);
+					if(!tfExtensao.getText().isEmpty())
+						item = item + "." + tfExtensao.getText().replace(".", "");
+					olTabelaArquivos.get(i).setNomeApos(item);
+				}
 			}
 		}
+		return;
 	}
 
 	private void removerExtensao() {
 		int posPonto;
 
-		for (int i = 0; i < olAntes.size(); i++) {
-			String item = olAntes.get(i);
-			posPonto = olAntes.get(i).lastIndexOf('.');
-			if (posPonto > 0) {
-				item = item.substring(0, posPonto);
-				olDepois.set(i, item);
+		for (int i = 0; i < olTabelaArquivos.size(); i++) {
+			if (olTabelaArquivos.get(i).selectedProperty().get()) {
+				String item = olTabelaArquivos.get(i).getNomeAtual();
+				posPonto = item.lastIndexOf('.');
+				if (posPonto > 0) {
+					item = item.substring(0, posPonto);
+					olTabelaArquivos.get(i).setNomeApos(item);
+				}
 			}
 		}
 	}
 
 	private void incluirExtensao() {
-		for (int i = 0; i < olAntes.size(); i++) {
-			String item = olAntes.get(i);
-			item = item + "." + tfExtensao.getText().replace(".", "");
-			olDepois.set(i, item);
+		if (!tfExtensao.getText().isEmpty()) {
+			for (int i = 0; i < olTabelaArquivos.size(); i++) {
+				if (olTabelaArquivos.get(i).selectedProperty().get()) {
+					String item = olTabelaArquivos.get(i).getNomeAtual();
+					item = item + "." + tfExtensao.getText().replace(".", "");
+					olTabelaArquivos.get(i).setNomeApos(item);
+				}
+			}
 		}
 	}
-
-	@FXML
-	private void itemSelecionado(Event ev) {
-		if (tfPadrao.isDisable()) {
-			tfPadrao.setText("");
-		} else {
-			if (lvAntes.getSelectionModel().getSelectedIndex() >= 0)
-				tfPadrao.setText(olAntes.get(lvAntes.getSelectionModel().getSelectedIndex()));
-		}
-	}
-
 }
 

@@ -1,26 +1,27 @@
 package model;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class RenameModel {
-	private SimpleBooleanProperty selecionado;
+	private BooleanProperty selected;
 	private SimpleStringProperty nomeAtual;
 	private SimpleStringProperty nomeApos;
 
 	public RenameModel() {
-		selecionado = new SimpleBooleanProperty();
+		selected = new SimpleBooleanProperty(false);
 		nomeAtual = new SimpleStringProperty();
 		nomeApos= new SimpleStringProperty();
 	}
 
-	public Boolean getSelecionado() {
-		return selecionado.getValue();
-	}
+    public BooleanProperty selectedProperty() {
+        return selected;
+    }
 
-	public void setSelecionado(Boolean selecionado) {
-		this.selecionado.set(selecionado);
-	}
+    public void setSelected(boolean selected) {
+        this.selected.set(selected);
+    }
 
 	public String getNomeAtual() {
 		return nomeAtual.get();
