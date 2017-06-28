@@ -117,7 +117,7 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                      <children>
-                        <Button fx:id="btRenomear" disable="true" mnemonicParsing="false" onAction="#renomear" text="Renomear" textAlignment="RIGHT" HBox.hgrow="NEVER" />
+                        <Button fx:id="btRenomear" disable="true" mnemonicParsing="false" onAction="#btRenomearAction" text="Renomear" textAlignment="RIGHT" HBox.hgrow="NEVER" />
                      </children>
                   </HBox>
                   <Separator prefWidth="200.0">
