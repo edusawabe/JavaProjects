@@ -30,32 +30,37 @@ public class CalendarCellFactory implements Callback<TableColumn<MarcacaoLinhaTV
 			@SuppressWarnings("deprecation")
 			public void updateItem(String item, boolean empty) {
                 SimpleDateFormat df = new SimpleDateFormat("/MM/yyyy");
+                SimpleDateFormat dfCompleto = new SimpleDateFormat("dd/MM/yyyy");
                 Date dtAtual = DateUtil.dataAtual();
                 Date dt;
                 String d = df.format(dtAtual);
+                String dsCompleta = dfCompleto.format(dtAtual);
+                String[] dsSplitCompleta = dsCompleta.split("/");
                 Calendar c = Calendar.getInstance();
                 int dayOfWeek = 0;
 
 				super.updateItem(item, empty);
                 if (!isEmpty() && item != null) {
                 	if(item.contains("\n")){
-                		String[] aux = item.split("\n");
+                		String[] dtItem = item.split("\n");
                 		String[] dtS = d.split("/");
-                		dt = new Date(Integer.parseInt(dtS[2]) - 1900, Integer.parseInt(dtS[1]) - 1, Integer.parseInt(aux[0]));
+                		dt = new Date(Integer.parseInt(dtS[2]) - 1900, Integer.parseInt(dtS[1]) - 1, Integer.parseInt(dtItem[0]));
                 		c.setTime(dt);
             			dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
             			if(dayOfWeek == 1 || dayOfWeek == 7){
             				this.setTextFill(Color.DARKBLUE);
             				this.setBackground(new Background(new BackgroundFill(Color.ANTIQUEWHITE, null, null)));
             			}
-                		if(feriadosReader.getlFeriados().isFeriado(aux[0] + d)){
+                		if(feriadosReader.getlFeriados().isFeriado(dtItem[0] + d)){
                 			this.setTextFill(Color.DARKGREEN);
                 			this.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
                 		}
                 		else{
 	                		if(item.contains("Horas: 00:00") && !(dayOfWeek == 1 || dayOfWeek == 7)){
-	                			this.setTextFill(Color.WHITE);
-	            				this.setBackground(new Background(new BackgroundFill(Color.RED, null, null)));
+	                			if (dsSplitCompleta[0].compareTo(dtItem[0]) > 0) {
+	                				this.setTextFill(Color.WHITE);
+	                				this.setBackground(new Background(new BackgroundFill(Color.RED, null, null)));
+	                			}
 	                		}
                 		}
                 	}

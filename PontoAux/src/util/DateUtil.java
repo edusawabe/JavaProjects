@@ -22,10 +22,10 @@ public final class DateUtil {
 
 	@SuppressWarnings("deprecation")
 	public static Date dataAtual() {
-		boolean test = false;
+		boolean test = true;
 
 		if(test)
-			return new Date(2017-1900,05,30);
+			return new Date(2017-1900,05,27);
 		else
 			return new Date();
 	}
