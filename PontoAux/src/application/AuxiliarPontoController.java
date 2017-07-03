@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ResourceBundle;
+
+import factory.CalendarCellFactory;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -137,7 +139,7 @@ public class AuxiliarPontoController implements Initializable{
 		int mes;
 		int year;
 		Calendar c = Calendar.getInstance();
-		Date dtAtual = new Date();
+		Date dtAtual = DateUtil.dataAtual();
 		Date dt;
 		SimpleDateFormat df  = new SimpleDateFormat("dd/MM/yyyy");
 		MarcacaoLinhaTV ml = null;
@@ -155,6 +157,14 @@ public class AuxiliarPontoController implements Initializable{
 		tcQui.setCellValueFactory(new PropertyValueFactory<>("horasQui"));
 		tcSex.setCellValueFactory(new PropertyValueFactory<>("horasSex"));
 		tcSab.setCellValueFactory(new PropertyValueFactory<>("horasSab"));
+
+		tcDom.setCellFactory(new CalendarCellFactory());
+		tcSeg.setCellFactory(new CalendarCellFactory());
+		tcTer.setCellFactory(new CalendarCellFactory());
+		tcQua.setCellFactory(new CalendarCellFactory());
+		tcQui.setCellFactory(new CalendarCellFactory());
+		tcSex.setCellFactory(new CalendarCellFactory());
+		tcSab.setCellFactory(new CalendarCellFactory());
 
 		csvReader = new CSVReader();
 		csvReader.setFile(new File("./ponto.csv"));
