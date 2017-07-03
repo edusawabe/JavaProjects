@@ -8,12 +8,11 @@ import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ResourceBundle;
-
-import br.org.util.validator.MaskFieldUtil;
-import br.org.util.validator.MaskTextField;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -86,8 +85,8 @@ public class AuxiliarPontoController implements Initializable{
 	@SuppressWarnings("deprecation")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		MaskFieldUtil.hoursField(tfEntrada);
-		MaskFieldUtil.hoursField(tfSaida);
+		hoursField(tfEntrada);
+		hoursField(tfSaida);
 		recarregar();
 		timer = new Timeline();
 		timer.setCycleCount(Timeline.INDEFINITE);
@@ -206,11 +205,11 @@ public class AuxiliarPontoController implements Initializable{
 			switch (dayOfWeek) {
 				case 1:
 					ml.setHorasDom(horas);
-					ml.setDate(df.format(dt));
+					ml.setDateDom(df.format(dt));
 					break;
 				case 2:
 					ml.setHorasSeg(horas);
-					ml.setDate(df.format(dt));
+					ml.setDateSeg(df.format(dt));
 					if(!feriadosReader.getlFeriados().isFeriado(dateS)){
 						qtdeHorasMes = qtdeHorasMes + 9;
 						if (horasDia.equals("00:00"))
@@ -220,7 +219,7 @@ public class AuxiliarPontoController implements Initializable{
 					break;
 				case 3:
 					ml.setHorasTer(horas);
-					ml.setDate(df.format(dt));
+					ml.setDateTer(df.format(dt));
 					if(!feriadosReader.getlFeriados().isFeriado(dateS)){
 						qtdeHorasMes = qtdeHorasMes + 9;
 						if (horasDia.equals("00:00"))
@@ -230,7 +229,7 @@ public class AuxiliarPontoController implements Initializable{
 					break;
 				case 4:
 					ml.setHorasQua(horas);
-					ml.setDate(df.format(dt));
+					ml.setDateQua(df.format(dt));
 					if(!feriadosReader.getlFeriados().isFeriado(dateS)){
 						qtdeHorasMes = qtdeHorasMes + 9;
 						if (horasDia.equals("00:00"))
@@ -240,7 +239,7 @@ public class AuxiliarPontoController implements Initializable{
 					break;
 				case 5:
 					ml.setHorasQui(horas);
-					ml.setDate(df.format(dt));
+					ml.setDateQui(df.format(dt));
 					if(!feriadosReader.getlFeriados().isFeriado(dateS)){
 						qtdeHorasMes = qtdeHorasMes + 9;
 						if (horasDia.equals("00:00"))
@@ -250,7 +249,7 @@ public class AuxiliarPontoController implements Initializable{
 					break;
 				case 6:
 					ml.setHorasSex(horas);
-					ml.setDate(df.format(dt));
+					ml.setDateSex(df.format(dt));
 					if(!feriadosReader.getlFeriados().isFeriado(dateS)){
 						qtdeHorasMes = qtdeHorasMes + 9;
 						if (horasDia.equals("00:00"))
@@ -260,7 +259,7 @@ public class AuxiliarPontoController implements Initializable{
 					break;
 				case 7:
 					ml.setHorasSab(horas);
-					ml.setDate(df.format(dt));
+					ml.setDateSab(df.format(dt));
 					break;
 				default:
 					break;
@@ -289,6 +288,39 @@ public class AuxiliarPontoController implements Initializable{
 		}
 		cbDatasPendentes.setItems(olDatasPendentes);
 		tvHorasMarcadas.setItems(olHorasMarcadas);
+
+		tvHorasMarcadas.getSelectionModel().setCellSelectionEnabled(true);
+
+		for (int j = 0; j < olHorasMarcadas.size(); j++) {
+			if(olHorasMarcadas.get(j).getDateDom() != null && olHorasMarcadas.get(j).getDateDom().equals(df.format(dtAtual))){
+				tvHorasMarcadas.getSelectionModel().select(j,tcDom);
+				break;
+			}
+			if(olHorasMarcadas.get(j).getDateSeg() != null && olHorasMarcadas.get(j).getDateSeg().equals(df.format(dtAtual))){
+				tvHorasMarcadas.getSelectionModel().select(j,tcSeg);
+				break;
+			}
+			if(olHorasMarcadas.get(j).getDateTer() != null && olHorasMarcadas.get(j).getDateTer().equals(df.format(dtAtual))){
+				tvHorasMarcadas.getSelectionModel().select(j,tcTer);
+				break;
+			}
+			if(olHorasMarcadas.get(j).getDateQua() != null && olHorasMarcadas.get(j).getDateQua().equals(df.format(dtAtual))){
+				tvHorasMarcadas.getSelectionModel().select(j,tcQua);
+				break;
+			}
+			if(olHorasMarcadas.get(j).getDateQui() != null && olHorasMarcadas.get(j).getDateQui().equals(df.format(dtAtual))){
+				tvHorasMarcadas.getSelectionModel().select(j,tcQui);
+				break;
+			}
+			if(olHorasMarcadas.get(j).getDateSex() != null && olHorasMarcadas.get(j).getDateSex().equals(df.format(dtAtual))){
+				tvHorasMarcadas.getSelectionModel().select(j,tcSex);
+				break;
+			}
+			if(olHorasMarcadas.get(j).getDateSab() != null && olHorasMarcadas.get(j).getDateSab().equals(df.format(dtAtual))){
+				tvHorasMarcadas.getSelectionModel().select(j,tcSab);
+				break;
+			}
+		}
 	}
 
 	@FXML
@@ -301,4 +333,58 @@ public class AuxiliarPontoController implements Initializable{
 		this.manualManager.writeLine(marcacao);
 		recarregar();
 	}
+
+    /**
+     * Monta a mascara para Data (dd/MM/yyyy).
+     *
+     * @param textField TextField
+     */
+    public static void hoursField(final TextField textField) {
+        maxField(textField, 5);
+        textField.lengthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if (newValue.intValue() < 5) {
+                    String value = textField.getText();
+                    value = value.replaceAll("[^0-9]", "");
+                    try {
+                    	value = value.replaceFirst("([01][0-9]|2[0-3])([0-5][0-9])", "$1:$2");
+                        textField.setText(value);
+                        positionCaret(textField);
+					} catch (IllegalArgumentException e) {
+						// TODO: handle exception
+					}
+                }
+            }
+        });
+    }
+
+    /**
+     * @param textField TextField.
+     * @param length    Tamanho do campo.
+     */
+    private static void maxField(final TextField textField, final Integer length) {
+        textField.textProperty().addListener(new ChangeListener<Object>() {
+			@Override
+			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+                if (((String) newValue).length() > length)
+                    textField.setText((String) oldValue);
+			}
+        });
+    }
+
+    /**
+     * Devido ao incremento dos caracteres das mascaras eh necessario que o cursor sempre se posicione no final da string.
+     *
+     * @param textField TextField
+     */
+    private static void positionCaret(final TextField textField) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                // Posiciona o cursor sempre a direita.
+                textField.positionCaret(textField.getText().length());
+            }
+        });
+    }
 }

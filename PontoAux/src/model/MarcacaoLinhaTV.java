@@ -3,7 +3,13 @@ package model;
 import javafx.beans.property.SimpleStringProperty;
 
 public class MarcacaoLinhaTV {
-	private String date;
+	private String dateDom;
+	private String dateSeg;
+	private String dateTer;
+	private String dateQua;
+	private String dateQui;
+	private String dateSex;
+	private String dateSab;
 	private SimpleStringProperty horasDom;
 	private SimpleStringProperty horasSeg;
 	private SimpleStringProperty horasTer;
@@ -78,12 +84,88 @@ public class MarcacaoLinhaTV {
 		this.horasSab.set(horasSab);
 	}
 
-	public String getDate() {
-		return date;
+	public String getDateDom() {
+		return dateDom;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setDateDom(String dateDom) {
+		this.dateDom = dateDom;
+	}
+
+	public String getDateSeg() {
+		return dateSeg;
+	}
+
+	public void setDateSeg(String dateSeg) {
+		this.dateSeg = dateSeg;
+	}
+
+	public String getDateTer() {
+		return dateTer;
+	}
+
+	public void setDateTer(String dateTer) {
+		this.dateTer = dateTer;
+	}
+
+	public String getDateQua() {
+		return dateQua;
+	}
+
+	public void setDateQua(String dateQua) {
+		this.dateQua = dateQua;
+	}
+
+	public String getDateQui() {
+		return dateQui;
+	}
+
+	public void setDateQui(String dateQui) {
+		this.dateQui = dateQui;
+	}
+
+	public String getDateSex() {
+		return dateSex;
+	}
+
+	public void setDateSex(String dateSex) {
+		this.dateSex = dateSex;
+	}
+
+	public String getDateSab() {
+		return dateSab;
+	}
+
+	public void setDateSab(String dateSab) {
+		this.dateSab = dateSab;
+	}
+
+	public void setHorasDom(SimpleStringProperty horasDom) {
+		this.horasDom = horasDom;
+	}
+
+	public void setHorasSeg(SimpleStringProperty horasSeg) {
+		this.horasSeg = horasSeg;
+	}
+
+	public void setHorasTer(SimpleStringProperty horasTer) {
+		this.horasTer = horasTer;
+	}
+
+	public void setHorasQua(SimpleStringProperty horasQua) {
+		this.horasQua = horasQua;
+	}
+
+	public void setHorasQui(SimpleStringProperty horasQui) {
+		this.horasQui = horasQui;
+	}
+
+	public void setHorasSex(SimpleStringProperty horasSex) {
+		this.horasSex = horasSex;
+	}
+
+	public void setHorasSab(SimpleStringProperty horasSab) {
+		this.horasSab = horasSab;
 	}
 
 }
