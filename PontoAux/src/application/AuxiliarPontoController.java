@@ -21,6 +21,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -57,6 +58,8 @@ public class AuxiliarPontoController implements Initializable{
 	@FXML
 	private TextField tfSaida;
 	@FXML
+	private Button btRealizaMarcacao;
+	@FXML
 	private TableView<MarcacaoLinhaTV> tvHorasMarcadas;
 	private ObservableList<MarcacaoLinhaTV> olHorasMarcadas = FXCollections.observableArrayList();
 	@FXML
@@ -89,6 +92,8 @@ public class AuxiliarPontoController implements Initializable{
 	public void initialize(URL location, ResourceBundle resources) {
 		hoursField(tfEntrada);
 		hoursField(tfSaida);
+		tfEntrada.setPromptText("HH:MM");
+		tfSaida.setPromptText("HH:MM");
 		recarregar();
 		timer = new Timeline();
 		timer.setCycleCount(Timeline.INDEFINITE);
@@ -119,6 +124,17 @@ public class AuxiliarPontoController implements Initializable{
 		timer.playFromStart();
 	}
 	private void requestFocus(Event event) {
+		if(olDatasPendentes.isEmpty()){
+			btRealizaMarcacao.setDisable(true);
+			tfEntrada.setDisable(true);
+			tfSaida.setDisable(true);
+			cbDatasPendentes.setDisable(true);
+		}else{
+			btRealizaMarcacao.setDisable(false);
+			tfEntrada.setDisable(false);
+			tfSaida.setDisable(false);
+			cbDatasPendentes.setDisable(false);
+		}
 		if(hora.equals(lbHoraSaida.getText())){
 			Platform.runLater(()-> lbDataAtual.getScene().getWindow().requestFocus());
 			System.out.println("Foco solicitado");
