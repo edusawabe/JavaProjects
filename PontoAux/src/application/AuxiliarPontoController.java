@@ -43,6 +43,8 @@ public class AuxiliarPontoController implements Initializable{
 	@FXML
 	private Label lbTotalRealizadoMes;
 	@FXML
+	private Label lbTotalDeveriamRealizarHoje;
+	@FXML
 	private Label lbDataAtual;
 	@FXML
 	private Label lbHoraEntrada;
@@ -86,6 +88,7 @@ public class AuxiliarPontoController implements Initializable{
 	private String MM;
 	private String ss;
 	private int qtdeHorasMes;
+	private int qtdeHorasAteHoje;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -161,6 +164,7 @@ public class AuxiliarPontoController implements Initializable{
 		MarcacaoLinhaTV ml = null;
 		dd = new String();
 		qtdeHorasMes = 0;
+		qtdeHorasAteHoje = 0;
 		lbTotalRealizadoMes.setText("00:00");
 
 		olDatasPendentes.clear();
@@ -227,7 +231,7 @@ public class AuxiliarPontoController implements Initializable{
 			if (horasDiaManual != null)
 				horasDia = horasDiaManual.getQtdeHoras();
 			horas = dd + "\nHoras: " + horasDia;
-			lbTotalRealizadoMes.setText(HorasUtil.addHours(lbTotalRealizadoMes.getText(), horasDia));
+			lbTotalRealizadoMes.setText(HorasUtil.operateHoursCalendar(lbTotalRealizadoMes.getText(), horasDia, "+"));
 			switch (dayOfWeek) {
 				case 1:
 					ml.setHorasDom(horas);
@@ -236,52 +240,27 @@ public class AuxiliarPontoController implements Initializable{
 				case 2:
 					ml.setHorasSeg(horas);
 					ml.setDateSeg(df.format(dt));
-					if(!feriadosReader.getlFeriados().isFeriado(dateS)){
-						qtdeHorasMes = qtdeHorasMes + 9;
-						if (horasDia.equals("00:00"))
-							if(dia > (i+1))
-								olDatasPendentes.add(df.format(dt));
-					}
+					tratarHorasDia(dateS, horasDia, i, df, dt, dia);
 					break;
 				case 3:
 					ml.setHorasTer(horas);
 					ml.setDateTer(df.format(dt));
-					if(!feriadosReader.getlFeriados().isFeriado(dateS)){
-						qtdeHorasMes = qtdeHorasMes + 9;
-						if (horasDia.equals("00:00"))
-							if(dia > (i+1))
-								olDatasPendentes.add(df.format(dt));
-					}
+					tratarHorasDia(dateS, horasDia, i, df, dt, dia);
 					break;
 				case 4:
 					ml.setHorasQua(horas);
 					ml.setDateQua(df.format(dt));
-					if(!feriadosReader.getlFeriados().isFeriado(dateS)){
-						qtdeHorasMes = qtdeHorasMes + 9;
-						if (horasDia.equals("00:00"))
-							if(dia > (i+1))
-								olDatasPendentes.add(df.format(dt));
-					}
+					tratarHorasDia(dateS, horasDia, i, df, dt, dia);
 					break;
 				case 5:
 					ml.setHorasQui(horas);
 					ml.setDateQui(df.format(dt));
-					if(!feriadosReader.getlFeriados().isFeriado(dateS)){
-						qtdeHorasMes = qtdeHorasMes + 9;
-						if (horasDia.equals("00:00"))
-							if(dia > (i+1))
-								olDatasPendentes.add(df.format(dt));
-					}
+					tratarHorasDia(dateS, horasDia, i, df, dt, dia);
 					break;
 				case 6:
 					ml.setHorasSex(horas);
 					ml.setDateSex(df.format(dt));
-					if(!feriadosReader.getlFeriados().isFeriado(dateS)){
-						qtdeHorasMes = qtdeHorasMes + 9;
-						if (horasDia.equals("00:00"))
-							if(dia > (i+1))
-								olDatasPendentes.add(df.format(dt));
-					}
+					tratarHorasDia(dateS, horasDia, i, df, dt, dia);
 					break;
 				case 7:
 					ml.setHorasSab(horas);
@@ -292,25 +271,22 @@ public class AuxiliarPontoController implements Initializable{
 			}
 		}
 
+		if(qtdeHorasAteHoje < 10)
+			lbTotalDeveriamRealizarHoje.setText("0" + qtdeHorasAteHoje + ":00");
+		else
+			lbTotalDeveriamRealizarHoje.setText("" + qtdeHorasAteHoje + ":00");
+
 		lbTotalMes.setText("" + qtdeHorasMes + ":00");
 		if(csvReader.getMarcacaoCSV(df.format(dtAtual))!= null){
+			String horaSaida = null, difHoras = null;
+
 			lbHoraEntrada.setText(csvReader.getMarcacaoCSV(df.format(dtAtual)).getEntrada());
-			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			Date d1 = null;
-
-			try {
-				d1 = format.parse(lbDataAtual.getText() + " " + lbHoraEntrada.getText() + ":00");
-				Calendar sum = Calendar.getInstance();
-				sum.setTimeInMillis(0);
-				sum.setTime(d1);
-				sum.add(Calendar.HOUR_OF_DAY,  9);
-				format = new SimpleDateFormat("HH:mm");
-				lbHoraSaida.setText(format.format(sum.getTime()));
-
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			horaSaida = HorasUtil.operateHoursCalendar(csvReader.getMarcacaoCSV(df.format(dtAtual)).getEntrada(), "09:00", "+");
+			if(!lbTotalDeveriamRealizarHoje.getText().equals(lbTotalRealizadoMes.getText())){
+				difHoras  = HorasUtil.subTractHours(lbTotalDeveriamRealizarHoje.getText(), lbTotalRealizadoMes.getText());
+				horaSaida = HorasUtil.operateHoursCalendar(horaSaida, difHoras, "+");
 			}
+			lbHoraSaida.setText(horaSaida);
 		}
 		cbDatasPendentes.setItems(olDatasPendentes);
 		tvHorasMarcadas.setItems(olHorasMarcadas);
@@ -345,6 +321,21 @@ public class AuxiliarPontoController implements Initializable{
 			if(olHorasMarcadas.get(j).getDateSab() != null && olHorasMarcadas.get(j).getDateSab().equals(df.format(dtAtual))){
 				tvHorasMarcadas.getSelectionModel().select(j,tcSab);
 				break;
+			}
+		}
+	}
+
+	private void tratarHorasDia(String dateS, String horasDia, int i, SimpleDateFormat df, Date dt, int dia){
+		if(!feriadosReader.getlFeriados().isFeriado(dateS)){
+			qtdeHorasMes = qtdeHorasMes + 9;
+			if (horasDia.equals("00:00")){
+				if(dia > (i+1))
+					olDatasPendentes.add(df.format(dt));
+			}
+			else{
+				if(dia > (i+1)){
+					qtdeHorasAteHoje = qtdeHorasAteHoje + 9;
+				}
 			}
 		}
 	}

@@ -15,7 +15,7 @@
                <children>
                   <HBox layoutX="10.0" layoutY="10.0">
                      <children>
-                        <Label text="Total Horas Que Devem Ser Realizadas no Mes:">
+                        <Label text="Total Horas Que Devem Ser Realizadas no Mes:          ">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -35,7 +35,7 @@
                   </HBox>
                   <HBox layoutX="10.0" layoutY="37.0">
                      <children>
-                        <Label text="Total Horas Realizadas:                                         ">
+                        <Label text="Total Horas Realizadas/Deveriam ter sido Realizadas:">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -43,11 +43,14 @@
                               <Insets />
                            </HBox.margin>
                         </Label>
-                        <Label fx:id="lbTotalRealizadoMes" text="120 Horas">
+                        <Label fx:id="lbTotalRealizadoMes" text="120:00">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
                         </Label>
+                        <Label layoutX="373.0" layoutY="10.0" text=" / " />
+                        <Label fx:id="lbTotalDeveriamRealizarHoje" layoutX="319.0" layoutY="10.0" text="120:00" />
+                        <Label layoutX="354.0" layoutY="10.0" text=" Horas" />
                      </children>
                      <VBox.margin>
                         <Insets top="10.0" />
