@@ -45,9 +45,9 @@ public final class HorasUtil {
 		return ret;
 	}
 
-	public static String subTractHours(String hours, String toSub) {
-		int hh, toSubHH, retHH;
-		int mm, toSubMM, retMM;
+	public static String addHours(String hours, String toAdd) {
+		int hh, toAddHH, retHH;
+		int mm, toAddMM, retMM;
 		String[] hoursSplit;
 		String ret;
 
@@ -55,6 +55,55 @@ public final class HorasUtil {
 		hh = Integer.parseInt(hoursSplit[0]);
 		mm = Integer.parseInt(hoursSplit[1]);
 
+		hoursSplit = toAdd.split(":");
+		toAddHH = Integer.parseInt(hoursSplit[0]);
+		toAddMM = Integer.parseInt(hoursSplit[1]);
+
+		retHH = hh + toAddHH;
+		retMM = mm + toAddMM;
+		if(retMM > 60){
+			retHH++;
+			retMM = retMM - 60;
+		}
+
+		if(retHH < 10)
+			ret = "0" + retHH;
+		else
+			ret = "" + retHH;
+
+		if(retMM < 10)
+			ret = ret+ ":0" + retMM;
+		else
+			ret = ret+ ":" + retMM;
+
+		return ret;
+	}
+
+	public static String subTractHours(String hours, String toSub) {
+		int hh, toSubHH, retHH;
+		int mm, toSubMM, retMM;
+		String[] hoursSplit;
+		String ret;
+		String tmp;
+		boolean negativeResult = false;
+
+		if(hours.compareTo(toSub) < 0){
+			negativeResult = true;
+			tmp = toSub;
+			toSub = hours;
+			hours = tmp;
+		}
+
+		if(hours.startsWith("-")){
+			hoursSplit = hours.split(":");
+			hh = Integer.parseInt(hoursSplit[0]);
+			mm = Integer.parseInt(hoursSplit[1]);
+			mm = mm *-1;
+		} else {
+			hoursSplit = hours.split(":");
+			hh = Integer.parseInt(hoursSplit[0]);
+			mm = Integer.parseInt(hoursSplit[1]);
+		}
 		hoursSplit = toSub.split(":");
 		toSubHH = Integer.parseInt(hoursSplit[0]);
 		toSubMM = Integer.parseInt(hoursSplit[1]);
@@ -76,6 +125,9 @@ public final class HorasUtil {
 		else
 			ret = ret+ ":" + retMM;
 
-		return ret;
+		if(negativeResult)
+			return "-"+ret;
+		else
+			return ret;
 	}
 }

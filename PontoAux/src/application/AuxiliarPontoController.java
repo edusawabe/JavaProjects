@@ -1,32 +1,30 @@
 package application;
 
-import java.io.File;
 import java.net.URL;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ResourceBundle;
-
 import factory.CalendarCellFactory;
+import factory.HourUnaryOperator;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
 import model.MarcacaoCSV;
@@ -39,19 +37,25 @@ import util.HorasUtil;
 
 public class AuxiliarPontoController implements Initializable{
 	@FXML
-	private Label lbTotalMes;
-	@FXML
 	private Label lbTotalRealizadoMes;
 	@FXML
-	private Label lbTotalDeveriamRealizarHoje;
+	private Label lbTotalDeveriamRealizarAteHoje;
+	@FXML
+	private Label lbDifHoras;
+	@FXML
+	private Label lbTotalMes;
 	@FXML
 	private Label lbDataAtual;
 	@FXML
 	private Label lbHoraEntrada;
 	@FXML
+	private Label lbHoraAtual;
+	@FXML
 	private Label lbHoraSaida;
 	@FXML
-	private Label lbHoraAtual;
+	private TextField tfHoraSaidaManual;
+	@FXML
+	private Label lbDifAposHoje;
 	@FXML
 	private ComboBox<String> cbDatasPendentes;
 	private ObservableList<String> olDatasPendentes = FXCollections.observableArrayList();
@@ -88,45 +92,45 @@ public class AuxiliarPontoController implements Initializable{
 	private String MM;
 	private String ss;
 	private int qtdeHorasMes;
-	private int qtdeHorasAteHoje;
+	private int qtdeHorasQueDeveriamAteHoje;
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		hoursField(tfEntrada);
-		hoursField(tfSaida);
+		//hoursField(tfEntrada);
+		//hoursField(tfSaida);
+		tfEntrada.setTextFormatter(new TextFormatter<>(new HourUnaryOperator()));
+		tfSaida.setTextFormatter(new TextFormatter<>(new HourUnaryOperator()));
+		tfHoraSaidaManual.setTextFormatter(new TextFormatter<>(new HourUnaryOperator()));
 		tfEntrada.setPromptText("HH:MM");
 		tfSaida.setPromptText("HH:MM");
+		tfHoraSaidaManual.setPromptText("HH:MM");
 		recarregar();
 		timer = new Timeline();
 		timer.setCycleCount(Timeline.INDEFINITE);
-		timer.getKeyFrames().add(new KeyFrame(Duration.millis(500), new EventHandler() {
-			// KeyFrame event handler
-			@Override
-			public void handle(Event event) {
-				if(LocalDateTime.now().getHour() < 10)
-					hh = "0" + LocalDateTime.now().getHour();
-				else
-					hh = "" + LocalDateTime.now().getHour();
+		timer.getKeyFrames().add(new KeyFrame(Duration.millis(500), event -> {
+			if(LocalDateTime.now().getHour() < 10)
+				hh = "0" + LocalDateTime.now().getHour();
+			else
+				hh = "" + LocalDateTime.now().getHour();
 
-				if(LocalDateTime.now().getMinute() < 10)
-					MM = "0" + LocalDateTime.now().getMinute();
-				else
-					MM = "" + LocalDateTime.now().getMinute();
+			if(LocalDateTime.now().getMinute() < 10)
+				MM = "0" + LocalDateTime.now().getMinute();
+			else
+				MM = "" + LocalDateTime.now().getMinute();
 
-				if(LocalDateTime.now().getSecond() < 10)
-					ss = "0" + LocalDateTime.now().getSecond();
-				else
-					ss = "" + LocalDateTime.now().getSecond();
-				lbHoraAtual.setText( hh + ":" + MM + ":" + ss);
+			if(LocalDateTime.now().getSecond() < 10)
+				ss = "0" + LocalDateTime.now().getSecond();
+			else
+				ss = "" + LocalDateTime.now().getSecond();
+			lbHoraAtual.setText( hh + ":" + MM + ":" + ss);
 
-				hora = LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute();
-				requestFocus(event);
-			}
+			hora = LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute();
+			tratarTela(event);
 		}));
 		timer.playFromStart();
 	}
-	private void requestFocus(Event event) {
+	private void tratarTela(Event event) {
 		if(olDatasPendentes.isEmpty()){
 			btRealizaMarcacao.setDisable(true);
 			tfEntrada.setDisable(true);
@@ -138,18 +142,30 @@ public class AuxiliarPontoController implements Initializable{
 			tfSaida.setDisable(false);
 			cbDatasPendentes.setDisable(false);
 		}
-		if(hora.equals(lbHoraSaida.getText())){
-			Platform.runLater(()-> lbDataAtual.getScene().getWindow().requestFocus());
-			System.out.println("Foco solicitado");
-			try {
-				this.finalize();
-			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		calculaDiferencaAposHoje();
+		if(!tfHoraSaidaManual.getText().isEmpty() && hora.equals(tfHoraSaidaManual.getText())){
+			requestFocus();
+		}
+		else{
+			if(hora.equals(lbHoraSaida.getText())){
+				requestFocus();
 			}
 		}
 	}
 
+	private void requestFocus() {
+		Platform.runLater(() -> lbDataAtual.getScene().getWindow().requestFocus());
+		System.out.println("Foco solicitado");
+		try {
+			this.finalize();
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	@SuppressWarnings("deprecation")
 	public void recarregar(){
 		String dd, mm = null, yyyy = null, dateS, horas, horasDia;
 		MarcacaoCSV horasDiaManual;
@@ -164,7 +180,7 @@ public class AuxiliarPontoController implements Initializable{
 		MarcacaoLinhaTV ml = null;
 		dd = new String();
 		qtdeHorasMes = 0;
-		qtdeHorasAteHoje = 0;
+		qtdeHorasQueDeveriamAteHoje = 0;
 		lbTotalRealizadoMes.setText("00:00");
 
 		olDatasPendentes.clear();
@@ -187,7 +203,6 @@ public class AuxiliarPontoController implements Initializable{
 		tcSab.setCellFactory(new CalendarCellFactory());
 
 		csvReader = new CSVReader();
-		csvReader.setFile(new File("./ponto.csv"));
 		feriadosReader = new FeriadosReader();
 		manualManager = new MarcacaoManualFileManager();
 		csvReader.readFile(false);
@@ -211,7 +226,7 @@ public class AuxiliarPontoController implements Initializable{
 			if(mes < 10)
 				mm = "0" + mes;
 
-			dt = new Date(year-1900, (mes-1), (i+1));
+			dt = new Date(year-1900, mes-1, i+1);
 			dateS = df.format(dt);
 			if(!DateUtil.isDateValid((dd + "/" + mm + "/" + yyyy))){
 				olHorasMarcadas.add(ml);
@@ -231,7 +246,6 @@ public class AuxiliarPontoController implements Initializable{
 			if (horasDiaManual != null)
 				horasDia = horasDiaManual.getQtdeHoras();
 			horas = dd + "\nHoras: " + horasDia;
-			lbTotalRealizadoMes.setText(HorasUtil.operateHoursCalendar(lbTotalRealizadoMes.getText(), horasDia, "+"));
 			switch (dayOfWeek) {
 				case 1:
 					ml.setHorasDom(horas);
@@ -271,26 +285,24 @@ public class AuxiliarPontoController implements Initializable{
 			}
 		}
 
-		if(qtdeHorasAteHoje < 10)
-			lbTotalDeveriamRealizarHoje.setText("0" + qtdeHorasAteHoje + ":00");
+		if(qtdeHorasQueDeveriamAteHoje < 10)
+			lbTotalDeveriamRealizarAteHoje.setText("0" + qtdeHorasQueDeveriamAteHoje + ":00");
 		else
-			lbTotalDeveriamRealizarHoje.setText("" + qtdeHorasAteHoje + ":00");
+			lbTotalDeveriamRealizarAteHoje.setText("" + qtdeHorasQueDeveriamAteHoje + ":00");
 
 		lbTotalMes.setText("" + qtdeHorasMes + ":00");
-		if(csvReader.getMarcacaoCSV(df.format(dtAtual))!= null){
-			String horaSaida = null, difHoras = null;
 
-			lbHoraEntrada.setText(csvReader.getMarcacaoCSV(df.format(dtAtual)).getEntrada());
-			horaSaida = HorasUtil.operateHoursCalendar(csvReader.getMarcacaoCSV(df.format(dtAtual)).getEntrada(), "09:00", "+");
-			if(!lbTotalDeveriamRealizarHoje.getText().equals(lbTotalRealizadoMes.getText())){
-				difHoras  = HorasUtil.subTractHours(lbTotalDeveriamRealizarHoje.getText(), lbTotalRealizadoMes.getText());
-				horaSaida = HorasUtil.operateHoursCalendar(horaSaida, difHoras, "+");
-			}
-			lbHoraSaida.setText(horaSaida);
+		if(csvReader.getMarcacaoCSV(df.format(dtAtual))!= null){
+			formatarDiferencaTotalHoras(dtAtual, df);
 		}
 		cbDatasPendentes.setItems(olDatasPendentes);
 		tvHorasMarcadas.setItems(olHorasMarcadas);
 
+		calculaDiferencaAposHoje();
+		selecionarDataAtual(dtAtual, df);
+	}
+
+	private void selecionarDataAtual(Date dtAtual, SimpleDateFormat df) {
 		tvHorasMarcadas.getSelectionModel().setCellSelectionEnabled(true);
 
 		for (int j = 0; j < olHorasMarcadas.size(); j++) {
@@ -324,18 +336,44 @@ public class AuxiliarPontoController implements Initializable{
 			}
 		}
 	}
+	private void formatarDiferencaTotalHoras(Date dtAtual, SimpleDateFormat df) {
+		String horaSaida = null, difHoras = null;
+
+		lbHoraEntrada.setText(csvReader.getMarcacaoCSV(df.format(dtAtual)).getEntrada());
+		//Soma 09:00 horas na hora de entrada, para obter a hora de saida padrao
+		horaSaida = HorasUtil.operateHoursCalendar(csvReader.getMarcacaoCSV(df.format(dtAtual)).getEntrada(), "09:00", "+");
+
+		//se as horas acumuladas são maiores que as horas que deveriam ter sido realizadas, subtrair a diferenca a hora de saida padrao
+		if(lbTotalDeveriamRealizarAteHoje.getText().compareTo(lbTotalRealizadoMes.getText()) < 0){
+			difHoras  = HorasUtil.subTractHours(lbTotalRealizadoMes.getText(), lbTotalDeveriamRealizarAteHoje.getText());
+			if(difHoras.compareTo("09:00") > 0)
+				horaSaida = HorasUtil.operateHoursCalendar(csvReader.getMarcacaoCSV(df.format(dtAtual)).getEntrada(), "09:00", "+");
+			else
+				horaSaida = HorasUtil.subTractHours(horaSaida, difHoras);
+			lbDifHoras.setText(difHoras);
+		}
+		//se as horas acumuladas são menores que as horas que deveriam ter sido realizadas, somar a diferenca na hora de saida padrao
+		if(lbTotalDeveriamRealizarAteHoje.getText().compareTo(lbTotalRealizadoMes.getText()) > 0){
+			difHoras  = HorasUtil.subTractHours(lbTotalDeveriamRealizarAteHoje.getText(), lbTotalRealizadoMes.getText());
+			if(difHoras.compareTo("09:00") > 0)
+				horaSaida = HorasUtil.operateHoursCalendar(csvReader.getMarcacaoCSV(df.format(dtAtual)).getEntrada(), "09:00", "+");
+			else
+				horaSaida = HorasUtil.addHours(horaSaida, difHoras);
+			lbDifHoras.setText("-"+difHoras);
+		}
+		lbHoraSaida.setText(horaSaida);
+	}
 
 	private void tratarHorasDia(String dateS, String horasDia, int i, SimpleDateFormat df, Date dt, int dia){
 		if(!feriadosReader.getlFeriados().isFeriado(dateS)){
 			qtdeHorasMes = qtdeHorasMes + 9;
-			if (horasDia.equals("00:00")){
-				if(dia > (i+1))
+			if(dia > (i+1)){
+				if (horasDia.equals("00:00")){
 					olDatasPendentes.add(df.format(dt));
-			}
-			else{
-				if(dia > (i+1)){
-					qtdeHorasAteHoje = qtdeHorasAteHoje + 9;
+				}else{
+					lbTotalRealizadoMes.setText(HorasUtil.addHours(lbTotalRealizadoMes.getText(), horasDia));
 				}
+				qtdeHorasQueDeveriamAteHoje = qtdeHorasQueDeveriamAteHoje + 9;
 			}
 		}
 	}
@@ -343,65 +381,61 @@ public class AuxiliarPontoController implements Initializable{
 	@FXML
 	private void btRealizarMarcacaoAction(Event event){
 		MarcacaoCSV marcacao = new MarcacaoCSV();
+		if(cbDatasPendentes.getSelectionModel().getSelectedIndex() < 0) {
+			Alert al = new Alert(AlertType.ERROR);
+			al.setTitle("Erro - Selecione a Data");
+			al.setContentText("Favor Selecionar a Data da Marcação Manual");
+			al.show();
+			return;
+		}
+		if(tfEntrada.getText().compareTo(tfSaida.getText()) >= 0) {
+			Alert al = new Alert(AlertType.ERROR);
+			al.setTitle("Erro - Horarios");
+			al.setContentText("Horario de Entrada não pode ser maior ou igual ao horario de saida");
+			al.show();
+			return;
+		}
 		marcacao.setData(olDatasPendentes.get(cbDatasPendentes.getSelectionModel().getSelectedIndex()));
 		marcacao.setEntrada(tfEntrada.getText());
 		marcacao.setSaida(tfSaida.getText());
-		marcacao.setQtdeHoras("09:00");
+		marcacao.setQtdeHoras(HorasUtil.operateHoursCalendar(tfSaida.getText(), tfEntrada.getText(), "-"));
 		this.manualManager.writeLine(marcacao);
 		recarregar();
 	}
 
-    /**
-     * Monta a mascara para Data (dd/MM/yyyy).
-     *
-     * @param textField TextField
-     */
-    public static void hoursField(final TextField textField) {
-        maxField(textField, 5);
-        textField.lengthProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                if (newValue.intValue() < 5) {
-                    String value = textField.getText();
-                    value = value.replaceAll("[^0-9]", "");
-                    try {
-                    	value = value.replaceFirst("([01][0-9]|2[0-3])([0-5][0-9])", "$1:$2");
-                        textField.setText(value);
-                        positionCaret(textField);
-					} catch (IllegalArgumentException e) {
-						// TODO: handle exception
-					}
-                }
-            }
-        });
-    }
+	private void calculaDiferencaAposHoje(){
+		String difTotal = null;
+		String difHoje = null;
 
-    /**
-     * @param textField TextField.
-     * @param length    Tamanho do campo.
-     */
-    private static void maxField(final TextField textField, final Integer length) {
-        textField.textProperty().addListener(new ChangeListener<Object>() {
-			@Override
-			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-                if (((String) newValue).length() > length)
-                    textField.setText((String) oldValue);
-			}
-        });
-    }
+		if(tfHoraSaidaManual.getText().length() == 5){
+			difHoje = HorasUtil.subTractHours(tfHoraSaidaManual.getText(), lbHoraEntrada.getText());
+			difHoje = HorasUtil.subTractHours(difHoje, "09:00");
+			difTotal = tratarHoras(difHoje, lbDifHoras.getText());
+			lbDifAposHoje.setText(difTotal);
+		} else {
+			difHoje = HorasUtil.subTractHours(lbHoraSaida.getText(), lbHoraEntrada.getText());
+			difHoje = HorasUtil.subTractHours(difHoje, "09:00");
+			difTotal = tratarHoras(difHoje, lbDifHoras.getText());
+			lbDifAposHoje.setText(difTotal);
+		}
+	}
 
-    /**
-     * Devido ao incremento dos caracteres das mascaras eh necessario que o cursor sempre se posicione no final da string.
-     *
-     * @param textField TextField
-     */
-    private static void positionCaret(final TextField textField) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                // Posiciona o cursor sempre a direita.
-                textField.positionCaret(textField.getText().length());
-            }
-        });
-    }
+	private String tratarHoras(String hora1, String hora2) {
+		if (hora1.startsWith("-") && hora2.startsWith("-")) {
+			return "-" + HorasUtil.addHours(hora1.replaceAll("-", ""), hora2.replaceAll("-", ""));
+		}
+
+		if (!hora1.startsWith("-") && !hora2.startsWith("-")) {
+			return HorasUtil.addHours(hora1, hora2);
+		}
+
+		if (hora1.startsWith("-") && !hora2.startsWith("-")) {
+			return HorasUtil.subTractHours(hora2, hora1.replaceAll("-", ""));
+		}
+
+		if (!hora1.startsWith("-") && hora2.startsWith("-")) {
+			return HorasUtil.subTractHours(hora1, hora2.replaceAll("-", ""));
+		}
+		return null;
+	}
 }

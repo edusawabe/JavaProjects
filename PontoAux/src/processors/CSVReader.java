@@ -15,7 +15,18 @@ public class CSVReader {
 
 	public void readFile(boolean marcacaoManualFile){
 		if (file == null) {
-			return;
+			file = new File("./");
+			File[] f = file.listFiles();
+			long lastModified = 0;
+
+			for (int i = 0; i < f.length; i++) {
+				if(f[i].getName().endsWith(".csv")){
+					if(f[i].lastModified() > lastModified){
+						file = f[i];
+						lastModified = f[i].lastModified();
+					}
+				}
+			}
 		}
 		String line;
 		boolean semSaida = false;

@@ -13,49 +13,141 @@
          <children>
             <VBox VBox.vgrow="NEVER">
                <children>
-                  <HBox layoutX="10.0" layoutY="10.0">
+                  <HBox>
                      <children>
-                        <Label text="Total Horas Que Devem Ser Realizadas no Mes:          ">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </Label>
-                        <Label fx:id="lbTotalMes" text="160 Horas">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </Label>
+                        <VBox>
+                           <children>
+                              <HBox>
+                                 <children>
+                                    <Label text="Total Horas Realizadas:">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox>
+                                 <children>
+                                    <Label text="Total Horas Que Deveriam Ter Sido Realizadas Ate Hoje: ">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox>
+                                 <children>
+                                    <Label text="Diferença de Horas:                                                             ">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox>
+                                 <children>
+                                    <Label text="Total Horas Que Devem Ser Realizadas no Mes:              ">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <HBox>
+                                 <children>
+                                    <Label fx:id="lbTotalRealizadoMes" text="120:00">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text=" Horas" />
+                                 </children>
+                              </HBox>
+                              <HBox>
+                                 <children>
+                                    <Label fx:id="lbTotalDeveriamRealizarAteHoje" text="120:00">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text=" Horas" />
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox layoutX="10.0" layoutY="60.0">
+                                 <children>
+                                    <Label fx:id="lbDifHoras" text="160:00">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="lbTotalMes11" layoutX="20.0" layoutY="10.0" text=" Horas" />
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox layoutX="10.0" layoutY="76.0">
+                                 <children>
+                                    <Label fx:id="lbTotalMes" text="160:00">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="lbTotalMes2" text=" Horas" />
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </HBox>
+                           </children>
+                        </VBox>
                      </children>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
                   </HBox>
-                  <HBox layoutX="10.0" layoutY="37.0">
-                     <children>
-                        <Label text="Total Horas Realizadas/Deveriam ter sido Realizadas:">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </Label>
-                        <Label fx:id="lbTotalRealizadoMes" text="120:00">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </Label>
-                        <Label layoutX="373.0" layoutY="10.0" text=" / " />
-                        <Label fx:id="lbTotalDeveriamRealizarHoje" layoutX="319.0" layoutY="10.0" text="120:00" />
-                        <Label layoutX="354.0" layoutY="10.0" text=" Horas" />
-                     </children>
+                  <Separator layoutX="10.0" layoutY="130.0" prefWidth="200.0">
                      <VBox.margin>
-                        <Insets top="10.0" />
+                        <Insets top="5.0" />
                      </VBox.margin>
-                  </HBox>
+                  </Separator>
                   <HBox>
                      <children>
                         <Label text="Data Atual:    ">
@@ -114,7 +206,7 @@
                                  <children>
                                     <Label fx:id="lbHoraAtual" text="09:10">
                                        <font>
-                                          <Font name="System Bold" size="36.0" />
+                                          <Font name="System Bold" size="30.0" />
                                        </font>
                                     </Label>
                                  </children>
@@ -139,6 +231,46 @@
                                     </Label>
                                  </children>
                               </HBox>
+                              <HBox layoutX="10.0" layoutY="80.0">
+                                 <children>
+                                    <Label text="Aviso Manual de Saída às:  ">
+                                       <font>
+                                          <Font name="System Bold" size="16.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets top="2.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <TextField fx:id="tfHoraSaidaManual" prefHeight="25.0" prefWidth="51.0">
+                                       <HBox.margin>
+                                          <Insets left="10.0" top="2.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="10.0" layoutY="110.0">
+                                 <children>
+                                    <Label text="Diferença Após Hoje:             ">
+                                       <font>
+                                          <Font name="System Bold" size="16.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Label>
+                                    <Label fx:id="lbDifAposHoje" layoutX="10.0" layoutY="12.0" text="10:00">
+                                       <font>
+                                          <Font name="System Bold" size="16.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </HBox>
                            </children>
                            <HBox.margin>
                               <Insets right="5.0" />
@@ -158,7 +290,7 @@
                                     </Label>
                                  </children>
                                  <VBox.margin>
-                                    <Insets top="10.0" />
+                                    <Insets />
                                  </VBox.margin>
                               </HBox>
                               <HBox>
