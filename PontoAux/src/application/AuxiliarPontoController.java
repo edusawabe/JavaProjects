@@ -359,7 +359,7 @@ public class AuxiliarPontoController implements Initializable{
 				horaSaida = HorasUtil.operateHoursCalendar(csvReader.getMarcacaoCSV(df.format(dtAtual)).getEntrada(), "09:00", "+");
 			else
 				horaSaida = HorasUtil.addHours(horaSaida, difHoras);
-			lbDifHoras.setText("-"+difHoras);
+			lbDifHoras.setText(difHoras);
 		}
 		lbHoraSaida.setText(horaSaida);
 	}

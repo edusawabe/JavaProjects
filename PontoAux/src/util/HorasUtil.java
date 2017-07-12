@@ -61,7 +61,7 @@ public final class HorasUtil {
 
 		retHH = hh + toAddHH;
 		retMM = mm + toAddMM;
-		if(retMM > 60){
+		if(retMM >= 60){
 			retHH++;
 			retMM = retMM - 60;
 		}
