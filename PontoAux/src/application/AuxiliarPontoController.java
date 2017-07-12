@@ -294,6 +294,12 @@ public class AuxiliarPontoController implements Initializable{
 
 		if(csvReader.getMarcacaoCSV(df.format(dtAtual))!= null){
 			formatarDiferencaTotalHoras(dtAtual, df);
+		}else{
+			Alert al = new Alert(AlertType.ERROR);
+			al.setTitle("Erro Hora de Entrada");
+			al.setContentText("Favor Carregar o arquivo CSV com a hora de entrada da Data de Hoje.");
+			al.show();
+			lbHoraEntrada.setText("08:00");
 		}
 		cbDatasPendentes.setItems(olDatasPendentes);
 		tvHorasMarcadas.setItems(olHorasMarcadas);
