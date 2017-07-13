@@ -342,6 +342,7 @@ public class AuxiliarPontoController implements Initializable{
 			}
 		}
 	}
+
 	private void formatarDiferencaTotalHoras(Date dtAtual, SimpleDateFormat df) {
 		String horaSaida = null, difHoras = null;
 
@@ -349,23 +350,20 @@ public class AuxiliarPontoController implements Initializable{
 		//Soma 09:00 horas na hora de entrada, para obter a hora de saida padrao
 		horaSaida = HorasUtil.operateHoursCalendar(csvReader.getMarcacaoCSV(df.format(dtAtual)).getEntrada(), "09:00", "+");
 
-		//se as horas acumuladas são maiores que as horas que deveriam ter sido realizadas, subtrair a diferenca a hora de saida padrao
-		if(lbTotalDeveriamRealizarAteHoje.getText().compareTo(lbTotalRealizadoMes.getText()) < 0){
-			difHoras  = HorasUtil.subTractHours(lbTotalRealizadoMes.getText(), lbTotalDeveriamRealizarAteHoje.getText());
-			if(difHoras.compareTo("09:00") > 0)
-				horaSaida = HorasUtil.operateHoursCalendar(csvReader.getMarcacaoCSV(df.format(dtAtual)).getEntrada(), "09:00", "+");
-			else
-				horaSaida = HorasUtil.subTractHours(horaSaida, difHoras);
-			lbDifHoras.setText(difHoras);
-		}
-		//se as horas acumuladas são menores que as horas que deveriam ter sido realizadas, somar a diferenca na hora de saida padrao
-		if(lbTotalDeveriamRealizarAteHoje.getText().compareTo(lbTotalRealizadoMes.getText()) > 0){
-			difHoras  = HorasUtil.subTractHours(lbTotalDeveriamRealizarAteHoje.getText(), lbTotalRealizadoMes.getText());
+		difHoras  = HorasUtil.subTractHours(lbTotalRealizadoMes.getText(), lbTotalDeveriamRealizarAteHoje.getText());
+		lbDifHoras.setText(difHoras);
+		// Se foram feitas menos horas que as necessarias até a data do dia, a diferença deve ser somada na data do dia
+		if(difHoras.startsWith("-")){
+			difHoras = difHoras.replaceAll("-", "");
 			if(difHoras.compareTo("09:00") > 0)
 				horaSaida = HorasUtil.operateHoursCalendar(csvReader.getMarcacaoCSV(df.format(dtAtual)).getEntrada(), "09:00", "+");
 			else
 				horaSaida = HorasUtil.addHours(horaSaida, difHoras);
-			lbDifHoras.setText(difHoras);
+		} else {
+			if(difHoras.compareTo("09:00") > 0)
+				horaSaida = HorasUtil.operateHoursCalendar(csvReader.getMarcacaoCSV(df.format(dtAtual)).getEntrada(), "09:00", "+");
+			else
+				horaSaida = HorasUtil.subTractHours(horaSaida, difHoras);
 		}
 		lbHoraSaida.setText(horaSaida);
 	}
