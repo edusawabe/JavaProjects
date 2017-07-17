@@ -1654,7 +1654,7 @@ public class PokerTimerFXController implements Initializable{
             case 12:
             case 13:
                 total1 = totalArrecadado * 0.55;
-                total2 = totalArrecadado * 0.35;
+                total2 = totalArrecadado * 0.30;
                 total3 = totalArrecadado * 0.15;
                 break;
             case 14:
