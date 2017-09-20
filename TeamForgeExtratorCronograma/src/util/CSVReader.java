@@ -13,19 +13,19 @@ public class CSVReader {
 	private LinkedList<CSVLine> lLines = new LinkedList<CSVLine>();
 	private String fName;
 	private String pt = "175435";
+	private String descricaoPT = "Impeditivos Fase 1";
 	private String group = "FIAV";
 	private String centroCusto = "FIAV";
 	private String status = "Backlog";
 	private String category = "Tarefa";
 	private String priority = "4 - Low";
 	private String plannedFor = "FIAV > PT 175435 - Impeditivos Fase 1";
+	private boolean gerarComNumPT;
 
 	public void readFile(){
 		File f = new File(fName);
 		BufferedReader reader;
 		String line;
-		String tmp;
-		int fieldNum = 0;
 		CSVLine csvLine;
 		try {
 			reader = new BufferedReader(new FileReader(f));
@@ -167,8 +167,13 @@ public class CSVReader {
 		for (int i = 0; i < lLines.size(); i++) {
 			if(lLines.get(i).getLrecurso().size() > 0){
 				for (int j = 0; j < lLines.get(i).getLrecurso().size(); j++) {
-					ret = ret + "PT" + pt + " - " + lLines.get(i).getNomeTarefa() + ",";
-					ret = ret + "PT" + pt + " - " + lLines.get(i).getNomeTarefa() + ",";
+					if(gerarComNumPT){
+						ret = ret + "[PT" + pt + "] - " + lLines.get(i).getNomeTarefa() + ",";
+						ret = ret + "[PT" + pt + "] - " + lLines.get(i).getNomeTarefa() + ",";
+					}else{
+						ret = ret + "[" + descricaoPT + "] - " + lLines.get(i).getNomeTarefa() + ",";
+						ret = ret + "[" + descricaoPT + "] - " + lLines.get(i).getNomeTarefa() + ",";
+					}
 					ret = ret + "00" + pt + ",";
 					ret = ret + "" + ",";
 					ret = ret + group + ",";
@@ -187,5 +192,53 @@ public class CSVReader {
 			}
 		}
 		return ret;
+	}
+
+	public String getPt() {
+		return pt;
+	}
+
+	public void setPt(String pt) {
+		this.pt = pt;
+	}
+
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
+	}
+
+	public String getCentroCusto() {
+		return centroCusto;
+	}
+
+	public void setCentroCusto(String centroCusto) {
+		this.centroCusto = centroCusto;
+	}
+
+	public String getPlannedFor() {
+		return plannedFor;
+	}
+
+	public void setPlannedFor(String plannedFor) {
+		this.plannedFor = plannedFor;
+	}
+
+	public String getDescricaoPT() {
+		return descricaoPT;
+	}
+
+	public void setDescricaoPT(String descricaoPT) {
+		this.descricaoPT = descricaoPT;
+	}
+
+	public boolean isGerarComNumPT() {
+		return gerarComNumPT;
+	}
+
+	public void setGerarComNumPT(boolean gerarComNumPT) {
+		this.gerarComNumPT = gerarComNumPT;
 	}
 }

@@ -11,11 +11,6 @@ import javafx.fxml.FXMLLoader;
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
-		CSVReader reader = new CSVReader();
-		reader.setfName("C:\\desenv\\teste_cronograma.csv");
-		reader.readFile();
-		System.out.print(reader.generateCSVLines());
-
 		try {
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("MainGUI.fxml"));
 			Scene scene = new Scene(root);

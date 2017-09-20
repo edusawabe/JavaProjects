@@ -37,10 +37,14 @@ public class ConfigReader {
 						token++;
 						break;
 					case 2:
-						cItem.setGrupo(line);
+						cItem.setDescricaoPT(line);
 						token++;
 						break;
 					case 3:
+						cItem.setGrupo(line);
+						token++;
+						break;
+					case 4:
 						cItem.setPlanningFolder(line);
 						lconfig.add(cItem);
 						token = 0;

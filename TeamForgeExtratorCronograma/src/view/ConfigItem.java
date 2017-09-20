@@ -5,6 +5,7 @@ public class ConfigItem {
 	private String pt;
 	private String grupo;
 	private String planningFolder;
+	private String descricaoPT;
 
 	public String getCentroCusto() {
 		return centroCusto;
@@ -36,5 +37,13 @@ public class ConfigItem {
 
 	public void setPlanningFolder(String planningFolder) {
 		this.planningFolder = planningFolder;
+	}
+
+	public String getDescricaoPT() {
+		return descricaoPT;
+	}
+
+	public void setDescricaoPT(String descricaoPT) {
+		this.descricaoPT = descricaoPT;
 	}
 }
