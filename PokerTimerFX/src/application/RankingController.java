@@ -52,6 +52,8 @@ public class RankingController implements Initializable{
 	@FXML
 	private TableColumn cTotal;
 	@FXML
+	private TableColumn cTotalDescarte;
+	@FXML
 	private TableColumn cTotalRebuys;
 	@FXML
 	private TableColumn cTotalGasto;
@@ -84,6 +86,7 @@ public class RankingController implements Initializable{
 		cResultado11.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("result11"));
 		cResultado12.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("result12"));
 		cTotal.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("total"));
+		cTotalDescarte.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("totalDescarte"));
 		cTotalRebuys.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("totalRebuys"));
 		cTotalGasto.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("totalGasto"));
 		cTotalGanho.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("totalGanho"));

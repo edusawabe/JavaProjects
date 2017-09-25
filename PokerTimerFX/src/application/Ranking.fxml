@@ -28,6 +28,7 @@
                         <TableColumn fx:id="cResultado11" editable="false" prefWidth="80.0" text="Nov" />
                         <TableColumn fx:id="cResultado12" editable="false" prefWidth="80.0" text="Dez" />
                         <TableColumn fx:id="cTotal" editable="false" prefWidth="100.0" text="Total" />
+                        <TableColumn fx:id="cTotalDescarte" editable="false" prefWidth="100.0" text="Total c\ Desc." />
                         <TableColumn fx:id="cTotalRebuys" editable="false" prefWidth="63.0" text="Rebuys" />
 						<TableColumn fx:id="cTotalGanho" editable="false" prefWidth="100.0" text="Total Ganho" />
                         <TableColumn fx:id="cTotalGasto" editable="false" prefWidth="100.0" text="Total Gasto" />

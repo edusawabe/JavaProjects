@@ -736,6 +736,7 @@ public class PokerTimerFXController implements Initializable{
 				r.setResult12(util.Util.completeZeros(Integer.parseInt(p.getResultados().get(11).getColocacao()), 2) + "/" + p.getResultados().get(11).getRebuys() + "/" + Util.completeZerosDouble(p.getResultados().get(11).getPontuacaoEtapa(),3));
 				resumo = p.getResumo();
 				r.setTotal("" + Util.completeZerosDouble(p.getPontuacaoTotal(),3));
+				r.setTotalDescarte("" + Util.completeZerosDouble(p.getPontuacaoTotalComDescarte(),3));
 				r.setTotalRebuys(""+resumo.getRebuys());
 				r.setTotalGanho("R$ " + resumo.getTotalGanho());
 				r.setTotalGasto("R$ -" + resumo.getTotalGasto());

@@ -21,6 +21,7 @@ public class Player {
     private String playerMail;
     private ArrayList<ResultadoRodada> resultados;
     private double pontuacaoTotal;
+    private double pontuacaoTotalComDescarte;
     private int posicaoAtual;
     private boolean played;
 
@@ -108,15 +109,11 @@ public class Player {
 			pontuacaoTotal = pontuacaoTotal + resultados.get(i).getPontuacaoEtapa();
 		}
 
-		if (mesEtapa >= 4) {
-			pontuacaoTotal = pontuacaoTotal - resultadosEtapas.get(0);
-			pontuacaoTotal = pontuacaoTotal - resultadosEtapas.get(1);
-		} else {
-			if (mesEtapa == 3) {
-				pontuacaoTotal = pontuacaoTotal - resultadosEtapas.get(0);
-			}
-		}
+		pontuacaoTotalComDescarte = pontuacaoTotal;
+		pontuacaoTotalComDescarte = pontuacaoTotal - resultadosEtapas.get(0);
+		pontuacaoTotalComDescarte = pontuacaoTotal - resultadosEtapas.get(1);
 		pontuacaoTotal = Math.round(pontuacaoTotal);
+		pontuacaoTotalComDescarte = Math.round(pontuacaoTotalComDescarte);
 	}
 
 	public Resumo getResumo(){
@@ -144,5 +141,9 @@ public class Player {
 
 	public void setPlayed(boolean played) {
 		this.played = played;
+	}
+
+	public double getPontuacaoTotalComDescarte() {
+		return pontuacaoTotalComDescarte;
 	}
 }

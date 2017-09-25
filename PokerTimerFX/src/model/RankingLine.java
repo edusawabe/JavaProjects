@@ -17,6 +17,7 @@ public class RankingLine {
 	private SimpleStringProperty result11;
 	private SimpleStringProperty result12;
 	private SimpleStringProperty total;
+	private SimpleStringProperty totalDescarte;
 	private SimpleStringProperty totalRebuys;
 	private SimpleStringProperty totalGasto;
 	private SimpleStringProperty totalGanho;
@@ -37,6 +38,7 @@ public class RankingLine {
 		result11 = new SimpleStringProperty();
 		result12 = new SimpleStringProperty();
 		total = new SimpleStringProperty();
+		totalDescarte = new SimpleStringProperty();
 		totalRebuys = new SimpleStringProperty();
 		totalGasto = new SimpleStringProperty();
 		totalGanho = new SimpleStringProperty();
@@ -150,5 +152,13 @@ public class RankingLine {
 	}
 	public void setSaldo(String saldo) {
 		this.saldo.set(saldo);
+	}
+
+	public String getTotalDescarte() {
+		return totalDescarte.get();
+	}
+
+	public void setTotalDescarte(String totalDescarte) {
+		this.totalDescarte.set(totalDescarte);
 	}
 }
