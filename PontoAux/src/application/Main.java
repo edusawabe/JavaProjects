@@ -12,7 +12,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("AuxiliarPonto.fxml"));
-			Scene scene = new Scene(root,580,630);
+			Scene scene = new Scene(root,980,680);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Apoio Apontamento de Horas V1.0");

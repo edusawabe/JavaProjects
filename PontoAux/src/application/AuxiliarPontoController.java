@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 import factory.CalendarCellFactory;
 import factory.HourUnaryOperator;
@@ -29,6 +30,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
 import model.MarcacaoCSV;
 import model.MarcacaoLinhaTV;
+import model.MarcacaoMes;
 import processors.CSVReader;
 import processors.FeriadosReader;
 import processors.MarcacaoManualFileManager;
@@ -82,6 +84,19 @@ public class AuxiliarPontoController implements Initializable{
 	private TableColumn<MarcacaoLinhaTV, String> tcSex;
 	@FXML
 	private TableColumn<MarcacaoLinhaTV, String> tcSab;
+	@FXML
+	private TableView<MarcacaoMes> tvHorasMarcadasMes;
+	private ObservableList<MarcacaoMes> olHorasMes = FXCollections.observableArrayList();
+	@FXML
+	private TableColumn<MarcacaoMes, String> tcMes;
+	@FXML
+	private TableColumn<MarcacaoMes, String> tcHorasMes;
+	@FXML
+	private TableColumn<MarcacaoMes, String> tcHorasRealizadas;
+	@FXML
+	private TableColumn<MarcacaoMes, String> tcDiferenca;
+	private LinkedList<String> lHorasRealizadasMes = new LinkedList<String>();
+	private LinkedList<String> lHorasMes = new LinkedList<String>();
 
 	private CSVReader csvReader;
 	private FeriadosReader feriadosReader;
@@ -93,12 +108,15 @@ public class AuxiliarPontoController implements Initializable{
 	private String ss;
 	private int qtdeHorasMes;
 	private int qtdeHorasQueDeveriamAteHoje;
+	private Alert al;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		//hoursField(tfEntrada);
 		//hoursField(tfSaida);
+		lHorasMes.add("");
+		lHorasRealizadasMes.add("");
 		tfEntrada.setTextFormatter(new TextFormatter<>(new HourUnaryOperator()));
 		tfSaida.setTextFormatter(new TextFormatter<>(new HourUnaryOperator()));
 		tfHoraSaidaManual.setTextFormatter(new TextFormatter<>(new HourUnaryOperator()));
@@ -126,6 +144,8 @@ public class AuxiliarPontoController implements Initializable{
 			lbHoraAtual.setText( hh + ":" + MM + ":" + ss);
 
 			hora = LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute();
+			if(LocalDateTime.now().getHour() < 10)
+				hora = "0" + hora;
 			tratarTela(event);
 		}));
 		timer.playFromStart();
@@ -145,17 +165,42 @@ public class AuxiliarPontoController implements Initializable{
 		calculaDiferencaAposHoje();
 		if(!tfHoraSaidaManual.getText().isEmpty() && hora.equals(tfHoraSaidaManual.getText())){
 			requestFocus();
+			if(al == null){
+				al = new Alert(AlertType.INFORMATION);
+				al.setTitle("Apontar Horas");
+				al.setContentText("Apontar Horas: " + tfHoraSaidaManual.getText());
+				al.show();
+			}
+			else{
+				if(!al.isShowing()){
+					al.setTitle("Apontar Horas");
+					al.setContentText("Apontar Horas: " + tfHoraSaidaManual.getText());
+					al.show();
+				}
+			}
 		}
 		else{
 			if(hora.equals(lbHoraSaida.getText())){
 				requestFocus();
+				if(al == null){
+					al = new Alert(AlertType.INFORMATION);
+					al.setTitle("Apontar Horas");
+					al.setContentText("Apontar Horas: " + lbHoraSaida.getText());
+					al.show();
+				}
+				else{
+					if(!al.isShowing()){
+						al.setTitle("Apontar Horas");
+						al.setContentText("Apontar Horas: " + lbHoraSaida.getText());
+						al.show();
+					}
+				}
 			}
 		}
 	}
 
 	private void requestFocus() {
 		Platform.runLater(() -> lbDataAtual.getScene().getWindow().requestFocus());
-		System.out.println("Foco solicitado");
 		try {
 			this.finalize();
 		} catch (Throwable e) {
@@ -178,6 +223,7 @@ public class AuxiliarPontoController implements Initializable{
 		Date dt;
 		SimpleDateFormat df  = new SimpleDateFormat("dd/MM/yyyy");
 		MarcacaoLinhaTV ml = null;
+		String dataFor = null;
 		dd = new String();
 		qtdeHorasMes = 0;
 		qtdeHorasQueDeveriamAteHoje = 0;
@@ -202,6 +248,11 @@ public class AuxiliarPontoController implements Initializable{
 		tcSex.setCellFactory(new CalendarCellFactory());
 		tcSab.setCellFactory(new CalendarCellFactory());
 
+		tcMes.setCellValueFactory(new PropertyValueFactory<>("mes"));
+		tcHorasMes.setCellValueFactory(new PropertyValueFactory<>("horasMes"));
+		tcHorasRealizadas.setCellValueFactory(new PropertyValueFactory<>("horasRealizadas"));
+		tcDiferenca.setCellValueFactory(new PropertyValueFactory<>("diferencaHoras"));
+
 		csvReader = new CSVReader();
 		feriadosReader = new FeriadosReader();
 		manualManager = new MarcacaoManualFileManager();
@@ -225,6 +276,8 @@ public class AuxiliarPontoController implements Initializable{
 				dd = "" + (i+1);
 			if(mes < 10)
 				mm = "0" + mes;
+			else
+				mm = ""+mes;
 
 			dt = new Date(year-1900, mes-1, i+1);
 			dateS = df.format(dt);
@@ -304,6 +357,82 @@ public class AuxiliarPontoController implements Initializable{
 		cbDatasPendentes.setItems(olDatasPendentes);
 		tvHorasMarcadas.setItems(olHorasMarcadas);
 
+		for (int mesFor = 1; mesFor < 13; mesFor++) {
+			lHorasMes.add("00:00");
+			lHorasRealizadasMes.add("00:00");
+			for (int diaFor = 1; diaFor < 32; diaFor++) {
+				if(diaFor < 10){
+					if(mesFor<10){
+						dataFor = "0"+diaFor+"/0"+mesFor+"/"+year;
+					}else{
+						dataFor = "0"+diaFor+"/"+mesFor+"/"+year;
+					}
+				}else{
+					if(mesFor<10){
+						dataFor = diaFor+"/0"+mesFor+"/"+year;
+					}else{
+						dataFor = diaFor+"/"+mesFor+"/"+year;
+					}
+				}
+				if(DateUtil.isDateValid(dataFor)){
+					if(csvReader.getQtdeHorasDia(dataFor) == null){
+						lHorasRealizadasMes.set(mesFor, HorasUtil.addHours(lHorasRealizadasMes.get(mesFor), "00:00"));
+					}
+					else{
+						lHorasRealizadasMes.set(mesFor, HorasUtil.addHours(lHorasRealizadasMes.get(mesFor), csvReader.getQtdeHorasDia(dataFor)));
+					}
+					if(!feriadosReader.getlFeriados().isFeriado(dataFor) && (DateUtil.isWeekDay(dataFor))){
+						lHorasMes.set(mesFor, HorasUtil.addHours(lHorasMes.get(mesFor), "09:00"));
+					}
+				}
+			}
+			olHorasMes.add(new MarcacaoMes());
+			olHorasMes.get(mesFor-1).setHorasMes(lHorasMes.get(mesFor));
+			olHorasMes.get(mesFor-1).setHorasRealizadas(lHorasRealizadasMes.get(mesFor));
+			switch (mesFor) {
+			case 1:
+				olHorasMes.get(mesFor-1).setMes("Jan");
+				break;
+			case 2:
+				olHorasMes.get(mesFor-1).setMes("Fev");
+				break;
+			case 3:
+				olHorasMes.get(mesFor-1).setMes("Mar");
+				break;
+			case 4:
+				olHorasMes.get(mesFor-1).setMes("Abr");
+				break;
+			case 5:
+				olHorasMes.get(mesFor-1).setMes("Mai");
+				break;
+			case 6:
+				olHorasMes.get(mesFor-1).setMes("Jun");
+				break;
+			case 7:
+				olHorasMes.get(mesFor-1).setMes("Jul");
+				break;
+			case 8:
+				olHorasMes.get(mesFor-1).setMes("Ago");
+				break;
+			case 9:
+				olHorasMes.get(mesFor-1).setMes("Set");
+				break;
+			case 10:
+				olHorasMes.get(mesFor-1).setMes("Out");
+				break;
+			case 11:
+				olHorasMes.get(mesFor-1).setMes("Nov");
+				break;
+			case 12:
+				olHorasMes.get(mesFor-1).setMes("Dez");
+				break;
+			default:
+				break;
+			}
+		}
+
+		tvHorasMarcadasMes.setItems(olHorasMes);
+
 		calculaDiferencaAposHoje();
 		selecionarDataAtual(dtAtual, df);
 	}
@@ -312,6 +441,7 @@ public class AuxiliarPontoController implements Initializable{
 		tvHorasMarcadas.getSelectionModel().setCellSelectionEnabled(true);
 
 		for (int j = 0; j < olHorasMarcadas.size(); j++) {
+			if(olHorasMarcadas.get(j) != null){
 			if(olHorasMarcadas.get(j).getDateDom() != null && olHorasMarcadas.get(j).getDateDom().equals(df.format(dtAtual))){
 				tvHorasMarcadas.getSelectionModel().select(j,tcDom);
 				break;
@@ -339,6 +469,7 @@ public class AuxiliarPontoController implements Initializable{
 			if(olHorasMarcadas.get(j).getDateSab() != null && olHorasMarcadas.get(j).getDateSab().equals(df.format(dtAtual))){
 				tvHorasMarcadas.getSelectionModel().select(j,tcSab);
 				break;
+			}
 			}
 		}
 	}

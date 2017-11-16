@@ -54,10 +54,23 @@ public final class HorasUtil {
 		hoursSplit = hours.split(":");
 		hh = Integer.parseInt(hoursSplit[0]);
 		mm = Integer.parseInt(hoursSplit[1]);
+		if(hours.startsWith("-")){
+			hh = hh * -1;
+			mm = mm * -1;
+		}
 
-		hoursSplit = toAdd.split(":");
+		try {
+			hoursSplit = toAdd.split(":");
+		} catch (Exception e) {
+			System.out.println("");
+		}
+
 		toAddHH = Integer.parseInt(hoursSplit[0]);
 		toAddMM = Integer.parseInt(hoursSplit[1]);
+		if(toAdd.startsWith("-")){
+			toAddHH = toAddHH * -1;
+			toAddMM = toAddMM * -1;
+		}
 
 		retHH = hh + toAddHH;
 		retMM = mm + toAddMM;
@@ -75,6 +88,11 @@ public final class HorasUtil {
 			ret = ret+ ":0" + retMM;
 		else
 			ret = ret+ ":" + retMM;
+
+		if(retHH < 0 || retMM < 0){
+			ret = ret.replaceAll("-", "");
+			ret = "-"+ret;
+		}
 
 		return ret;
 	}

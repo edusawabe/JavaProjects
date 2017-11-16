@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import model.ListMarcacaoCSV;
 import model.MarcacaoCSV;
+import util.HorasUtil;
 
 public class CSVReader {
 	private ListMarcacaoCSV lMarcacaoCSV;
@@ -31,6 +32,7 @@ public class CSVReader {
 		String line;
 		boolean semSaida = false;
 		lMarcacaoCSV = new ListMarcacaoCSV();
+		String[] s;
 		try {
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 			line = bufferedReader.readLine();
@@ -47,20 +49,46 @@ public class CSVReader {
 						semSaida = true;
 						break;
 					}
+					if(line.contains("Dia abonado"))
+					{
+						line = bufferedReader.readLine();
+						semSaida = false;
+						break;
+					}
 					line = bufferedReader.readLine();
 				}
 			}
 			while (line != null && !line.contains("Total de Horas;")) {
 				String[] lItem = line.split(";");
 				MarcacaoCSV marcacaoCSV = new MarcacaoCSV();
-				marcacaoCSV.setData(lItem[0]);
-				marcacaoCSV.setDiaSemana(lItem[1]);
-				marcacaoCSV.setEntrada(lItem[2]);
-				if(semSaida)
+				marcacaoCSV.setData(lItem[1]);
+				marcacaoCSV.setDiaSemana("Teste");
+				if(lItem.length > 7){
+					if (!lItem[8].isEmpty()){
+						s = lItem[8].split(" ");
+						marcacaoCSV.setEntrada(s[1].replaceAll(" ", ""));
+					}
+					if(lItem.length > 9)
+						semSaida = false;
+					else
+						semSaida = true;
+					if(semSaida)
+						marcacaoCSV.setQtdeHoras("00:00");
+					else{
+						try {
+							if (!lItem[9].isEmpty()){
+								s = lItem[9].split(" ");
+								marcacaoCSV.setSaida(s[1].replaceAll(" ", ""));
+								marcacaoCSV.setQtdeHoras(HorasUtil.subTractHours(marcacaoCSV.getSaida(), marcacaoCSV.getEntrada()));
+							}
+						} catch (Exception e) {
+							System.err.println("");
+						}
+					}
+				} else{
+					marcacaoCSV.setEntrada("00:00");
+					marcacaoCSV.setSaida("00:00");
 					marcacaoCSV.setQtdeHoras("00:00");
-				else{
-					marcacaoCSV.setSaida(lItem[3]);
-					marcacaoCSV.setQtdeHoras(lItem[4]);
 				}
 				lMarcacaoCSV.getLMarcacaoCSV().add(marcacaoCSV);
 				line = bufferedReader.readLine();
