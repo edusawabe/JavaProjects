@@ -103,6 +103,18 @@ public class RankingController implements Initializable{
 		cResultado10.setVisible(false);
 		cResultado11.setVisible(false);
 		cResultado12.setVisible(false);
+		cResultado1.setCellFactory(new ColumnFactory());
+		cResultado2.setCellFactory(new ColumnFactory());
+		cResultado3.setCellFactory(new ColumnFactory());
+		cResultado4.setCellFactory(new ColumnFactory());
+		cResultado5.setCellFactory(new ColumnFactory());
+		cResultado6.setCellFactory(new ColumnFactory());
+		cResultado7.setCellFactory(new ColumnFactory());
+		cResultado8.setCellFactory(new ColumnFactory());
+		cResultado9.setCellFactory(new ColumnFactory());
+		cResultado10.setCellFactory(new ColumnFactory());
+		cResultado11.setCellFactory(new ColumnFactory());
+		cResultado12.setCellFactory(new ColumnFactory());
 		Date date = new Date();
 		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
 		int mesEtapa;

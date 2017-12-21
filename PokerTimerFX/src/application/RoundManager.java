@@ -80,7 +80,7 @@ public class RoundManager {
 			case 7:
 				round.setSmallBlind(70);
 				round.setBigBlind(140);
-				round.setAnte(20);
+				round.setAnte(10);
 				round.setBreakRound(false);
 				round.setRebuyAllowed(true);
 				round.setMinutes(Constants.MAX_MINUTES);
@@ -112,18 +112,18 @@ public class RoundManager {
 				round.setMinutesToBreak(Constants.MAX_MINUTES_BREAK);
 				break;
 			case 11:
-				round.setSmallBlind(160);
-				round.setBigBlind(320);
+				round.setSmallBlind(150);
+				round.setBigBlind(300);
 				round.setAnte(30);
 				round.setBreakRound(false);
-				round.setMinutes(Constants.MAX_MINUTES);
+				round.setMinutes(Constants.MAX_MINUTES_INIT);
 				break;
 			case 12:
 				round.setSmallBlind(220);
 				round.setBigBlind(440);
 				round.setAnte(40);
 				round.setBreakRound(false);
-				round.setMinutes(Constants.MAX_MINUTES);
+				round.setMinutes(Constants.MAX_MINUTES_INIT);
 				break;
 			case 13:
 				round.setSmallBlind(300);
@@ -148,30 +148,30 @@ public class RoundManager {
 				round.setMinutesToBreak(Constants.MAX_MINUTES_BREAK);
 				break;
 			case 16:
-				round.setSmallBlind(550);
-				round.setBigBlind(1100);
+				round.setSmallBlind(500);
+				round.setBigBlind(1000);
 				round.setAnte(100);
 				round.setBreakRound(false);
 				round.setMinutes(Constants.MAX_MINUTES_10);
 				break;
 			case 17:
-				round.setSmallBlind(750);
-				round.setBigBlind(1500);
-				round.setAnte(200);
+				round.setSmallBlind(600);
+				round.setBigBlind(1200);
+				round.setAnte(100);
 				round.setBreakRound(false);
 				round.setMinutes(Constants.MAX_MINUTES_10);
 				break;
 			case 18:
-				round.setSmallBlind(1000);
-				round.setBigBlind(2000);
-				round.setAnte(200);
+				round.setSmallBlind(800);
+				round.setBigBlind(1600);
+				round.setAnte(100);
 				round.setBreakRound(false);
 				round.setMinutes(Constants.MAX_MINUTES_10);
 				break;
 			case 19:
-				round.setSmallBlind(1400);
-				round.setBigBlind(2800);
-				round.setAnte(300);
+				round.setSmallBlind(1000);
+				round.setBigBlind(2000);
+				round.setAnte(200);
 				round.setBreakRound(false);
 				round.setMinutes(Constants.MAX_MINUTES_10);
 				break;
@@ -184,16 +184,37 @@ public class RoundManager {
 				round.setMinutesToBreak(Constants.MAX_MINUTES_BREAK);
 				break;
 			case 21:
-				round.setSmallBlind(1900);
-				round.setBigBlind(3800);
-				round.setAnte(400);
+				round.setSmallBlind(1200);
+				round.setBigBlind(2400);
+				round.setAnte(200);
 				round.setBreakRound(false);
 				round.setMinutes(Constants.MAX_MINUTES_10);
 				break;
 			case 22:
+				round.setSmallBlind(1500);
+				round.setBigBlind(3000);
+				round.setAnte(300);
+				round.setBreakRound(false);
+				round.setMinutes(Constants.MAX_MINUTES_10);
+				break;
+			case 23:
+				round.setSmallBlind(2000);
+				round.setBigBlind(4000);
+				round.setAnte(400);
+				round.setBreakRound(false);
+				round.setMinutes(Constants.MAX_MINUTES_10);
+				break;
+			case 24:
 				round.setSmallBlind(2500);
 				round.setBigBlind(5000);
 				round.setAnte(500);
+				round.setBreakRound(false);
+				round.setMinutes(Constants.MAX_MINUTES_10);
+				break;
+			case 25:
+				round.setSmallBlind(3000);
+				round.setBigBlind(6000);
+				round.setAnte(600);
 				round.setBreakRound(false);
 				round.setMinutes(Constants.MAX_MINUTES_10);
 				break;

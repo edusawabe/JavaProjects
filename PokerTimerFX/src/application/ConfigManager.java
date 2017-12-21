@@ -234,6 +234,113 @@ public class ConfigManager {
         }
 	}
 
+	/*
+	public void updateFile(LinkedList<Player> lPlayer){
+		File confgFile  = new File(configFileName);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss");
+		String[] configBackup = configFileName.split(Constants.CONFIG_FILE_NAME_SPLIT);
+        BufferedReader reader;
+        BufferedWriter writer;
+        BufferedWriter writer2;
+        int cont = 0;
+        JogadorConfigFile j = new JogadorConfigFile();
+        String[] results;
+        try {
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(confgFile),"Cp1252"));
+            String line = reader.readLine();
+            String readLines = new String();
+            String backupLine = new String();
+            while (line != null) {
+				backupLine += line + "\n";
+				readLines = readLines + line + "\n";
+				if(cont > 1){
+					line = reader.readLine();
+					if (line == null)
+						break;
+				}
+				if (line.contains("#Jogadores")) {
+					cont++;
+					line = reader.readLine();
+					while (line != null && (!line.contains("#Jogadores")) && cont < 2) {
+						j.parseFileLine(line);
+						Player p = new Player();
+						p.setPlayerName(j.getNome());
+						p.setPlayerMail(j.getEmail());
+						results = j.getResults();
+						int rebuys = 0, pos = 0;
+						for (int i = 0; i < oListRebuys.size(); i++) {
+							if(oListRebuys.get(i).equals(p.getPlayerName()))
+								rebuys++;
+						}
+						for (int i = 0; i < oListFora.size(); i++) {
+							if(oListFora.get(i).equals(p.getPlayerName())){
+								pos = oListFora.size() - i;
+								break;
+							}
+						}
+						for (int i = 0; i < results.length; i++) {
+							ResultadoRodada r = new ResultadoRodada();
+							r.getResultadoFromFileLine(results[i]);
+							if ((i+1) == mesEtapa){
+								r.setColocacao(Util.completeZeros(pos, 1));
+								r.setRebuys(rebuys);
+								switch (pos) {
+								case 1:
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos,oListRebuys.size()));
+									r.setPremiacao(total1l);
+									break;
+								case 2:
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos,oListRebuys.size()));
+									r.setPremiacao(total2l);
+									break;
+								case 3:
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos,oListRebuys.size()));
+									r.setPremiacao(total3l);
+									break;
+								case 4:
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos,oListRebuys.size()));
+									r.setPremiacao(total4l);
+									break;
+								case 5:
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos,oListRebuys.size()));
+									r.setPremiacao(total5l);
+									break;
+								default:
+									r.setPontuacaoEtapa(getPontuacaoJogadorEtapa(oListFora.size(), rebuys, pos,oListRebuys.size()));
+									r.setPremiacao(0.00);
+									break;
+								}
+								results[mesEtapa -1] = r.getResultLine();
+							}
+							else
+								if ((i+1) >  mesEtapa)
+									break;
+						}
+						readLines = readLines + j.generateFileLine() + "\n";
+						line = reader.readLine();
+						if(!line.contains("#Jogadores"))
+							backupLine += line + "\n";
+					}
+				}
+			}
+            reader.close();
+
+            writer = new BufferedWriter(new FileWriter(confgFile));
+            writer2 = new BufferedWriter(new FileWriter(configBackup[0] + dateFormat.format(date) + ".txt"));
+            writer.write(readLines);
+            writer.flush();
+            writer.close();
+            writer2.write(backupLine);
+            writer2.flush();
+            writer2.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+	}
+	*/
+
 	public void updatePlayersResult(ObservableList<String> oListFora, ObservableList<String> oListRebuys, double total1l
 			, double total2l, double total3l, double total4l, double total5l){
 		File confgFile  = new File(configFileName);

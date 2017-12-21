@@ -111,7 +111,7 @@ public class Player {
 
 		pontuacaoTotalComDescarte = pontuacaoTotal;
 		pontuacaoTotalComDescarte = pontuacaoTotal - resultadosEtapas.get(0);
-		pontuacaoTotalComDescarte = pontuacaoTotal - resultadosEtapas.get(1);
+		pontuacaoTotalComDescarte = pontuacaoTotalComDescarte - resultadosEtapas.get(1);
 		pontuacaoTotal = Math.round(pontuacaoTotal);
 		pontuacaoTotalComDescarte = Math.round(pontuacaoTotalComDescarte);
 	}
