@@ -15,6 +15,8 @@ public class ColumnCell extends TableCell<RankingLine, String> {
         }
         if(item.equals("00/0/000.0")){
         	this.setTextFill(Color.DARKRED);
+        }else{
+        	this.setTextFill(Color.DARKGRAY);
         }
     }
 }

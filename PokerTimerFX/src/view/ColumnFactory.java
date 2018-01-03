@@ -20,6 +20,9 @@ public class ColumnFactory implements Callback<TableColumn<RankingLine, String>,
 					if(item.equals("00/0/000.0")){
 			        	this.setTextFill(Color.RED);
 			        	this.setStyle("Bold");
+			        }else{
+			        	this.setTextFill(Color.BLACK);
+			        	this.setStyle("Bold");
 			        }
 		        }
 			}
