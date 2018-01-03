@@ -115,7 +115,7 @@
                                           <Blend mode="DARKEN" />
                                        </effect>
                                     </ProgressBar>
-                                    <Label fx:id="lbTimer" alignment="CENTER" contentDisplay="CENTER" text="15:00" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <Label fx:id="lbTimer" alignment="CENTER" contentDisplay="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <font>
                                           <Font name="System Bold" size="130.0" />
                                        </font>

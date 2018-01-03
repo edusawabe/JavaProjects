@@ -1,17 +1,12 @@
 package application;
 
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
-
-import com.sun.javafx.css.Style;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -35,9 +30,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -45,7 +37,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -56,7 +47,6 @@ import model.RankingLine;
 import model.ResultadoRodada;
 import model.Resumo;
 import model.Round;
-import model.Statistic;
 import util.Constants;
 import util.DateUtil;
 import util.MailResultContent;
@@ -1288,9 +1278,9 @@ public class PokerTimerFXController implements Initializable{
 		llMesa2 = new LinkedList<>();
 
 		//Inicializa tempos
-        breakMinutes = 5 * Constants.MAX_MINUTES_15;
+        breakMinutes = roundList.get(listRodadas.getSelectionModel().getSelectedIndex()).getMinutesToBreak();
         seconds = 0;
-        minutes = Constants.MAX_MINUTES_15;
+        minutes = roundList.get(listRodadas.getSelectionModel().getSelectedIndex()).getMinutes();
         maxRound = minutes * Constants.SECONDS_IN_MINUTE;
 
         cbJogador.setItems(oListComboJogador);
