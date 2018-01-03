@@ -56,6 +56,7 @@ import model.RankingLine;
 import model.ResultadoRodada;
 import model.Resumo;
 import model.Round;
+import model.Statistic;
 import util.Constants;
 import util.MailResultContent;
 import util.MailSender;
@@ -685,8 +686,11 @@ public class PokerTimerFXController implements Initializable{
     	boolean added;
 
     	ExcelRankingGenerator excelRankingGenerator = new ExcelRankingGenerator();
+    	ExcelRankingGenerator statsExcelGenerator = new ExcelRankingGenerator();
     	excelRankingGenerator.setlPlayer(lPlayer);
     	excelRankingGenerator.generateExcel();
+    	statsExcelGenerator.setlPlayer(lPlayer);
+    	excelRankingGenerator.generateStatisticsExcel();
 
     	//obtem Loader
     	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Ranking.fxml"));
@@ -1285,9 +1289,9 @@ public class PokerTimerFXController implements Initializable{
 		llMesa2 = new LinkedList<>();
 
 		//Inicializa tempos
-        breakMinutes = 5 * Constants.MAX_MINUTES_INIT;
+        breakMinutes = 5 * Constants.MAX_MINUTES_15;
         seconds = 0;
-        minutes = Constants.MAX_MINUTES_INIT;
+        minutes = Constants.MAX_MINUTES_15;
         maxRound = minutes * Constants.SECONDS_IN_MINUTE;
 
         cbJogador.setItems(oListComboJogador);
@@ -1689,7 +1693,7 @@ public class PokerTimerFXController implements Initializable{
         statsPremio4.setText("R$ " + total4l);
         statsPremio5.setText("R$ " + total5l);
         if (totalJogando > 0)
-        	statsMedia.setText("" + (((totalJogadores + totalRebuy) * 3000)/totalJogando));
+        	statsMedia.setText("" + (((totalJogadores + totalRebuy) * Constants.STACK)/totalJogando));
 
         if(timerWindowController != null){
 	        timerWindowController.getLbTimer().setText(lbTimer.getText());

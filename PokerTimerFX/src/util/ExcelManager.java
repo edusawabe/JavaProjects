@@ -126,4 +126,8 @@ public class ExcelManager {
 
 	public void setSheetName(String sheetName) {
 	}
+
+	public void createSheet(){
+		wb.createSheet();
+	}
 }

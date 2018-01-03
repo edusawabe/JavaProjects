@@ -24,6 +24,7 @@ public class Player {
     private double pontuacaoTotalComDescarte;
     private int posicaoAtual;
     private boolean played;
+    private Statistic statistic;
 
     public Player() {
     	resultados = new ArrayList<ResultadoRodada>();
@@ -114,6 +115,8 @@ public class Player {
 		pontuacaoTotalComDescarte = pontuacaoTotalComDescarte - resultadosEtapas.get(1);
 		pontuacaoTotal = Math.round(pontuacaoTotal);
 		pontuacaoTotalComDescarte = Math.round(pontuacaoTotalComDescarte);
+		statistic = new Statistic();
+		statistic.generateStatistic(this);
 	}
 
 	public Resumo getResumo(){
@@ -145,5 +148,13 @@ public class Player {
 
 	public double getPontuacaoTotalComDescarte() {
 		return pontuacaoTotalComDescarte;
+	}
+
+	public Statistic getStatistic() {
+		return statistic;
+	}
+
+	public void setStatistic(Statistic statistic) {
+		this.statistic = statistic;
 	}
 }
