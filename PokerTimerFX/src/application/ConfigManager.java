@@ -739,7 +739,7 @@ public class ConfigManager {
 			// A:
 			resultado = ((5 * qtdJogadores) - (5 * (pos - 1)));
 
-			// B:
+			// B: e C:
 			switch (pos) {
 			case 1:
 				//if (pos <= Constants.MAX_PLAYERS_FINAL_TABLE)
@@ -791,14 +791,8 @@ public class ConfigManager {
 				break;
 			}
 
-			//if (pos <= Constants.MAX_PLAYERS_FINAL_TABLE)
-			//	resultado = resultado + 3*qtdeRebuysRodada;
-
-			// C:
-
-
 			// D:
-			resultado = resultado + (rebuys * (-15.00));
+			resultado = resultado + (rebuys * (Constants.REBUY_PENALTY));
 		}
 
 		BigDecimal bd = new BigDecimal(resultado);

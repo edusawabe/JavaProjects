@@ -110,8 +110,10 @@ public class Player {
 		}
 
 		pontuacaoTotalComDescarte = pontuacaoTotal;
-		pontuacaoTotalComDescarte = pontuacaoTotal - resultadosEtapas.get(0);
-		pontuacaoTotalComDescarte = pontuacaoTotalComDescarte - resultadosEtapas.get(1);
+		if(mesEtapa > 2){
+			pontuacaoTotalComDescarte = pontuacaoTotal - resultadosEtapas.get(0);
+			pontuacaoTotalComDescarte = pontuacaoTotalComDescarte - resultadosEtapas.get(1);
+		}
 		pontuacaoTotal = Math.round(pontuacaoTotal);
 		pontuacaoTotalComDescarte = Math.round(pontuacaoTotalComDescarte);
 		statistic = new Statistic();
