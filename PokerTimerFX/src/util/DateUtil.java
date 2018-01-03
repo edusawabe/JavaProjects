@@ -7,7 +7,7 @@ import java.util.Date;
 public class DateUtil {
 
 	public static String getDate() {
-		boolean debug = true;
+		boolean debug = false;
 		if(debug){
 			return "03/12/2017";
 		} else{
