@@ -689,7 +689,7 @@ public class PokerTimerFXController implements Initializable{
     	excelRankingGenerator.setlPlayer(lPlayer);
     	excelRankingGenerator.generateExcel();
     	statsExcelGenerator.setlPlayer(lPlayer);
-    	excelRankingGenerator.generateStatisticsExcel();
+    	//excelRankingGenerator.generateStatisticsExcel();
 
     	//obtem Loader
     	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Ranking.fxml"));
