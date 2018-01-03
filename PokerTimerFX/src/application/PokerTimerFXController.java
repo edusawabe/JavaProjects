@@ -58,6 +58,7 @@ import model.Resumo;
 import model.Round;
 import model.Statistic;
 import util.Constants;
+import util.DateUtil;
 import util.MailResultContent;
 import util.MailSender;
 import util.Mp3Player;
@@ -644,9 +645,7 @@ public class PokerTimerFXController implements Initializable{
         String msgHtml = mailContent.toStringCssHtml();
         String msg = mailContent.toString();
         MailSender sender = new MailSender();
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = new Date();
-        String subject = "Resultados Etapa "+ dateFormat.format(date);
+        String subject = "Resultados Etapa "+ DateUtil.getDate();
 
 		Alert alert = new Alert(AlertType.INFORMATION);
 		WebView webView = new WebView();

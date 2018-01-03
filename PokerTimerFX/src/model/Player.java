@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.LinkedList;
 
 import application.ConfigManager;
+import util.DateUtil;
 
 /**
  *
@@ -85,9 +86,7 @@ public class Player {
 	public void updatePontuacaoTotal() {
 		pontuacaoTotal = 0;
 		LinkedList<Double> resultadosEtapas = new LinkedList<Double>();
-		Date date = new Date();
-		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
-		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(3, 5));
+		int mesEtapa = Integer.parseInt(DateUtil.getDate().substring(3, 5));
 		boolean added;
 
 		for (int i = 0; i < mesEtapa; i++) {

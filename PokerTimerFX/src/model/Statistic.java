@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import util.Constants;
+import util.DateUtil;
 
 public class Statistic {
 	private double avgRebuy;
@@ -188,8 +189,6 @@ public class Statistic {
 	public void generateStatistic(Player p) {
 		ArrayList<ResultadoRodada> l = p.getResultados();
 		ResultadoRodada currentResult = null;
-		Date date = new Date();
-		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
 		int mesEtapa = 0;
 
 		for (int i = 0; i < l.size(); i++) {
@@ -247,9 +246,7 @@ public class Statistic {
 				break;
 			}
 		}
-		mesEtapa = Integer.parseInt(dataDia.format(date).substring(3, 5));
-		if(Constants.CURRENT_MONTH > 0)
-			mesEtapa = Constants.CURRENT_MONTH;
+		mesEtapa = Integer.parseInt(DateUtil.getDate().substring(3, 5));
 		double dTotalRebuy = totalRebuy;
 		double dNumFault = numFault;
 		avgRebuy = dTotalRebuy/(mesEtapa - dNumFault);

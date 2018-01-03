@@ -98,8 +98,6 @@ public class MailResultContent {
     public String toStringCssHtml()
     {
     	updateRebuys();
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = new Date();
 
         String rebuyList = new String();
         String outsList = new String();
@@ -163,7 +161,7 @@ public class MailResultContent {
         "	<div class=\"header\">    	       \n" +
         "        <div class=\"banner\">\n" +
         "        	<div class=\"banner-content\">\n" +
-        "				 <h1>Poker Etapa "+dateFormat.format(date)+"</h1>\n" +
+        "				 <h1>Poker Etapa "+DateUtil.getDate()+"</h1>\n" +
         "            </div>\n" +
         "        </div>        \n" +
         "    </div>\n" +
@@ -275,8 +273,6 @@ public class MailResultContent {
     public String toStringCssHtml2()
     {
     	updateRebuys();
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = new Date();
 
         String rebuyList = new String();
         String outsList = new String();
@@ -340,7 +336,7 @@ public class MailResultContent {
         "	<div class=\"header\">    	       \n" +
         "        <div class=\"banner\">\n" +
         "        	<div class=\"banner-content\">\n" +
-        "				 <h1>Poker Etapa "+dateFormat.format(date)+"</h1>\n" +
+        "				 <h1>Poker Etapa "+DateUtil.getDate()+"</h1>\n" +
         "            </div>\n" +
         "        </div>        \n" +
         "    </div>\n" +
@@ -454,9 +450,7 @@ public class MailResultContent {
         int r = 0;
 
         updateRebuys();
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = new Date();
-ret =       "<p>===================== Etapa "+ dateFormat.format(date) +"==================================</P>";
+        ret =       "<p>===================== Etapa "+ DateUtil.getDate() +"==================================</P>";
         ret = ret + "<P>*********************************************************</P>";
         ret = ret + "<P>Jogadores           : " + outs.size() + "</P>";
         ret = ret + "<P>Rebuys              : " + rebuys + "</P>";
@@ -520,9 +514,7 @@ ret +
         int r = 0;
 
         updateRebuys();
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = new Date();
-ret =       "===================== Etapa "+ dateFormat.format(date) +"==================================\n";
+        ret =       "===================== Etapa "+ DateUtil.getDate() +"==================================\n";
         ret = ret + "*********************************************************\n";
         ret = ret + "Jogadores           : " + outs.size() + "\n";
         ret = ret + "Rebuys              : " + rebuys + "\n";

@@ -17,6 +17,7 @@ import javafx.util.Callback;
 import javafx.util.Pair;
 import model.RankingLine;
 import util.Constants;
+import util.DateUtil;
 import view.ColumnCell;
 import view.ColumnFactory;
 
@@ -115,14 +116,9 @@ public class RankingController implements Initializable{
 		cResultado10.setCellFactory(new ColumnFactory());
 		cResultado11.setCellFactory(new ColumnFactory());
 		cResultado12.setCellFactory(new ColumnFactory());
-		Date date = new Date();
-		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
 		int mesEtapa;
 
-		if(Constants.CURRENT_MONTH > 0)
-			mesEtapa = Constants.CURRENT_MONTH;
-		else
-			mesEtapa = Integer.parseInt(dataDia.format(date).substring(3, 5));
+		mesEtapa = Integer.parseInt(DateUtil.getDate().substring(3, 5));
 
 		for (int i = 0; i < mesEtapa; i++) {
 			switch (i+1) {

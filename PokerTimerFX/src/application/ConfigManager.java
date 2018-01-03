@@ -30,6 +30,7 @@ import model.Player;
 import model.ProjecaoLine;
 import model.ResultadoRodada;
 import util.Constants;
+import util.DateUtil;
 import util.Util;
 
 /**
@@ -346,10 +347,7 @@ public class ConfigManager {
 		File confgFile  = new File(configFileName);
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss");
 		Date date = new Date();
-		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
-		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(3, 5));
-		if(Constants.CURRENT_MONTH > 0)
-			mesEtapa = Constants.CURRENT_MONTH;
+		int mesEtapa = Integer.parseInt(DateUtil.getDate().substring(3, 5));
 		String[] configBackup = configFileName.split(Constants.CONFIG_FILE_NAME_SPLIT);
         BufferedReader reader;
         BufferedWriter writer;
@@ -458,14 +456,7 @@ public class ConfigManager {
 			ObservableList<String> oListFora, ObservableList<String> oListJogadores, int totalJogadores, int colocaocaoPersonilizada, int rebuysMais, String jogadorRebuys) {
 		ObservableList<ProjecaoLine> projecaoList = FXCollections.observableArrayList();
 		ObservableList<ProjecaoLine> projecaoListOrdered = FXCollections.observableArrayList();
-		File confgFile = new File(configFileName);
-		Date date = new Date();
-		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
-		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(6, 7));
-		if (Constants.CURRENT_MONTH > 0)
-			mesEtapa = Constants.CURRENT_MONTH;
-		int cont = 0;
-		int qtdeJogadoresTotal = 0;
+		int mesEtapa = Integer.parseInt(DateUtil.getDate().substring(6, 7));
 		int posAtual = 0;
 		boolean jogando = false;
 		double soma = 0;
