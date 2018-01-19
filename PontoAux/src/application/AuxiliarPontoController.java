@@ -389,6 +389,7 @@ public class AuxiliarPontoController implements Initializable{
 			olHorasMes.add(new MarcacaoMes());
 			olHorasMes.get(mesFor-1).setHorasMes(lHorasMes.get(mesFor));
 			olHorasMes.get(mesFor-1).setHorasRealizadas(lHorasRealizadasMes.get(mesFor));
+			olHorasMes.get(mesFor-1).setDiferencaHoras(HorasUtil.subTractHours(lHorasMes.get(mesFor), lHorasRealizadasMes.get(mesFor)));
 			switch (mesFor) {
 			case 1:
 				olHorasMes.get(mesFor-1).setMes("Jan");
