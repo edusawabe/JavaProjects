@@ -87,7 +87,7 @@ public final class HorasUtil {
 		String tmp;
 		boolean negativeResult = false;
 
-		if(hours.compareTo(toSub) < 0){
+		if(hours.compareTo(toSub) < 0 || hours.length() < toSub.length()){
 			negativeResult = true;
 			tmp = toSub;
 			toSub = hours;
