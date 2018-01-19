@@ -3,11 +3,18 @@ package application;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class TimerWindowController implements Initializable{
 	@FXML
@@ -42,10 +49,44 @@ public class TimerWindowController implements Initializable{
 	private Label lbPos5;
 	@FXML
 	private VBox vbStats;
+	@FXML
+	private AnchorPane mainPane;
+	private ObjectProperty<Font> fontTrackingTimer = new SimpleObjectProperty<Font>(Font.getDefault());
+	private ObjectProperty<Font> fontTrackingBlind = new SimpleObjectProperty<Font>(Font.getDefault());
+	private ObjectProperty<Font> fontTrackingNextBlind = new SimpleObjectProperty<Font>(Font.getDefault());
+	private ObjectProperty<Font> fontTrackingGeneralUp = new SimpleObjectProperty<Font>(Font.getDefault());
+	private ObjectProperty<Font> fontTrackingGeneralDown = new SimpleObjectProperty<Font>(Font.getDefault());
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		lbTimer.fontProperty().bind(fontTrackingTimer);
+		lbBlindsAtual.fontProperty().bind(fontTrackingBlind);
+		lbBlindsProxima.fontProperty().bind(fontTrackingNextBlind);
+		lbProxBreak.fontProperty().bind(fontTrackingBlind);
+		lbFora.fontProperty().bind(fontTrackingGeneralUp);
+		lbJogando.fontProperty().bind(fontTrackingGeneralUp);
+		lbRebuys.fontProperty().bind(fontTrackingGeneralUp);
+		lbFora.fontProperty().bind(fontTrackingGeneralUp);
+		lbMediaFichas.fontProperty().bind(fontTrackingGeneralUp);
+		lbTotalArrecadado.fontProperty().bind(fontTrackingGeneralUp);
+		lbPos1.fontProperty().bind(fontTrackingGeneralDown);
+		lbPos2.fontProperty().bind(fontTrackingGeneralDown);
+		lbPos3.fontProperty().bind(fontTrackingGeneralDown);
+		lbPos4.fontProperty().bind(fontTrackingGeneralDown);
+		lbPos5.fontProperty().bind(fontTrackingGeneralDown);
 
+		mainPane.heightProperty().addListener(new ChangeListener<Number>()
+		{
+		   @Override
+		   public void changed(ObservableValue<? extends Number> observableValue, Number oldHeight, Number newHeight)
+		   {
+			   fontTrackingTimer.set(Font.font("System",FontWeight.BOLD,(newHeight.doubleValue() / 2) - 120));
+			   fontTrackingBlind.set(Font.font("System",FontWeight.BOLD,(((newHeight.doubleValue() / 2) - 120)/3)));
+			   fontTrackingNextBlind.set(Font.font("System",FontWeight.BOLD,(((newHeight.doubleValue() / 2) - 120)/3)-20));
+			   fontTrackingGeneralUp.set(Font.font("System",FontWeight.BOLD,(((newHeight.doubleValue() * 0.6))/6)-20));
+			   fontTrackingGeneralDown.set(Font.font("System",FontWeight.BOLD,(((newHeight.doubleValue() * 0.4))/5)-20));
+		   }
+		});
 	}
 
 	public Label getLbTimer() {
@@ -81,11 +122,11 @@ public class TimerWindowController implements Initializable{
 	}
 
 	public void setTextLbMediaFichas(String mediaFichas){
-		lbMediaFichas.setText("Média de Fichas: " + mediaFichas);
+		lbMediaFichas.setText("Média: " + mediaFichas);
 	}
 
 	public void setTextLbTotalArrecadado(String totalArrecadado){
-		lbTotalArrecadado.setText("Total Arrecadado: " + totalArrecadado);
+		lbTotalArrecadado.setText("Total: " + totalArrecadado);
 	}
 
 	public void setTextLbPos1(String pos1){
@@ -106,5 +147,9 @@ public class TimerWindowController implements Initializable{
 
 	public void setTextLbPos5(String pos5){
 		lbPos5.setText("5º: " + pos5);
+	}
+
+	public AnchorPane getMainPane() {
+		return mainPane;
 	}
 }

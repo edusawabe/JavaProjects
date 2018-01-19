@@ -52,6 +52,7 @@ import util.DateUtil;
 import util.MailResultContent;
 import util.MailSender;
 import util.Mp3Player;
+import util.NumberMaskFormatter;
 import util.Util;
 
 public class PokerTimerFXController implements Initializable{
@@ -200,7 +201,6 @@ public class PokerTimerFXController implements Initializable{
     private int currentSelection;
     private int lastInput;
     private String lastSelectedName;
-    private int hidePainelInferior;
     private TimerWindowController timerWindowController;
 	private Stage primaryStageTimer;
 	private final static Logger logger = Logger.getLogger(PokerTimerFXController.class);
@@ -678,8 +678,9 @@ public class PokerTimerFXController implements Initializable{
     	ExcelRankingGenerator statsExcelGenerator = new ExcelRankingGenerator();
     	excelRankingGenerator.setlPlayer(lPlayer);
     	excelRankingGenerator.generateExcel();
-    	statsExcelGenerator.setlPlayer(lPlayer);
-    	//excelRankingGenerator.generateStatisticsExcel();
+    	//statsExcelGenerator.setlPlayer(lPlayer);
+    	//statsExcelGenerator.generateStatisticsExcel();
+    	//statsExcelGenerator.generateExcel();
 
     	//obtem Loader
     	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Ranking.fxml"));
@@ -1682,7 +1683,7 @@ public class PokerTimerFXController implements Initializable{
         statsPremio4.setText("R$ " + total4l);
         statsPremio5.setText("R$ " + total5l);
         if (totalJogando > 0)
-        	statsMedia.setText("" + (((totalJogadores + totalRebuy) * Constants.STACK)/totalJogando));
+        	statsMedia.setText(NumberMaskFormatter.formatMask(((totalJogadores + totalRebuy) * Constants.STACK)/totalJogando));
 
         if(timerWindowController != null){
 	        timerWindowController.getLbTimer().setText(lbTimer.getText());

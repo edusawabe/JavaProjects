@@ -201,10 +201,10 @@ public class Statistic {
 				minScore = currentResult.getPontuacaoEtapa();
 			totalRebuy += currentResult.getRebuys();
 			totalPrize += currentResult.getPremiacao();
-			if(!currentResult.getColocacao().equals("0"))
-				totalCost += totalCost + 40 + (currentResult.getRebuys() * 30);
-			else
+			if(currentResult.getColocacao().equals("0"))
 				numFault++;
+			else
+				totalCost = totalCost + 40 + (currentResult.getRebuys() * 30);
 			totalScore += currentResult.getPontuacaoEtapa();
 
 			if(currentResult.getRebuys() > 0)
@@ -219,27 +219,35 @@ public class Statistic {
 			case 2:
 				numTop3++;
 				num2pos++;
+				numFinalTable++;
 				break;
 			case 3:
 				numTop3++;
 				num3pos++;
+				numFinalTable++;
 				break;
 			case 4:
 				num4pos++;
+				numFinalTable++;
 				break;
 			case 5:
 				num5pos++;
+				numFinalTable++;
 				break;
 			case 6:
+				numFinalTable++;
 				numFinalTable++;
 				break;
 			case 7:
 				numFinalTable++;
+				numFinalTable++;
 				break;
 			case 8:
 				numFinalTable++;
+				numFinalTable++;
 				break;
 			case 9:
+				numFinalTable++;
 				numFinalTable++;
 				break;
 			default:

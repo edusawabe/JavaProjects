@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import model.Round;
 import util.Constants;
+import util.NumberMaskFormatter;
 
 public class RoundManager {
 	private LinkedList<Round> roundList;
@@ -231,8 +232,8 @@ public class RoundManager {
 				round.setRoundName("BREAK");
 			} else {
 				roundNum++;
-				round.setRoundName("Rodada " + roundNum + ": " + round.getSmallBlind() + "/" + round.getBigBlind()
-						+ " - Ante: " + round.getAnte());
+				round.setRoundName("Rodada " + roundNum + ": " + NumberMaskFormatter.formatMask(round.getSmallBlind())
+						+ "/" + NumberMaskFormatter.formatMask(round.getBigBlind()) + " - Ante: " + round.getAnte());
 			}
 			roundList.add(round);
 		}
