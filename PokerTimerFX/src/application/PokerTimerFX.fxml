@@ -465,6 +465,20 @@
                                     </ListView>
                                  </children>
                               </VBox>
+                              <VBox alignment="CENTER" layoutX="497.0" layoutY="10.0">
+                                 <children>
+                                    <Label fx:id="lbMesa3" alignment="CENTER" text="Mesa 3">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <ListView fx:id="listMesa3" minWidth="200.0" onMouseClicked="#selecaoMesa3">
+                                       <VBox.margin>
+                                          <Insets left="5.0" />
+                                       </VBox.margin>
+                                    </ListView>
+                                 </children>
+                              </VBox>
                            </children>
                            <BorderPane.margin>
                               <Insets bottom="10.0" />

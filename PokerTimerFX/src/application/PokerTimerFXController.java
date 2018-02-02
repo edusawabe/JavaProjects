@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.ResourceBundle;
-
 import org.apache.log4j.Logger;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -23,7 +21,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -101,6 +98,8 @@ public class PokerTimerFXController implements Initializable{
 	@FXML
 	private Label lbMesa2;
 	@FXML
+	private Label lbMesa3;
+	@FXML
 	private ProgressBar timerBar;
 	@FXML
 	private Button btAnterior;
@@ -128,6 +127,8 @@ public class PokerTimerFXController implements Initializable{
 	private ListView<String> listMesa1;
 	@FXML
 	private ListView<String> listMesa2;
+	@FXML
+	private ListView<String> listMesa3;
 	@FXML
 	private Button btAdicionaJogador;
 	@FXML
@@ -168,6 +169,7 @@ public class PokerTimerFXController implements Initializable{
 	private ObservableList<String> oListComboJogador = FXCollections.observableArrayList();
 	private ObservableList<String> oListJogadoresMesa1 = FXCollections.observableArrayList();
 	private ObservableList<String> oListJogadoresMesa2 = FXCollections.observableArrayList();
+	private ObservableList<String> oListJogadoresMesa3 = FXCollections.observableArrayList();
 
 	private ObservableList<String> oListJogadoresBk = FXCollections.observableArrayList();
 	private ObservableList<String> oListRebuysBk = FXCollections.observableArrayList();
@@ -176,6 +178,7 @@ public class PokerTimerFXController implements Initializable{
 	private ObservableList<String> oListComboJogadorBk = FXCollections.observableArrayList();
 	private ObservableList<String> oListJogadoresMesa1Bk = FXCollections.observableArrayList();
 	private ObservableList<String> oListJogadoresMesa2Bk = FXCollections.observableArrayList();
+	private ObservableList<String> oListJogadoresMesa3Bk = FXCollections.observableArrayList();
 
     private boolean paused;
     private boolean play;
@@ -194,7 +197,11 @@ public class PokerTimerFXController implements Initializable{
     private double total4l = 0;
     private double total5l = 0;
     private LinkedList<String> llMesa1;
+    private LinkedList<String> llMesa1BK;
     private LinkedList<String> llMesa2;
+    private LinkedList<String> llMesa2BK;
+    private LinkedList<String> llMesa3;
+    private LinkedList<String> llMesa3BK;
     private Timeline updateGuitask;
     private String lastKey;
     private String inputName;
@@ -204,6 +211,7 @@ public class PokerTimerFXController implements Initializable{
     private TimerWindowController timerWindowController;
 	private Stage primaryStageTimer;
 	private final static Logger logger = Logger.getLogger(PokerTimerFXController.class);
+	private int numMesas = 0;
 
 	public PokerTimerFXController() {
 		lastKey = "";
@@ -300,11 +308,24 @@ public class PokerTimerFXController implements Initializable{
 	private void selecaoMesa1(Event evt){
 		listMesa2.getSelectionModel().clearSelection();
 		listJogadores.getSelectionModel().clearSelection();
+		if(oListJogadoresMesa3.size() > 0){
+			listMesa3.getSelectionModel().clearSelection();
+		}
 	}
 
 	@FXML
 	private void selecaoMesa2(Event evt){
 		listMesa1.getSelectionModel().clearSelection();
+		listJogadores.getSelectionModel().clearSelection();
+		if(oListJogadoresMesa3.size() > 0){
+			listMesa3.getSelectionModel().clearSelection();
+		}
+	}
+
+	@FXML
+	private void selecaoMesa3(Event evt){
+		listMesa1.getSelectionModel().clearSelection();
+		listMesa2.getSelectionModel().clearSelection();
 		listJogadores.getSelectionModel().clearSelection();
 	}
 
@@ -312,6 +333,9 @@ public class PokerTimerFXController implements Initializable{
 	private void selecaojogadores(Event evt){
 		listMesa1.getSelectionModel().clearSelection();
 		listMesa2.getSelectionModel().clearSelection();
+		if(oListJogadoresMesa3.size() > 0){
+			listMesa3.getSelectionModel().clearSelection();
+		}
 	}
 
 	@FXML
@@ -325,99 +349,145 @@ public class PokerTimerFXController implements Initializable{
 
 	@FXML
 	private void trocarJogadorMesa(Event evt) {
-		listMesa1.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		listMesa2.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		if (listMesa1.getSelectionModel().getSelectedIndex() < 0
-				&& listMesa2.getSelectionModel().getSelectedIndex() < 0) {
+		listMesa1.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+		listMesa2.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-			Alert alError = new Alert(AlertType.ERROR);
-			alError.setTitle("Selecionar Jogador");
-			alError.setContentText("Por favor selecionar o jogador da troca em uma das Mesas");
-			alError.show();
-			return;
+		if(oListJogadoresMesa3.size() > 0){
+			listMesa3.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+			if (listMesa1.getSelectionModel().getSelectedIndex() < 0
+					&& listMesa2.getSelectionModel().getSelectedIndex() < 0
+					&& listMesa3.getSelectionModel().getSelectedIndex() < 0) {
+
+				Alert alError = new Alert(AlertType.ERROR);
+				alError.setTitle("Selecionar Jogador");
+				alError.setContentText("Por favor selecionar o jogador da troca em uma das Mesas");
+				alError.show();
+				return;
+			}
+			tratarTroca3Mesas();
+		} else {
+			if (listMesa1.getSelectionModel().getSelectedIndex() < 0
+					&& listMesa2.getSelectionModel().getSelectedIndex() < 0) {
+				Alert alError = new Alert(AlertType.ERROR);
+				alError.setTitle("Selecionar Jogador");
+				alError.setContentText("Por favor selecionar o jogador da troca em uma das Mesas");
+				alError.show();
+				return;
+			}
+			if (listMesa1.getSelectionModel().getSelectedIndex() >= 0) {
+				trocarMesa(oListJogadoresMesa1,oListJogadoresMesa2,1,2,llMesa1,llMesa2,listMesa1,listMesa2);
+			} else {
+				trocarMesa(oListJogadoresMesa2,oListJogadoresMesa1,2,1,llMesa2,llMesa1,listMesa2,listMesa1);
+			}
 		}
+	}
 
+	private void trocarMesa(ObservableList<String> olJogadorMesaOrigem, ObservableList<String> olJogadorMesaDestino, int mesaOrigem, int mesaDestino,
+			LinkedList<String> llOrigem, LinkedList<String> llDestino, ListView<String> listOrigem, ListView<String> listDestino){
 		Random gerador = new Random();
 		int maxMesa;
 		int origem = 0, destino = 0;
 		Alert al = new Alert(AlertType.CONFIRMATION);
-		int jogadorRandom = 0;
 
-		if (listMesa1.getSelectionModel().getSelectedIndices().size() > 1) {
-			jogadorRandom = gerador.nextInt(listMesa1.getSelectionModel().getSelectedIndices().size());
-			listMesa1.getSelectionModel()
-					.select(listMesa1.getSelectionModel().getSelectedIndices().get(jogadorRandom).intValue());
+		origem = listOrigem.getSelectionModel().getSelectedIndex();
+		maxMesa = listDestino.getItems().size();
+		destino = gerador.nextInt(maxMesa);
+
+		al.setTitle("Troca de Mesa");
+		al.setContentText("Confirmar Troca:" + "\nMesa " + origem + ": " + "\n - " + olJogadorMesaOrigem.get(origem) + "\nMesa "+destino +": "
+				+ "\n - " + olJogadorMesaDestino.get(destino));
+		al.showAndWait();
+		if (al.getResult() == ButtonType.OK) {
+			String j1, j2;
+			j1 = olJogadorMesaOrigem.get(origem);
+			j2 = olJogadorMesaDestino.get(destino);
+			llOrigem.remove(j1);
+			llDestino.remove(j2);
+			llDestino.remove(j1);
+			llOrigem.remove(j2);
+			olJogadorMesaOrigem.remove(origem);
+			olJogadorMesaDestino.remove(destino);
+			olJogadorMesaDestino.add(destino, j1);
+			olJogadorMesaOrigem.add(origem, j2);
+			listOrigem.getSelectionModel().clearSelection();
+			listDestino.getSelectionModel().clearSelection();
+			listOrigem.getSelectionModel().select(origem);
+			listDestino.getSelectionModel().select(destino);
+			listOrigem.scrollTo(origem);
+			listDestino.scrollTo(destino);
+		}
+	}
+
+	private void tratarTroca3Mesas(){
+		int qtdeMesa1=0, qtdeMesa2=0, qtdeMesa3=0, maiorMesa=0, maiorQtde=0, difMesas=0, mesaSelecionada=0;
+		Random gerador = new Random();
+
+		qtdeMesa1 = oListJogadoresMesa1.size();
+		qtdeMesa2 = oListJogadoresMesa2.size();
+		qtdeMesa3 = oListJogadoresMesa3.size();
+
+		if(listMesa1.getSelectionModel().getSelectedIndex() > 0){
+			mesaSelecionada = 1;
 		}
 
-		if (listMesa2.getSelectionModel().getSelectedIndices().size() > 1) {
-			jogadorRandom = gerador.nextInt(listMesa2.getSelectionModel().getSelectedIndices().size());
-			listMesa2.getSelectionModel()
-					.select(listMesa2.getSelectionModel().getSelectedIndices().get(jogadorRandom).intValue());
+		if(listMesa2.getSelectionModel().getSelectedIndex() > 0){
+			mesaSelecionada = 2;
 		}
 
-		if (listMesa1.getSelectionModel().getSelectedIndex() >= 0) {
-			origem = listMesa1.getSelectionModel().getSelectedIndex();
-			maxMesa = listMesa2.getItems().size();
-			destino = gerador.nextInt(maxMesa);
+		if(listMesa2.getSelectionModel().getSelectedIndex() > 0){
+			mesaSelecionada = 3;
+		}
 
-			al.setTitle("Troca de Mesa");
-			al.setContentText("Confirmar Troca:" + "\nMesa 1: " + "\n - " + oListJogadoresMesa1.get(origem)
-					+ "\nMesa 2: " + "\n - " + oListJogadoresMesa2.get(destino));
-			al.showAndWait();
-			if (al.getResult() == ButtonType.OK) {
-				String j1, j2;
-				j1 = oListJogadoresMesa1.get(origem);
-				j2 = oListJogadoresMesa2.get(destino);
-				llMesa1.remove(j1);
-				llMesa2.remove(j2);
-				llMesa2.remove(j1);
-				llMesa1.remove(j2);
-				oListJogadoresMesa1.remove(origem);
-				oListJogadoresMesa2.remove(destino);
-				oListJogadoresMesa2.add(destino, j1);
-				oListJogadoresMesa1.add(origem, j2);
-				listMesa1.getSelectionModel().clearSelection();
-				listMesa2.getSelectionModel().clearSelection();
-				listMesa1.getSelectionModel().select(origem);
-				listMesa2.getSelectionModel().select(destino);
-				listMesa1.scrollTo(origem);
-				listMesa2.scrollTo(destino);
-			}
-
-		} else {
-			origem = listMesa2.getSelectionModel().getSelectedIndex();
-			maxMesa = listMesa1.getItems().size();
-			destino = gerador.nextInt(maxMesa);
-
-			al.setTitle("Troca de Mesa");
-			al.setContentText("Confirmar Troca:" + "\nMesa 2: " + "\n - " + oListJogadoresMesa2.get(origem)
-					+ "\nMesa 1: " + "\n - " + oListJogadoresMesa1.get(destino));
-			al.showAndWait();
-			if (al.getResult() == ButtonType.OK) {
-				String j1, j2;
-				j1 = oListJogadoresMesa2.get(origem);
-				j2 = oListJogadoresMesa1.get(destino);
-				llMesa1.remove(j1);
-				llMesa2.remove(j2);
-				llMesa2.remove(j1);
-				llMesa1.remove(j2);
-				oListJogadoresMesa2.remove(origem);
-				oListJogadoresMesa1.remove(destino);
-				oListJogadoresMesa1.add(destino, j1);
-				oListJogadoresMesa2.add(origem, j2);
-				listMesa1.getSelectionModel().clearSelection();
-				listMesa2.getSelectionModel().clearSelection();
-				listMesa2.getSelectionModel().select(origem);
-				listMesa1.getSelectionModel().select(destino);
-				listMesa2.scrollTo(origem);
-				listMesa1.scrollTo(destino);
-
-			}
+		switch (mesaSelecionada) {
+		case 1:
+			if (gerador.nextInt(1000) % 2 == 0)
+				trocarMesa(oListJogadoresMesa1, oListJogadoresMesa2, mesaSelecionada, 2, llMesa1, llMesa2, listMesa1, listMesa2);
+			else
+				trocarMesa(oListJogadoresMesa1, oListJogadoresMesa3, mesaSelecionada, 3, llMesa1, llMesa3, listMesa1, listMesa3);
+			break;
+		case 2:
+			if (gerador.nextInt(1000) % 2 == 0)
+				trocarMesa(oListJogadoresMesa2, oListJogadoresMesa1, mesaSelecionada, 1, llMesa2, llMesa1, listMesa2, listMesa1);
+			else
+				trocarMesa(oListJogadoresMesa2, oListJogadoresMesa3, mesaSelecionada, 3, llMesa2, llMesa3, listMesa2, listMesa3);
+			break;
+		case 3:
+			if (gerador.nextInt(1000) % 2 == 0)
+				trocarMesa(oListJogadoresMesa3, oListJogadoresMesa2, mesaSelecionada, 2, llMesa3, llMesa2, listMesa3, listMesa2);
+			else
+				trocarMesa(oListJogadoresMesa3, oListJogadoresMesa1, mesaSelecionada, 1, llMesa3, llMesa1, listMesa3, listMesa1);
+			break;
+		default:
+			break;
 		}
 	}
 
 	@FXML
 	private void sortearMesas(Event evt){
+
+		Alert al = new Alert(AlertType.CONFIRMATION);
+		al.setTitle("Selecionar Quantidade de Mesas");
+		al.setContentText("Existe quantidade de jogadores para 3 mesas.\n"
+				+ "Selcione OK para Sortear 3 Mesas ou Cancelar para Sortear 2 Mesas.");
+		al.setHeaderText("Selecionar a Quantidae de Mesas.");
+		al.showAndWait();
+		if(al.getResult() == ButtonType.OK){
+			numMesas = 3;
+			sortear3Mesas();
+		} else {
+			numMesas = 2;
+			sortear2Mesas();
+		}
+	}
+
+	private void sortear2Mesas(){
+		oListJogadoresMesa1.clear();
+		oListJogadoresMesa2.clear();
+		oListJogadoresMesa3.clear();
+		llMesa1.clear();
+		llMesa2.clear();
+		llMesa3.clear();
+
 		btSortear.setDisable(true);
 		Random gerador = new Random();
 		Random geradorMesa = new Random();
@@ -428,7 +498,7 @@ public class PokerTimerFXController implements Initializable{
 		int totalSize = oListJogadores.size();
 		int maxMesa = (totalSize/2) + 1;
 		int numero = gerador.nextInt(size);
-		int mesa = geradorMesa.nextInt(1);
+		int mesa = geradorMesa.nextInt(100);
 
 		if ((totalSize % 2) == 0)
 			maxMesa = totalSize/2;
@@ -467,6 +537,78 @@ public class PokerTimerFXController implements Initializable{
 		}
 		listMesa1.setItems(oListJogadoresMesa1);
 		listMesa2.setItems(oListJogadoresMesa2);
+	}
+
+	private void sortear3Mesas(){
+		boolean added = false;
+		btSortear.setDisable(true);
+		Random gerador = new Random();
+		Random geradorMesa = new Random();
+		ObservableList<String> copyList =  FXCollections.observableArrayList(oListJogadores);
+
+		int size = oListJogadores.size();
+		int players = oListJogadores.size();
+		int totalSize = oListJogadores.size();
+		int maxMesa = 0;
+		int numero = gerador.nextInt(size);
+		int mesa = geradorMesa.nextInt(900);
+
+		if ((totalSize % 3) == 0)
+			maxMesa = totalSize/3;
+		else
+			maxMesa = (totalSize/3) + 1;
+
+		while (size > 0 ){
+			//Se Existe pessoas suficientes para mais de uma mesa
+			if (players > Constants.MAX_PLAYERS_FINAL_TABLE){
+				if(mesa < 301){
+					if (llMesa1.size() < maxMesa){
+						llMesa1.add(copyList.get(numero));
+						added = true;
+					} else {
+						added = false;
+					}
+				}
+				if(mesa > 300 && mesa < 601){
+					if (llMesa2.size() < maxMesa){
+						llMesa2.add(copyList.get(numero));
+						added = true;
+					} else {
+						added = false;
+					}
+				}
+				if(mesa > 600 && mesa < 901){
+					if (llMesa3.size() < maxMesa){
+						llMesa3.add(copyList.get(numero));
+						added = true;
+					} else {
+						added = false;
+					}
+				}
+			}else{
+				llMesa1.add(copyList.get(numero));
+			}
+			if(added){
+				copyList.remove(numero);
+			}
+			mesa = geradorMesa.nextInt(900);
+			size = copyList.size();
+			if(size > 0)
+				numero = gerador.nextInt(size);
+		}
+		for (int i = 0; i < llMesa1.size(); i++) {
+			oListJogadoresMesa1.add(i, llMesa1.get(i));
+		}
+
+		for (int i = 0; i < llMesa2.size(); i++) {
+			oListJogadoresMesa2.add(i, llMesa2.get(i));
+		}
+		for (int i = 0; i < llMesa3.size(); i++) {
+			oListJogadoresMesa3.add(i, llMesa3.get(i));
+		}
+		listMesa1.setItems(oListJogadoresMesa1);
+		listMesa2.setItems(oListJogadoresMesa2);
+		listMesa3.setItems(oListJogadoresMesa3);
 	}
 
 	@FXML
@@ -678,9 +820,9 @@ public class PokerTimerFXController implements Initializable{
     	ExcelRankingGenerator statsExcelGenerator = new ExcelRankingGenerator();
     	excelRankingGenerator.setlPlayer(lPlayer);
     	excelRankingGenerator.generateExcel();
-    	//statsExcelGenerator.setlPlayer(lPlayer);
-    	//statsExcelGenerator.generateStatisticsExcel();
-    	//statsExcelGenerator.generateExcel();
+    	statsExcelGenerator.setlPlayer(lPlayer);
+    	statsExcelGenerator.generateStatisticsExcel();
+    	statsExcelGenerator.generateExcel();
 
     	//obtem Loader
     	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Ranking.fxml"));
@@ -1047,18 +1189,32 @@ public class PokerTimerFXController implements Initializable{
 	@FXML
 	private void removeJogadorTorneio(Event evt){
 
+		//Backups
 		oListJogadoresMesa1Bk.clear();
 		oListJogadoresMesa1Bk.addAll(oListJogadoresMesa1);
 		oListJogadoresMesa2Bk.clear();
 		oListJogadoresMesa2Bk.addAll(oListJogadoresMesa2);
+		oListJogadoresMesa3Bk.clear();
+		oListJogadoresMesa3Bk.addAll(oListJogadoresMesa3);
+		oListForaBk.clear();
+		oListForaBk.addAll(oListFora);
+		oListJogadoresBk.clear();
+		oListJogadoresBk.addAll(oListJogadores);
+		llMesa1BK.clear();
+		llMesa1BK.addAll(llMesa1);
+		llMesa2BK.clear();
+		llMesa2BK.addAll(llMesa2);
+		llMesa3BK.clear();
+		llMesa3BK.addAll(llMesa3);
 
 		int i = listJogadores.getSelectionModel().getSelectedIndex();
-		int size1, size2, diferenca, posicaoTroca, posicaoEliminacao, mesa, sorteado, sortedSize;
-		Alert al = new Alert(AlertType.INFORMATION);
+		int size1, size2, size3, diferenca, posicaoTroca, posicaoEliminacao, mesa, sorteado, sortedSize, result;
+		Alert al = new Alert(AlertType.CONFIRMATION);
 		al.setTitle("Mudar Jogador de Mesa");
 		Random gerador = new Random();
 		String eliminado, jogadorReposicionado;
 
+		//Error
 		if (i < 0){
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Erro");
@@ -1067,6 +1223,7 @@ public class PokerTimerFXController implements Initializable{
 			alert.show();
 		}
 		else{
+			//Validate End of Game or Final Table
 			if(oListJogadores.size() == 2)
 				playLastPlayer();
 			else
@@ -1074,6 +1231,7 @@ public class PokerTimerFXController implements Initializable{
 					playFinishTournament();
 				else
 					playElimina();
+
 			//nome do jogador eliminado
 			eliminado = oListJogadores.get(i);
 
@@ -1081,28 +1239,40 @@ public class PokerTimerFXController implements Initializable{
 			oListFora.add(oListJogadores.get(i));
 
 			//verifica de qual mesa o jogador esta sendo eliminado e elimina jogador da mesa
-			mesa = 1;
-			posicaoEliminacao = oListJogadoresMesa1.indexOf(eliminado);
-			if (posicaoEliminacao < 0 ) {
-				mesa = 2;
-				posicaoEliminacao = oListJogadoresMesa2.indexOf(eliminado);
-				oListJogadoresMesa2.remove(oListJogadores.get(i));
-			}
-			else
-			{
-				oListJogadoresMesa1.remove(oListJogadores.get(i));
-			}
+			mesa = buscaMesaEliminado(eliminado);
+			posicaoEliminacao = buscaPosicaoEliminado(eliminado, mesa);
+			removeEliminadoMesa(eliminado, mesa);
+
 			//elimina jogador da lista de inscritos
 			oListJogadores.remove(i);
 
 			//recalcula tamanho das mesas
 			size1 = oListJogadoresMesa1.size();
 			size2 = oListJogadoresMesa2.size();
+			size3 = oListJogadoresMesa3.size();
+
+			//Valida se existia 3 mesas e não precisa mais de 3 meses
+			if(numMesas == 3){
+				//Realiza o Sorteio Novamente pois não precisa mais de Duas Mesas
+				if (oListJogadores.size() == Constants.MAX_PLAYERS_2_TABLE){
+					sortear2Mesas();
+					Alert al2Mesa = new Alert(AlertType.INFORMATION);
+					al2Mesa.setTitle("Mesa Final");
+					al2Mesa.setContentText("Numero de Jogadores para 2 Mesas Atingido."
+							+ "\nFavor Reposicionar Jogadores Conforme o Novo Sorteio Realizado!");
+					al2Mesa.setResizable(true);
+					al2Mesa.setWidth(600);
+					al2Mesa.setHeight(400);
+					al2Mesa.show();
+					return;
+				}
+			}
 
 			//tratamento para sorteio da mesa final
 			if (oListJogadores.size() == Constants.MAX_PLAYERS_FINAL_TABLE){
 				oListJogadoresMesa1.clear();
 				oListJogadoresMesa2.clear();
+				oListJogadoresMesa3.clear();
 				sortedSize = oListJogadoresMesa1.size();
 
 				while(sortedSize != oListJogadores.size()){
@@ -1116,11 +1286,6 @@ public class PokerTimerFXController implements Initializable{
 				alMesaFinal.setTitle("Mesa Final");
 				alMesaFinal.setContentText("Numero de Jogadores da Mesa Final Atingido."
 						+ "\nFavor Reposicionar Jogadores Conforme o Novo Sorteio Realizado!");
-				DialogPane dialogPane = alMesaFinal.getDialogPane();
-				dialogPane.getStylesheets().add(
-				   getClass().getResource("dialog.css").toExternalForm());
-				dialogPane.getStyleClass().add("myDialog");
-				dialogPane.setPrefSize(600, 400);
 				alMesaFinal.setResizable(true);
 				alMesaFinal.setWidth(600);
 				alMesaFinal.setHeight(400);
@@ -1129,7 +1294,69 @@ public class PokerTimerFXController implements Initializable{
 			}
 
 			// verfica se existe necessidade de balancear jogadores
-			if (size1 > 0 && size2 > 0) {
+			if (size1 > 0 && size2 > 0 && size3 > 0) {
+				//tratamento de eliminação por mesa
+				switch (mesa) {
+				// eliminacao ocorrendo na mesa 1 - Se balancear Destino é a
+				// Mesa 1
+				case 1:
+					if (size2 > size3) {
+						verificarBalanceamento(size2, size1, posicaoEliminacao, 2, 1, eliminado, oListJogadoresMesa2, oListJogadoresMesa1, listMesa1);
+					} else {
+						if(size3 > size2)
+							verificarBalanceamento(size3, size1, posicaoEliminacao, 3, 1, eliminado, oListJogadoresMesa3, oListJogadoresMesa1, listMesa1);
+						else {
+							result = gerador.nextInt(1000);
+							if(result%2 == 0){
+								verificarBalanceamento(size2, size1, posicaoEliminacao, 2, 1, eliminado, oListJogadoresMesa2, oListJogadoresMesa1, listMesa1);
+							} else {
+								verificarBalanceamento(size3, size1, posicaoEliminacao, 3, 1, eliminado, oListJogadoresMesa3, oListJogadoresMesa1, listMesa1);
+							}
+						}
+					}
+					break;
+				// eliminacao ocorrendo na mesa 2 - Se balancear Destino é a
+				// Mesa 2
+				case 2:
+					if (size1 > size3) {
+						verificarBalanceamento(size1, size2, posicaoEliminacao, 1, 2, eliminado, oListJogadoresMesa1, oListJogadoresMesa2, listMesa2);
+					} else {
+						if(size3 > size1)
+							verificarBalanceamento(size3, size2, posicaoEliminacao, 3, 2, eliminado, oListJogadoresMesa3, oListJogadoresMesa2, listMesa2);
+						else {
+							result = gerador.nextInt(1000);
+							if(result%2 == 0){
+								verificarBalanceamento(size1, size2, posicaoEliminacao, 1, 2, eliminado, oListJogadoresMesa1, oListJogadoresMesa2, listMesa2);
+							} else {
+								verificarBalanceamento(size3, size2, posicaoEliminacao, 3, 2, eliminado, oListJogadoresMesa3, oListJogadoresMesa2, listMesa2);
+							}
+						}
+					}
+					break;
+				// eliminacao ocorrendo na mesa 2 - Se balancear Destino é a
+				// Mesa 3
+				case 3:
+					if (size1 > size2) {
+						verificarBalanceamento(size1, size3, posicaoEliminacao, 1, 3, eliminado, oListJogadoresMesa1, oListJogadoresMesa3, listMesa3);
+					} else {
+						if(size2 > size1)
+							verificarBalanceamento(size2, size3, posicaoEliminacao, 2, 3, eliminado, oListJogadoresMesa2, oListJogadoresMesa3, listMesa3);
+						else {
+							result = gerador.nextInt(1000);
+							if(result%2 == 0){
+								verificarBalanceamento(size1, size3, posicaoEliminacao, 1, 3, eliminado, oListJogadoresMesa1, oListJogadoresMesa3, listMesa3);
+							} else {
+								verificarBalanceamento(size2, size3, posicaoEliminacao, 2, 3, eliminado, oListJogadoresMesa2, oListJogadoresMesa3, listMesa3);
+							}
+						}
+					}
+					break;
+				default:
+					break;
+				}
+			}
+			// verfica se existe necessidade de balancear jogadores
+			if (size1 > 0 && size2 > 0 && size3 == 0) {
 				if (size1 > size2) {
 					diferenca = size1 - size2;
 				} else {
@@ -1139,45 +1366,91 @@ public class PokerTimerFXController implements Initializable{
 				if (diferenca > 1) {
 					// se jogador eliminado é da mesa 2
 					if (mesa == 2) {
-						// obtem jogador da mesa 1 a ser trocado
-						posicaoTroca = gerador.nextInt(size1);
-						jogadorReposicionado = oListJogadoresMesa1.get(posicaoTroca);
-
-						al.setContentText("Trocar de Mesa!" + "\n" + " - Jogador:\n   " + jogadorReposicionado
-								+ "\nIr para Mesa 2: " + "\n  - Na posição em que estava:\n  " + eliminado);
-
-						oListJogadoresMesa2.add(posicaoEliminacao, oListJogadoresMesa1.get(posicaoTroca));
-						oListJogadoresMesa1.remove(posicaoTroca);
-						listJogadores.getSelectionModel().clearSelection();
-						listMesa2.getSelectionModel().clearSelection();
-						listMesa2.getSelectionModel().select(jogadorReposicionado);
+						balanceTables(posicaoEliminacao, 1, 2, size1, eliminado, oListJogadoresMesa1, oListJogadoresMesa2, listMesa2);
 					} else {
 						// se jogador eliminado é da mesa 1
 						// obtem jogador da mesa 2 a ser trocado
-						posicaoTroca = gerador.nextInt(size2);
-						jogadorReposicionado = oListJogadoresMesa2.get(posicaoTroca);
-
-						al.setContentText("Trocar de Mesa!" + "\n" + " - Jogador:\n   " + jogadorReposicionado
-								+ "\nIr para Mesa 1: " + "\n  - Na posição em que estava:\n  " + eliminado);
-						oListJogadoresMesa1.add(posicaoEliminacao, oListJogadoresMesa2.get(posicaoTroca));
-						oListJogadoresMesa2.remove(posicaoTroca);
-						listJogadores.getSelectionModel().clearSelection();
-						listMesa1.getSelectionModel().clearSelection();
-						listMesa1.getSelectionModel().select(jogadorReposicionado);
+						balanceTables(posicaoEliminacao, 2, 1, size2, eliminado, oListJogadoresMesa2, oListJogadoresMesa1, listMesa1);
 					}
-					DialogPane dialogPane = al.getDialogPane();
-					dialogPane.getStylesheets().add(
-					   getClass().getResource("dialog.css").toExternalForm());
-					dialogPane.getStyleClass().add("myDialog");
-					dialogPane.setPrefSize(600, 500);
-					al.setResizable(true);
-					al.setWidth(600);
-					al.setHeight(500);
-					al.show();
 				}
 			}
 		}
 		listJogadores.requestFocus();
+	}
+
+	private void verificarBalanceamento(int sizeOrigem, int sizeDestino, int posicaoEliminacao, int mesaOrigem, int mesaDestino,
+			String eliminado, ObservableList<String> olMesaOrigem, ObservableList<String> olMesaDestino, ListView<String> llDestino){
+		int diferenca = 0;
+		if (sizeOrigem > sizeDestino) {
+			diferenca = sizeOrigem - sizeDestino;
+			if (diferenca > 1) {
+				balanceTables(posicaoEliminacao, mesaOrigem, mesaDestino, sizeOrigem, eliminado, olMesaOrigem,
+						olMesaDestino, llDestino);
+			}
+		}
+	}
+
+	private void balanceTables(int posicaoEliminacao, int mesaOrigem, int mesaDestino, int sizeMesaOrigem
+			, String eliminado, ObservableList<String> olOrigem, ObservableList<String> olDestino
+			, ListView<String> llMesaDestino) {
+		Random gerador = new Random();
+		Alert al = new Alert(AlertType.INFORMATION);
+
+		// se jogador eliminado é da mesa 1
+		// obtem jogador da mesa 2 a ser trocado
+		int posicaoTroca = gerador.nextInt(sizeMesaOrigem);
+		String jogadorReposicionado = olOrigem.get(posicaoTroca);
+
+		al.setContentText("Trocar de Mesa!" + "\n" + " - Jogador Da Mesa " + mesaOrigem + ":\n   " + jogadorReposicionado
+				+ "\nIr para Mesa "+mesaDestino+": " + "\n  - Na posição em que estava:\n  " + eliminado);
+		olDestino.add(posicaoEliminacao, olOrigem.get(posicaoTroca));
+		olOrigem.remove(posicaoTroca);
+		listJogadores.getSelectionModel().clearSelection();
+		llMesaDestino.getSelectionModel().clearSelection();
+		llMesaDestino.getSelectionModel().select(jogadorReposicionado);
+		al.setResizable(true);
+		al.setWidth(600);
+		al.setHeight(500);
+		al.show();
+	}
+
+	private int buscaMesaEliminado(String eliminado) {
+		if(oListJogadoresMesa1.indexOf(eliminado) >= 0)
+			return 1;
+		if(oListJogadoresMesa2.indexOf(eliminado) >= 0)
+			return 2;
+		if(oListJogadoresMesa3.indexOf(eliminado) >= 0)
+			return 3;
+		return 0;
+	}
+
+	private int buscaPosicaoEliminado(String eliminado, int mesa) {
+		switch (mesa) {
+			case 1:
+				return oListJogadoresMesa1.indexOf(eliminado);
+			case 2:
+				return oListJogadoresMesa2.indexOf(eliminado);
+			case 3:
+				return oListJogadoresMesa3.indexOf(eliminado);
+			default:
+				return 0;
+		}
+	}
+
+	private void removeEliminadoMesa(String eliminado, int mesa) {
+		switch (mesa) {
+			case 1:
+				oListJogadoresMesa1.remove(eliminado);
+				break;
+			case 2:
+				oListJogadoresMesa2.remove(eliminado);
+				break;
+			case 3:
+				oListJogadoresMesa3.remove(eliminado);
+				break;
+			default:
+				break;
+		}
 	}
 
 	@FXML
@@ -1192,12 +1465,22 @@ public class PokerTimerFXController implements Initializable{
 		}
 		else{
 			playCancelElimina();
-			Util.addJogadorListaOrdenadamente(oListFora.get(i), oListJogadores);
-			oListFora.remove(i);
 			oListJogadoresMesa1.clear();
 			oListJogadoresMesa1.addAll(oListJogadoresMesa1Bk);
 			oListJogadoresMesa2.clear();
 			oListJogadoresMesa2.addAll(oListJogadoresMesa2Bk);
+			oListJogadoresMesa3.clear();
+			oListJogadoresMesa3.addAll(oListJogadoresMesa3Bk);
+			oListFora.clear();
+			oListFora.addAll(oListForaBk);
+			oListJogadores.clear();
+			oListJogadores.addAll(oListJogadoresBk);
+			llMesa1.clear();
+			llMesa1.addAll(llMesa1BK);
+			llMesa2.clear();
+			llMesa2.addAll(llMesa2BK);
+			llMesa3.clear();
+			llMesa3BK.addAll(llMesa3BK);
 			atualizarEstatisticas();
 		}
 		listJogadores.requestFocus();
@@ -1276,7 +1559,11 @@ public class PokerTimerFXController implements Initializable{
 		listFora.setItems(oListFora);
 		listRebuys.setItems(oListRebuys);
 		llMesa1 = new LinkedList<>();
+		llMesa1BK = new LinkedList<>();
 		llMesa2 = new LinkedList<>();
+		llMesa2BK = new LinkedList<>();
+		llMesa3 = new LinkedList<>();
+		llMesa3BK = new LinkedList<>();
 
 		//Inicializa tempos
         breakMinutes = roundList.get(listRodadas.getSelectionModel().getSelectedIndex()).getMinutesToBreak();
@@ -1585,6 +1872,7 @@ public class PokerTimerFXController implements Initializable{
         int totalFora = oListFora.size();
         int totalMesa1 = oListJogadoresMesa1.size();
         int totalMesa2 = oListJogadoresMesa2.size();
+        int totalMesa3 = oListJogadoresMesa3.size();
         double totalArrecadado = 0;
         String jogadorSelecionado;
 		if (lastInput > 0)
@@ -1602,15 +1890,26 @@ public class PokerTimerFXController implements Initializable{
 				listMesa1.getSelectionModel().select(oListJogadoresMesa1.indexOf(jogadorSelecionado));
 				listMesa1.scrollTo(oListJogadoresMesa1.indexOf(jogadorSelecionado));
 				listMesa2.getSelectionModel().clearSelection();
-			} else {
+				listMesa3.getSelectionModel().clearSelection();
+			}
+			if (oListJogadoresMesa2.indexOf(jogadorSelecionado) >= 0) {
 				listMesa2.getSelectionModel().clearSelection();
 				listMesa2.getSelectionModel().select(oListJogadoresMesa2.indexOf(jogadorSelecionado));
 				listMesa2.scrollTo(oListJogadoresMesa2.indexOf(jogadorSelecionado));
 				listMesa1.getSelectionModel().clearSelection();
+				listMesa3.getSelectionModel().clearSelection();
+			}
+			if (oListJogadoresMesa3.indexOf(jogadorSelecionado) >= 0) {
+				listMesa3.getSelectionModel().clearSelection();
+				listMesa3.getSelectionModel().select(oListJogadoresMesa3.indexOf(jogadorSelecionado));
+				listMesa3.scrollTo(oListJogadoresMesa3.indexOf(jogadorSelecionado));
+				listMesa1.getSelectionModel().clearSelection();
+				listMesa2.getSelectionModel().clearSelection();
 			}
         }
         lbMesa1.setText("Mesa 1 ("+ totalMesa1 + "/" + totalJogando +")");
         lbMesa2.setText("Mesa 2 ("+ totalMesa2 + "/" + totalJogando +")");
+        lbMesa3.setText("Mesa 3 ("+ totalMesa3 + "/" + totalJogando +")");
 
         for (int i = 0; i < oListRebuys.size(); i++) {
         	if (oListRebuys.get(i).contains("==="))

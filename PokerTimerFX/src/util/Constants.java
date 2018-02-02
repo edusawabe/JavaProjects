@@ -25,6 +25,7 @@ public final class Constants {
     public static final int CURRENT_MONTH =  0;
     public static final int MAX_ROUND_REBUY = 10;
     public static final int MAX_PLAYERS_FINAL_TABLE = 9;
+    public static final int MAX_PLAYERS_2_TABLE = 18;
     public static final int LAST_BREAK_ROUND = 20;
     public static final double SUBSCRIPTION_VALUE = 25.00;
     public static final double REBUY_PENALTY = -25.00;
