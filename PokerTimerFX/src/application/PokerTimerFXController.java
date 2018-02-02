@@ -465,17 +465,21 @@ public class PokerTimerFXController implements Initializable{
 	@FXML
 	private void sortearMesas(Event evt){
 
-		Alert al = new Alert(AlertType.CONFIRMATION);
-		al.setTitle("Selecionar Quantidade de Mesas");
-		al.setContentText("Existe quantidade de jogadores para 3 mesas.\n"
-				+ "Selcione OK para Sortear 3 Mesas ou Cancelar para Sortear 2 Mesas.");
-		al.setHeaderText("Selecionar a Quantidae de Mesas.");
-		al.showAndWait();
-		if(al.getResult() == ButtonType.OK){
-			numMesas = 3;
-			sortear3Mesas();
-		} else {
-			numMesas = 2;
+		if(oListJogadores.size() > Constants.MAX_PLAYERS_2_TABLE){
+			Alert al = new Alert(AlertType.CONFIRMATION);
+			al.setTitle("Selecionar Quantidade de Mesas");
+			al.setContentText("Existe quantidade de jogadores para 3 mesas.\n"
+					+ "Selcione OK para Sortear 3 Mesas ou Cancelar para Sortear 2 Mesas.");
+			al.setHeaderText("Selecionar a Quantidae de Mesas.");
+			al.showAndWait();
+			if(al.getResult() == ButtonType.OK){
+				numMesas = 3;
+				sortear3Mesas();
+			} else {
+				numMesas = 2;
+				sortear2Mesas();
+			}
+		} else{
 			sortear2Mesas();
 		}
 	}
