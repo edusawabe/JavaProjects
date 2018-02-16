@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.LinkedList;
 
 import application.ConfigManager;
+import util.Constants;
 import util.DateUtil;
 
 /**
@@ -128,7 +129,7 @@ public class Player {
 		for (int i = 0; i < resultados.size(); i++) {
 			rebuys = rebuys + resultados.get(i).getRebuys();
 			if ((!resultados.get(i).getColocacao().equals("00")) && (!resultados.get(i).getColocacao().equals("0")))
-				totalGasto = totalGasto + 15 + 30 + (30 * resultados.get(i).getRebuys());
+				totalGasto = totalGasto + Constants.SUBSCRIPTION_VALUE + Constants.BUY_IN_VALUE + (Constants.REBUY_VALUE * resultados.get(i).getRebuys());
 			totalGanho = totalGanho + resultados.get(i).getPremiacao();
 		}
 		saldo  = totalGanho - totalGasto;

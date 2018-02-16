@@ -1995,7 +1995,7 @@ public class PokerTimerFXController implements Initializable{
 					"Atual: " + smallAtual.getText() + "/" + bigAtual.getText() + " Ante: " + valorAnteAtual.getText());
 			timerWindowController.getLbBlindsProxima().setText("Próxima: " + smallSeguinte.getText() + "/"
 					+ bigSeguinte.getText() + " Ante: " + valorAnteSeguinte.getText());
-			timerWindowController.getLbProxBreak().setText("Próximo Break: " + lbProximoBreak.getText());
+			timerWindowController.getLbProxBreak().setText(lbProximoBreak.getText());
 	        if(currentRound > Constants.LAST_BREAK_ROUND)
 	        	timerWindowController.getLbProxBreak().setText("Próximo Break: ");
 	        timerWindowController.setTextLbJogando(statsJogando.getText());

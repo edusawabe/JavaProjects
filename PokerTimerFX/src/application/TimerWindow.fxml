@@ -9,11 +9,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.TimerWindowController">
+<AnchorPane fx:id="mainPane" onScroll="#onScrollEvent" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.TimerWindowController">
    <children>
       <HBox>
          <children>
-            <VBox>
+            <VBox fx:id="vbTimer">
                <children>
                   <AnchorPane>
                      <children>
@@ -42,7 +42,12 @@
                                     <Font name="System Bold Italic" size="60.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lbProxBreak" alignment="CENTER" contentDisplay="CENTER" text="Próximo Break: 01:20:00">
+                              <Label fx:id="lbProxBreakHeader" alignment="CENTER" contentDisplay="CENTER" text="Próximo Break:">
+                                 <font>
+                                    <Font name="System Bold" size="50.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbProxBreak" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="201.0" text="Próximo Break: 01:20:00">
                                  <font>
                                     <Font name="System Bold" size="70.0" />
                                  </font>

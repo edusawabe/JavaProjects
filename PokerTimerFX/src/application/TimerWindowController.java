@@ -2,15 +2,11 @@ package application;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -27,6 +23,8 @@ public class TimerWindowController implements Initializable{
 	private ProgressBar pbProgress;
 	@FXML
 	private Label lbProxBreak;
+	@FXML
+	private Label lbProxBreakHeader;
 	@FXML
 	private Label lbJogando;
 	@FXML
@@ -50,43 +48,53 @@ public class TimerWindowController implements Initializable{
 	@FXML
 	private VBox vbStats;
 	@FXML
+	private VBox vbTimer;
+	@FXML
 	private AnchorPane mainPane;
-	private ObjectProperty<Font> fontTrackingTimer = new SimpleObjectProperty<Font>(Font.getDefault());
-	private ObjectProperty<Font> fontTrackingBlind = new SimpleObjectProperty<Font>(Font.getDefault());
-	private ObjectProperty<Font> fontTrackingNextBlind = new SimpleObjectProperty<Font>(Font.getDefault());
-	private ObjectProperty<Font> fontTrackingGeneralUp = new SimpleObjectProperty<Font>(Font.getDefault());
-	private ObjectProperty<Font> fontTrackingGeneralDown = new SimpleObjectProperty<Font>(Font.getDefault());
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		lbTimer.fontProperty().bind(fontTrackingTimer);
-		lbBlindsAtual.fontProperty().bind(fontTrackingBlind);
-		lbBlindsProxima.fontProperty().bind(fontTrackingNextBlind);
-		lbProxBreak.fontProperty().bind(fontTrackingBlind);
-		lbFora.fontProperty().bind(fontTrackingGeneralUp);
-		lbJogando.fontProperty().bind(fontTrackingGeneralUp);
-		lbRebuys.fontProperty().bind(fontTrackingGeneralUp);
-		lbFora.fontProperty().bind(fontTrackingGeneralUp);
-		lbMediaFichas.fontProperty().bind(fontTrackingGeneralUp);
-		lbTotalArrecadado.fontProperty().bind(fontTrackingGeneralUp);
-		lbPos1.fontProperty().bind(fontTrackingGeneralDown);
-		lbPos2.fontProperty().bind(fontTrackingGeneralDown);
-		lbPos3.fontProperty().bind(fontTrackingGeneralDown);
-		lbPos4.fontProperty().bind(fontTrackingGeneralDown);
-		lbPos5.fontProperty().bind(fontTrackingGeneralDown);
 
-		mainPane.heightProperty().addListener(new ChangeListener<Number>()
-		{
-		   @Override
-		   public void changed(ObservableValue<? extends Number> observableValue, Number oldHeight, Number newHeight)
-		   {
-			   fontTrackingTimer.set(Font.font("System",FontWeight.BOLD,(newHeight.doubleValue() / 2) - 120));
-			   fontTrackingBlind.set(Font.font("System",FontWeight.BOLD,(((newHeight.doubleValue() / 2) - 120)/3)));
-			   fontTrackingNextBlind.set(Font.font("System",FontWeight.BOLD,(((newHeight.doubleValue() / 2) - 120)/3)-20));
-			   fontTrackingGeneralUp.set(Font.font("System",FontWeight.BOLD,(((newHeight.doubleValue() * 0.6))/6)-20));
-			   fontTrackingGeneralDown.set(Font.font("System",FontWeight.BOLD,(((newHeight.doubleValue() * 0.4))/5)-20));
-		   }
-		});
+	}
+
+	@FXML
+	private void onScrollEvent(ScrollEvent evt){
+		if(evt.getDeltaY() > 0){
+			lbTimer.setFont(Font.font("System", FontWeight.BOLD, lbTimer.getFont().getSize() + 1));
+			lbBlindsAtual.setFont(Font.font("System", FontWeight.BOLD, lbBlindsAtual.getFont().getSize() + 1));
+			lbBlindsProxima.setFont(Font.font("System", FontWeight.BOLD, lbBlindsProxima.getFont().getSize() + 1));
+			lbProxBreak.setFont(Font.font("System", FontWeight.BOLD, lbProxBreak.getFont().getSize() + 1));
+			lbProxBreakHeader.setFont(Font.font("System", FontWeight.BOLD, lbProxBreakHeader.getFont().getSize() + 1));
+			lbFora.setFont(Font.font("System", FontWeight.BOLD, lbFora.getFont().getSize() + 1));
+			lbJogando.setFont(Font.font("System", FontWeight.BOLD, lbJogando.getFont().getSize() + 1));
+			lbRebuys.setFont(Font.font("System", FontWeight.BOLD, lbRebuys.getFont().getSize() + 1));
+			lbFora.setFont(Font.font("System", FontWeight.BOLD, lbFora.getFont().getSize() + 1));
+			lbMediaFichas.setFont(Font.font("System", FontWeight.BOLD, lbMediaFichas.getFont().getSize() + 1));
+			lbTotalArrecadado.setFont(Font.font("System", FontWeight.BOLD, lbTotalArrecadado.getFont().getSize() + 1));
+			lbPos1.setFont(Font.font("System", FontWeight.BOLD, lbPos1.getFont().getSize() + 1));
+			lbPos2.setFont(Font.font("System", FontWeight.BOLD, lbPos2.getFont().getSize() + 1));
+			lbPos3.setFont(Font.font("System", FontWeight.BOLD, lbPos3.getFont().getSize() + 1));
+			lbPos4.setFont(Font.font("System", FontWeight.BOLD, lbPos4.getFont().getSize() + 1));
+			lbPos5.setFont(Font.font("System", FontWeight.BOLD, lbPos5.getFont().getSize() + 1));
+		}
+		if(evt.getDeltaY() < 0){
+			lbTimer.setFont(Font.font("System", FontWeight.BOLD, lbTimer.getFont().getSize() - 1));
+			lbBlindsAtual.setFont(Font.font("System", FontWeight.BOLD, lbBlindsAtual.getFont().getSize() - 1));
+			lbBlindsProxima.setFont(Font.font("System", FontWeight.BOLD, lbBlindsProxima.getFont().getSize() - 1));
+			lbProxBreak.setFont(Font.font("System", FontWeight.BOLD, lbProxBreak.getFont().getSize() - 1));
+			lbProxBreakHeader.setFont(Font.font("System", FontWeight.BOLD, lbProxBreakHeader.getFont().getSize() - 1));
+			lbFora.setFont(Font.font("System", FontWeight.BOLD, lbFora.getFont().getSize() - 1));
+			lbJogando.setFont(Font.font("System", FontWeight.BOLD, lbJogando.getFont().getSize() - 1));
+			lbRebuys.setFont(Font.font("System", FontWeight.BOLD, lbRebuys.getFont().getSize() - 1));
+			lbFora.setFont(Font.font("System", FontWeight.BOLD, lbFora.getFont().getSize() - 1));
+			lbMediaFichas.setFont(Font.font("System", FontWeight.BOLD, lbMediaFichas.getFont().getSize() - 1));
+			lbTotalArrecadado.setFont(Font.font("System", FontWeight.BOLD, lbTotalArrecadado.getFont().getSize() - 1));
+			lbPos1.setFont(Font.font("System", FontWeight.BOLD, lbPos1.getFont().getSize() - 1));
+			lbPos2.setFont(Font.font("System", FontWeight.BOLD, lbPos2.getFont().getSize() - 1));
+			lbPos3.setFont(Font.font("System", FontWeight.BOLD, lbPos3.getFont().getSize() - 1));
+			lbPos4.setFont(Font.font("System", FontWeight.BOLD, lbPos4.getFont().getSize() - 1));
+			lbPos5.setFont(Font.font("System", FontWeight.BOLD, lbPos5.getFont().getSize() - 1));
+		}
 	}
 
 	public Label getLbTimer() {
