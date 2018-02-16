@@ -2016,27 +2016,33 @@ public class PokerTimerFXController implements Initializable{
 	@FXML
 	private void abrirTimer(Event evt){
 		if(primaryStageTimer == null){
-	    	//obtem Loader
-	    	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TimerWindow.fxml"));
-	    	Stage primaryStage  = new Stage();
-			try {
-				//carrega o loader
-				Pane myPane = (Pane) fxmlLoader.load();
-				// obtem o controller da nova janela
-				timerWindowController = fxmlLoader.<TimerWindowController> getController();
-				// definindo a nova janela
-				Scene scene = new Scene(myPane, 800, 600);
-				primaryStageTimer.setScene(scene);
-				primaryStageTimer.setTitle("Timer");
-				primaryStageTimer.show();
-				} catch(Exception e){
-					e.printStackTrace();
-				}
+	    	createNewTimerWindow();
 		}
 		else{
-			if(!primaryStageTimer.isShowing())
-				primaryStageTimer.show();
+			if(!primaryStageTimer.isShowing()){
+				primaryStageTimer = null;
+				createNewTimerWindow();
+			}
 		}
+	}
+
+	private void createNewTimerWindow() {
+		//obtem Loader
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TimerWindow.fxml"));
+		Stage primaryStageTimer  = new Stage();
+		try {
+			//carrega o loader
+			Pane myPane = (Pane) fxmlLoader.load();
+			// obtem o controller da nova janela
+			timerWindowController = fxmlLoader.<TimerWindowController> getController();
+			// definindo a nova janela
+			Scene scene = new Scene(myPane, 800, 600);
+			primaryStageTimer.setScene(scene);
+			primaryStageTimer.setTitle("Timer");
+			primaryStageTimer.show();
+			} catch(Exception e){
+				e.printStackTrace();
+			}
 	}
 
 	@FXML
