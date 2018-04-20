@@ -2,28 +2,42 @@ package application;
 
 import java.io.File;
 import java.net.URL;
-import java.util.LinkedList;
 import java.util.ResourceBundle;
 
-import extractors.DclgenFileReader;
-import extractors.TxaExecutionFlowFileReader;
+import extractors.FileProcessor;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import util.ExcelManager;
+import javafx.util.Duration;
 
 public class MainGUIController implements Initializable{
 	@FXML
 	private TextArea taOutput;
+	@FXML
+	private ProgressBar pbProgress;
+	@FXML
+	private Label lbProgresso;
+
+	private Timeline tlUpdateGUI;
+	private int totalFiles;
+	private int processed;
+	private Thread extractionThread;
+	private FileProcessor fileProcessor;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		taOutput.setText("Selecione em Arquivo->Abrir "
 				+ "\nO Diretorio com os arquivos de DCLGEN"
 				+ "\nOu arquivos TXA de Fluxos FRWK");
+
 	}
 
 	@FXML
@@ -47,74 +61,49 @@ public class MainGUIController implements Initializable{
 
 	private void extractInfos(File dir) {
 		File[] f = dir.listFiles();
-		if(f[0].getName().charAt(4) == 'I' || f[0].getName().charAt(4) == 'i')
-			processTxaDir(f);
-		else
-			processDclgenDir(f);
+		totalFiles = f.length - 1;
+		processed = 0;
+		pbProgress.setProgress(0);
+		fileProcessor = new FileProcessor();
+
+		if(tlUpdateGUI != null)
+			tlUpdateGUI.stop();
+
+		tlUpdateGUI = new Timeline();
+		tlUpdateGUI.setCycleCount(Timeline.INDEFINITE);
+		tlUpdateGUI.getKeyFrames().add(new KeyFrame(Duration.seconds(0.1), new EventHandler() {
+			// KeyFrame event handler
+			@Override
+			public void handle(Event event) {
+				updateStatus();
+			}
+		}));
+		tlUpdateGUI.playFromStart();
+
+		extractionThread = new Thread(() -> {
+			this.fileProcessor.setToProcess(f);
+			this.fileProcessor.process();
+		});
+		extractionThread.start();
 	}
 
-	private void processDclgenDir(File[] f) {
-		DclgenFileReader reader = new DclgenFileReader(null);
+	private void updateStatus() {
+		processed = this.fileProcessor.getProcessed();
+		totalFiles = this.fileProcessor.getTotalFiles();
 
-		ExcelManager excelManager = new ExcelManager();
-		excelManager.setFileName("./DclgenInfos.xslx");
-		excelManager.getlConlumns().add("DCLGEN");
-		excelManager.getlConlumns().add("Nome da Tabela");
-
-		for (int i = 0; i < f.length; i++) {
-			reader.setDclgenFileName(f[i]);
-
-			if(reader.getFileInfos()){
-				if(taOutput.getText().isEmpty())
-					taOutput.setText(reader.getDclgenName() + "\t" + reader.getDclgenTableName());
-				else
-					taOutput.setText(taOutput.getText() + "\n" + reader.getDclgenName() + "\t" + reader.getDclgenTableName());
-				excelManager.getlRowValue().add(new LinkedList<String>());
-				excelManager.getlRowValue().getLast().add(reader.getDclgenName());
-				excelManager.getlRowValue().getLast().add(reader.getDclgenTableName());
-			}else{
-				if(taOutput.getText().isEmpty())
-					taOutput.setText(f[i].getName() + "Não Processado Corretamente");
-				else
-					taOutput.setText(taOutput.getText() + "\n" + f[i].getName() + "Não Processado Corretamente");
-			}
+		if(processed >= totalFiles){
+			tlUpdateGUI.stop();
+			extractionThread.stop();
 		}
-		excelManager.generateExcelFile();
-	}
 
-	private void processTxaDir(File[] f) {
-		TxaExecutionFlowFileReader reader = new TxaExecutionFlowFileReader(null);
-
-		ExcelManager excelManager = new ExcelManager();
-		excelManager.setFileName("./FRWK.xslx");
-		excelManager.getlConlumns().add("Descricao Resumida Fluxo");
-		excelManager.getlConlumns().add("Nome do Fluxo");
-		excelManager.getlConlumns().add("Fluxo");
-		excelManager.getlConlumns().add("Coordenador");
-
-		for (int i = 0; i < f.length; i++) {
-			reader.setTxaExecutionFlowFile(f[i]);
-			if(reader.getFileInfos()){
-				if (taOutput.getText().isEmpty())
-					taOutput.setText(reader.getFlowDescription() + "\t" + reader.getFlowName() + "\t"
-							+ reader.getFlowID() + "\t" + reader.getFlowCoordinatorProgram());
-				else
-					taOutput.setText(
-							taOutput.getText() + "\n" + reader.getFlowDescription() + "\t" + reader.getFlowName() + "\t"
-									+ reader.getFlowID() + "\t" + reader.getFlowCoordinatorProgram());
-				excelManager.getlRowValue().add(new LinkedList<String>());
-				excelManager.getlRowValue().getLast().add(reader.getFlowDescription());
-				excelManager.getlRowValue().getLast().add(reader.getFlowName());
-				excelManager.getlRowValue().getLast().add(reader.getFlowID());
-				excelManager.getlRowValue().getLast().add(reader.getFlowCoordinatorProgram());
-			}
-			else{
-				if(taOutput.getText().isEmpty())
-					taOutput.setText(f[i].getName() + "Não Processado Corretamente");
-				else
-					taOutput.setText(taOutput.getText() + "\n" + f[i].getName() + "Não Processado Corretamente");
-			}
+		if (Platform.isFxApplicationThread()) {
+			lbProgresso.setText("Arquivos Processados: " + processed + " / " + totalFiles);
+			pbProgress.setProgress(Double.parseDouble("" + processed) / Double.parseDouble("" + totalFiles));
+		} else {
+			Platform.runLater(() -> lbProgresso.setText("Arquivos Processados: " + processed + " / " + totalFiles));
+			Platform.runLater(() -> pbProgress
+					.setProgress(Double.parseDouble("" + processed) / Double.parseDouble("" + totalFiles)));
 		}
-		excelManager.generateExcelFile();
+		taOutput.setText(fileProcessor.getResult());
 	}
 }
