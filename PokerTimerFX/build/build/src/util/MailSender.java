@@ -68,14 +68,9 @@ public class MailSender {
         session.setDebug(true);
 
         Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress("marcel.conti@cpmbraxis.com")); //Remetente
+        message.setFrom(new InternetAddress("edusawabe@gmail.com")); //Remetente
 
-        Address[] toCC  = InternetAddress.parse("edusawabe@gmail.com");
-        Address[] toUser = InternetAddress //Destinatário(s)
-                .parse(dest);
-
-        message.setRecipients(Message.RecipientType.BCC, toUser);
-        message.setRecipients(Message.RecipientType.CC, toCC);
+        message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse(dest.replace(';', ',')));
         message.setSubject(subject);//Assunto
         message.setText(msg);
         message.setContent(msg, "text/html;charset=utf-8");

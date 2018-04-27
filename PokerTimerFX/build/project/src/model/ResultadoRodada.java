@@ -3,14 +3,18 @@ package model;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import application.ConfigManager;
+
 public class ResultadoRodada {
 	int rebuys;
 	String colocacao;
 	double premiacao;
 	double pontuacaoEtapa;
+	int qtdeJogadores;
+	int qtderebuysEtapa;
 
 	public double getPontuacaoEtapa() {
-		return pontuacaoEtapa;
+		return getPontuacaoJogadorEtapa();
 	}
 
 	public void setPontuacaoEtapa(double pontuacaoEtapa) {
@@ -50,6 +54,14 @@ public class ResultadoRodada {
 		return res;
 	}
 
+	public double getPontuacaoJogadorEtapa(){
+		ConfigManager config = new ConfigManager();
+		if(qtderebuysEtapa > 0)
+			return config.getPontuacaoJogadorEtapa(qtdeJogadores, rebuys, Integer.parseInt(colocacao), qtderebuysEtapa);
+		else
+			return config.getPontuacaoJogadorEtapa(this);
+	}
+
 	public String getColocacao() {
 		return colocacao;
 	}
@@ -67,5 +79,21 @@ public class ResultadoRodada {
 	}
 	public void setRebuys(int rebuys) {
 		this.rebuys = rebuys;
+	}
+
+	public int getQtdeJogadores() {
+		return qtdeJogadores;
+	}
+
+	public void setQtdeJogadores(int qtdeJogadores) {
+		this.qtdeJogadores = qtdeJogadores;
+	}
+
+	public int getQtderebuysEtapa() {
+		return qtderebuysEtapa;
+	}
+
+	public void setQtderebuysEtapa(int qtderebuysEtapa) {
+		this.qtderebuysEtapa = qtderebuysEtapa;
 	}
 }

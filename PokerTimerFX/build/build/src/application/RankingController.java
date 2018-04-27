@@ -16,6 +16,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import javafx.util.Pair;
 import model.RankingLine;
+import util.Constants;
+import util.DateUtil;
 import view.ColumnCell;
 import view.ColumnFactory;
 
@@ -51,6 +53,8 @@ public class RankingController implements Initializable{
 	@FXML
 	private TableColumn cTotal;
 	@FXML
+	private TableColumn cTotalDescarte;
+	@FXML
 	private TableColumn cTotalRebuys;
 	@FXML
 	private TableColumn cTotalGasto;
@@ -83,6 +87,7 @@ public class RankingController implements Initializable{
 		cResultado11.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("result11"));
 		cResultado12.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("result12"));
 		cTotal.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("total"));
+		cTotalDescarte.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("totalDescarte"));
 		cTotalRebuys.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("totalRebuys"));
 		cTotalGasto.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("totalGasto"));
 		cTotalGanho.setCellValueFactory(new PropertyValueFactory<RankingLine, String>("totalGanho"));
@@ -99,9 +104,21 @@ public class RankingController implements Initializable{
 		cResultado10.setVisible(false);
 		cResultado11.setVisible(false);
 		cResultado12.setVisible(false);
-		Date date = new Date();
-		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
-		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(6, 7));
+		cResultado1.setCellFactory(new ColumnFactory());
+		cResultado2.setCellFactory(new ColumnFactory());
+		cResultado3.setCellFactory(new ColumnFactory());
+		cResultado4.setCellFactory(new ColumnFactory());
+		cResultado5.setCellFactory(new ColumnFactory());
+		cResultado6.setCellFactory(new ColumnFactory());
+		cResultado7.setCellFactory(new ColumnFactory());
+		cResultado8.setCellFactory(new ColumnFactory());
+		cResultado9.setCellFactory(new ColumnFactory());
+		cResultado10.setCellFactory(new ColumnFactory());
+		cResultado11.setCellFactory(new ColumnFactory());
+		cResultado12.setCellFactory(new ColumnFactory());
+		int mesEtapa;
+
+		mesEtapa = Integer.parseInt(DateUtil.getDate().substring(3, 5));
 
 		for (int i = 0; i < mesEtapa; i++) {
 			switch (i+1) {

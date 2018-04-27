@@ -15,12 +15,17 @@ public class Round {
     private int bigBlind;
     private int ante;
     private boolean breakRound;
-    
+    private int minutesToBreak;
+    private int minutes;
+    private boolean rebuyAllowed;
+    private int breakRoundNumber;
+
     public Round (){
         smallBlind = 0;
         bigBlind = 0;
         ante = 0;
         breakRound = false;
+        rebuyAllowed = false;
         roundName = new String();
     }
 
@@ -93,5 +98,37 @@ public class Round {
     public void setRoundName(String roundName) {
         this.roundName = roundName;
     }
-    
+
+	public int getMinutesToBreak() {
+		return minutesToBreak;
+	}
+
+	public void setMinutesToBreak(int minutesToBreak) {
+		this.minutesToBreak = minutesToBreak;
+	}
+
+	public int getMinutes() {
+		return minutes;
+	}
+
+	public void setMinutes(int minutes) {
+		this.minutes = minutes;
+	}
+
+	public boolean isRebuyAllowed() {
+		return rebuyAllowed;
+	}
+
+	public void setRebuyAllowed(boolean rebuyAllowed) {
+		this.rebuyAllowed = rebuyAllowed;
+	}
+
+	public int getBreakRoundNumber() {
+		return breakRoundNumber;
+	}
+
+	public void setBreakRoundNumber(int breakRoundNumber) {
+		this.breakRoundNumber = breakRoundNumber;
+	}
+
 }

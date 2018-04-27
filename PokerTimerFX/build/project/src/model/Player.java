@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 
+import application.ConfigManager;
+import util.Constants;
+import util.DateUtil;
+
 /**
  *
  * @author eduardo.sawabe
@@ -19,7 +23,10 @@ public class Player {
     private String playerMail;
     private ArrayList<ResultadoRodada> resultados;
     private double pontuacaoTotal;
+    private double pontuacaoTotalComDescarte;
     private int posicaoAtual;
+    private boolean played;
+    private Statistic statistic;
 
     public Player() {
     	resultados = new ArrayList<ResultadoRodada>();
@@ -80,39 +87,38 @@ public class Player {
 	public void updatePontuacaoTotal() {
 		pontuacaoTotal = 0;
 		LinkedList<Double> resultadosEtapas = new LinkedList<Double>();
-		Date date = new Date();
-		SimpleDateFormat dataDia = new SimpleDateFormat("dd/MM/yyyy");
-		int mesEtapa = Integer.parseInt(dataDia.format(date).substring(6, 7));
+		int mesEtapa = Integer.parseInt(DateUtil.getDate().substring(3, 5));
+		boolean added;
 
-		for (int i = 0; i < resultados.size(); i++) {
+		for (int i = 0; i < mesEtapa; i++) {
+			added = false;
 			if (resultadosEtapas.isEmpty()) {
-				if(!resultados.get(i).getColocacao().equals("0") && !resultados.get(i).getColocacao().equals("00")){
-					resultadosEtapas.add(new Double(resultados.get(i).getPontuacaoEtapa()));
-				}
-			}
-			else
-			{
-				if(!resultados.get(i).getColocacao().equals("0") && !resultados.get(i).getColocacao().equals("00")){
-					for (int j = 0; j < resultadosEtapas.size(); j++) {
-						if(resultadosEtapas.get(j).compareTo(new Double(resultados.get(i).getPontuacaoEtapa())) >= 0){
-							resultadosEtapas.add(j, new Double(resultados.get(i).getPontuacaoEtapa()));
-							break;
-						}
+				ConfigManager cfg = new ConfigManager();
+				resultadosEtapas.add(cfg.getPontuacaoJogadorEtapa(resultados.get(i)));
+				resultados.get(i).setPontuacaoEtapa(cfg.getPontuacaoJogadorEtapa(resultados.get(i)));
+			} else {
+				for (int j = 0; j < resultadosEtapas.size(); j++) {
+					if (resultadosEtapas.get(j).compareTo(new Double(resultados.get(i).getPontuacaoEtapa())) >= 0) {
+						resultadosEtapas.add(j, new Double(resultados.get(i).getPontuacaoEtapa()));
+						added = true;
+						break;
 					}
 				}
+				if (!added)
+					resultadosEtapas.add(new Double(resultados.get(i).getPontuacaoEtapa()));
 			}
 			pontuacaoTotal = pontuacaoTotal + resultados.get(i).getPontuacaoEtapa();
 		}
 
-		if(mesEtapa > 4){
-			pontuacaoTotal = pontuacaoTotal - resultadosEtapas.get(0);
-			pontuacaoTotal = pontuacaoTotal - resultadosEtapas.get(1);
+		pontuacaoTotalComDescarte = pontuacaoTotal;
+		if(mesEtapa > 2){
+			pontuacaoTotalComDescarte = pontuacaoTotal - resultadosEtapas.get(0);
+			pontuacaoTotalComDescarte = pontuacaoTotalComDescarte - resultadosEtapas.get(1);
 		}
-		else {
-			if(mesEtapa == 3){
-				pontuacaoTotal = pontuacaoTotal - resultadosEtapas.get(0);
-			}
-		}
+		pontuacaoTotal = Math.round(pontuacaoTotal);
+		pontuacaoTotalComDescarte = Math.round(pontuacaoTotalComDescarte);
+		statistic = new Statistic();
+		statistic.generateStatistic(this);
 	}
 
 	public Resumo getResumo(){
@@ -123,7 +129,7 @@ public class Player {
 		for (int i = 0; i < resultados.size(); i++) {
 			rebuys = rebuys + resultados.get(i).getRebuys();
 			if ((!resultados.get(i).getColocacao().equals("00")) && (!resultados.get(i).getColocacao().equals("0")))
-				totalGasto = totalGasto + 15 + 30 + (30 * resultados.get(i).getRebuys());
+				totalGasto = totalGasto + Constants.SUBSCRIPTION_VALUE + Constants.BUY_IN_VALUE + (Constants.REBUY_VALUE * resultados.get(i).getRebuys());
 			totalGanho = totalGanho + resultados.get(i).getPremiacao();
 		}
 		saldo  = totalGanho - totalGasto;
@@ -132,5 +138,25 @@ public class Player {
 		resumo.setTotalGanho(totalGanho);
 		resumo.setTotalGasto(totalGasto);
 		return resumo;
+	}
+
+	public boolean isPlayed() {
+		return played;
+	}
+
+	public void setPlayed(boolean played) {
+		this.played = played;
+	}
+
+	public double getPontuacaoTotalComDescarte() {
+		return pontuacaoTotalComDescarte;
+	}
+
+	public Statistic getStatistic() {
+		return statistic;
+	}
+
+	public void setStatistic(Statistic statistic) {
+		this.statistic = statistic;
 	}
 }
