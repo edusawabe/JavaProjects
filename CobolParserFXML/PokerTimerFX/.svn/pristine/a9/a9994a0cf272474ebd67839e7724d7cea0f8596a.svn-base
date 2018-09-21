@@ -1,0 +1,28 @@
+.blindsTitleLabels {
+	-fx-font: "System" 46px;
+	-fx-font-weight: bold;
+	-fx-font-size: 46px;
+}
+
+.blindsLabels {
+	-fx-font: "System";
+	-fx-font-weight: bold;
+	-fx-font-size: 76px;
+}
+
+.statsLabels{
+	-fx-font: "System";
+	-fx-font-size: 18px;
+}
+
+.statsContents{
+	-fx-font: "System";
+	-fx-start-margin: 10px;
+	-fx-font-weight: bold;
+	-fx-font-size: 18px;
+}
+
+.listCell{
+  -fx-font: "System";
+  -fx-font-size: 20px;
+}

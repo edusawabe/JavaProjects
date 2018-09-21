@@ -1,0 +1,48 @@
+===================== Etapa 20/03/2017==================================
+*********************************************************
+Jogadores           : 17
+Rebuys              : 28
+Total Arrecadado    : R$ 930.0
+Premiação 1o        : R$ 465.0
+Premiação 2o        : R$ 233.0
+Premiação 3o        : R$ 140.0
+Premiação 4o        : R$ 93.0
+Premiação 5o        : R$ 0.0
+Ultimo Round        : BREAK
+*********************************************************
+Lista de Rebuys     : 
+   - 1 Eduardo Takeshi Sawabe
+   - 2 José Ribamar Junior (DDS)
+   - 3 Denis Vinicius Pimentel
+   - 4 Ramon Cravo
+   - 5 Jackson Cravo
+   - 6 Jackson Cravo
+   - 7 Ailton Francisco da Silva
+   - 8 Marcel Cravo Conti
+   - 9 Eduardo Takeshi Sawabe
+   - 10 Jackson Cravo
+   - 11 Ricardo de Cassia Ferreira
+   - 12 Eduardo Takeshi Sawabe
+   - 13 Ramon Cravo
+   - 14 Nivaldo (DDS)
+*********************************************************
+Lista de Eliminações: 
+   - 1 Ailton Francisco da Silva
+   - 2 Nivaldo (DDS)
+   - 3 Jefferson Oliveira de Carvalho
+   - 4 Ramon Cravo
+   - 5 Marcel Cravo Conti
+   - 6 Jackson Cravo
+   - 7 Alan Tremori de Almeida
+   - 8 Eduardo Takeshi Sawabe
+   - 9 Denis Vinicius Pimentel
+   - 10 Leandro Savarego (Jefferson)
+   - 11 José Ribamar Junior (DDS)
+   - 12 Daniel da Cunha Porto
+   - 13 Sandro Moraes da Silva (Denis)
+   - 14 Ricardo de Cassia Ferreira
+   - 15 Nivaldo (Denis)
+   - 16 Humberto Rechi Jr (DDS)
+   - 17 Thiago Scorza (Marcel)
+*********************************************************
+==================================================================

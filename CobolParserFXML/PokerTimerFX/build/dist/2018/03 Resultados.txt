@@ -1,0 +1,64 @@
+===================== Etapa 10/03/2018==================================
+*********************************************************
+Jogadores           : 24
+Rebuys              : 23
+Total Arrecadado    : R$ 1640.0
+Premiação 1o        : R$ 738.0
+Premiação 2o        : R$ 410.0
+Premiação 3o        : R$ 246.0
+Premiação 4o        : R$ 164.0
+Premiação 5o        : R$ 82.0
+Ultimo Round        : Rodada 3: 30/60 - Ante: 0
+*********************************************************
+Lista de Rebuys     : 
+   - 1 Daniel da Cunha Porto
+   - 2 Daniel da Cunha Porto
+   - 3 Venícius Augusto (Ricardinho)
+   - 4 Caio Pignatari (Jefferson) 
+   - 5 Thiago Scorza
+   - 6 Thiago Scorza
+   - 7 Jeferson Pimentel
+   - 8 Nivaldo (Denis)
+   - 9 Nivaldo (Denis)
+   - 10 Nivaldo (Denis)
+   - 11 Marcel Cravo Conti
+   - 12 Denis Vinicius Pimentel Gonçalves
+   - 13 Rodrigo (Ricardinho)
+   - 14 Ricardo de Cassia Ferreira
+   - 15 José Ribamar Junior
+   - 16 Leandro Savarego (Jefferson)
+   - 17 Eduardo Takeshi Sawabe
+   - 18 Ramon Cravo
+   - 19 Alan Tremori de Almeida
+   - 20 Jaime (Denis)
+   - 21 Jaime (Denis)
+   - 22 Jaime (Denis)
+   - 23 Caio Pignatari (Jefferson) 
+*********************************************************
+Lista de Eliminações: 
+   - 1 Venícius Augusto (Ricardinho)
+   - 2 Caio Pignatari (Jefferson) 
+   - 3 Leandro Savarego (Jefferson)
+   - 4 Ramon Cravo
+   - 5 Jackson Cravo
+   - 6 Denis Vinicius Pimentel Gonçalves
+   - 7 Jefferson Oliveira de Carvalho
+   - 8 José Ribamar Junior
+   - 9 Nivaldo Custódio
+   - 10 Sandro Moraes da Silva
+   - 11 Ailton Francisco da Silva
+   - 12 Rodrigo (Ricardinho)
+   - 13 Alan Tremori de Almeida
+   - 14 Daniel da Cunha Porto
+   - 15 Humberto Rechi Jr (DDS)
+   - 16 Eduardo Takeshi Sawabe
+   - 17 Jeferson Pimentel
+   - 18 Thiago Scorza
+   - 19 Rodrigo Conti Costa
+   - 20 Marcel Cravo Conti
+   - 21 Jaime (Denis)
+   - 22 Ricardo de Cassia Ferreira
+   - 23 Nivaldo (Denis)
+   - 24 Renildo (Jefferson)
+*********************************************************
+==================================================================

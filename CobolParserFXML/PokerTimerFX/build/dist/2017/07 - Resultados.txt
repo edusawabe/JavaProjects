@@ -1,0 +1,43 @@
+===================== Etapa 15/07/2017==================================
+*********************************************************
+Jogadores           : 13
+Rebuys              : 13
+Total Arrecadado    : R$ 780.0
+Premiação 1o        : R$ 429.0
+Premiação 2o        : R$ 273.0
+Premiação 3o        : R$ 117.0
+Premiação 4o        : R$ 0.0
+Premiação 5o        : R$ 0.0
+Ultimo Round        : Rodada 25: 4000/8000 - Ante: 800
+*********************************************************
+Lista de Rebuys     : 
+   - 1 Ricardo de Cassia Ferreira
+   - 2 Nivaldo (Denis)
+   - 3 Ramon Cravo
+   - 4 Thiago Scorza
+   - 5 Ailton Francisco da Silva
+   - 6 Sandro Moraes da Silva
+   - 7 Nivaldo (Denis)
+   - 8 Nivaldo (Denis)
+   - 9 Sandro Moraes da Silva
+   - 10 Nivaldo (Denis)
+   - 11 Thiago Scorza
+   - 12 Denis Vinicius Pimentel Gonçalves
+   - 13 Sandro Moraes da Silva
+*********************************************************
+Lista de Eliminações: 
+   - 1 Ailton Francisco da Silva
+   - 2 Marcel Cravo Conti
+   - 3 Jaime (Denis)
+   - 4 Nivaldo (Denis)
+   - 5 Eduardo Takeshi Sawabe
+   - 6 Sandro Moraes da Silva
+   - 7 Alan Tremori de Almeida
+   - 8 Jackson Cravo
+   - 9 Denis Vinicius Pimentel Gonçalves
+   - 10 Ramon Cravo
+   - 11 Ricardo de Cassia Ferreira
+   - 12 Daniel da Cunha Porto
+   - 13 Thiago Scorza
+*********************************************************
+==================================================================

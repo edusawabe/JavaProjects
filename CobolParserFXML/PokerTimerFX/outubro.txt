@@ -1,0 +1,31 @@
+===================== Etapa 17/12/2016==================================
+*********************************************************
+Jogadores           : 6
+Rebuys              : 8
+Total Arrecadado    : R$ 300.0
+Premiação 1o        : R$ 195.0
+Premiação 2o        : R$ 105.0
+Premiação 3o        : R$ 0.0
+Premiação 4o        : R$ 0.0
+Premiação 5o        : R$ 0.0
+Ultimo Round        : Rodada 17: 1000/2000 - Ante: 300
+*********************************************************
+Lista de Rebuys     : 
+   - 1 Ailton da Silva
+   - 2 Humberto Reichi Junior
+   - 3 Eduardo Takeshi Sawabe
+   - 4 José Ribamar Junior
+*********************************************************
+Lista de Eliminações: 
+   - 1 Humberto Reichi Junior
+   - 2 Rafael Gelin Detter
+   - 3 Nivaldo Custodio
+   - 4 Ailton da Silva
+   - 5 José Ribamar Junior
+   - 6 Eduardo Takeshi Sawabe
+*********************************************************
+==================================================================
+
+
+
+andre.vieira@capgemini.com;dcporto@gmail.com;denis.goncalves@softtek.com;edusawabe@gmail.com;gutosk@gmail.com;humberto@smartconn.com.br;4253.humberto@bradesco.com.br;jhones.ferreira@capgemini.com;jonijunior@gmail.com;junior.rib@usp.br;julio.oliveira@capgemini.com;marcel.conti@capgemini.com;nei@smartconn.com.br;4840.custodio@bradesco.com.br;rafael.detter@capgemini.com;ramon80@gmail.com;ricardo.ferreira@capgemini.com;samorsil1010@gmail.com;thiago.grillo@capgemini.com;vinicius.silva@capgemini.com

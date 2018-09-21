@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.TimerWindowController">
+   <children>
+      <HBox>
+         <children>
+            <VBox>
+               <children>
+                  <AnchorPane>
+                     <children>
+                        <ProgressBar fx:id="pbProgress" progress="0.39" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <Label fx:id="lbTimer" alignment="CENTER" contentDisplay="CENTER" text="20:00" textAlignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                           <font>
+                              <Font name="System Bold" size="200.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </AnchorPane>
+                  <AnchorPane>
+                     <children>
+                        <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Label fx:id="lbBlindsAtual" text="Atual: 50\100 Ante: 10">
+                                 <font>
+                                    <Font name="System Bold" size="70.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbBlindsProxima" text="Próxima: 100\200 Ante 20" textFill="#7c7272">
+                                 <font>
+                                    <Font name="System Bold Italic" size="60.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbProxBreak" alignment="CENTER" contentDisplay="CENTER" text="Próximo Break: 01:20:00">
+                                 <font>
+                                    <Font name="System Bold" size="70.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                  </AnchorPane>
+               </children>
+            </VBox>
+            <VBox fx:id="vbStats">
+               <children>
+                  <Label fx:id="lbJogando" text="Jogando:">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="System Bold" size="48.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lbRebuys" layoutX="10.0" layoutY="20.0" text="Rebuys:">
+                     <font>
+                        <Font name="System Bold" size="48.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lbFora" layoutX="10.0" layoutY="90.0" text="Fora:">
+                     <font>
+                        <Font name="System Bold" size="48.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lbMediaFichas" layoutX="10.0" layoutY="160.0" text="Média Fichas:">
+                     <font>
+                        <Font name="System Bold" size="48.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lbTotalArrecadado" layoutX="10.0" layoutY="230.0" text="Total Arrecadado:">
+                     <font>
+                        <Font name="System Bold" size="40.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lbPos1" layoutX="10.0" layoutY="300.0" text="1º:">
+                     <font>
+                        <Font name="System Bold" size="40.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lbPos2" layoutX="10.0" layoutY="370.0" text="2º:">
+                     <font>
+                        <Font name="System Bold" size="40.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lbPos3" layoutX="10.0" layoutY="440.0" text="3º:">
+                     <font>
+                        <Font name="System Bold" size="40.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lbPos4" layoutX="10.0" layoutY="510.0" text="4º:">
+                     <font>
+                        <Font name="System Bold" size="40.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lbPos5" layoutX="10.0" layoutY="532.0" text="5º:">
+                     <font>
+                        <Font name="System Bold" size="40.0" />
+                     </font>
+                  </Label>
+               </children>
+               <HBox.margin>
+                  <Insets left="25.0" right="10.0" />
+               </HBox.margin>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

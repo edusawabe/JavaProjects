@@ -1,0 +1,46 @@
+===================== Etapa 10/02/2017==================================
+*********************************************************
+Jogadores           : 15
+Rebuys              : 14
+Total Arrecadado    : R$ 870.0
+Premiação 1o        : R$ 435.0
+Premiação 2o        : R$ 218.0
+Premiação 3o        : R$ 131.0
+Premiação 4o        : R$ 87.0
+Premiação 5o        : R$ 0.0
+Ultimo Round        : BREAK
+*********************************************************
+Lista de Rebuys     : 
+   - 1 Humberto Rechi Jr (DDS)
+   - 2 Humberto Rechi Jr (DDS)
+   - 3 Rodrigo (Ricardinho)
+   - 4 Humberto Rechi Jr (DDS)
+   - 5 Sandro Moraes da Silva (Denis)
+   - 6 Jordi Marti Santacana
+   - 7 José Ribamar Junior (DDS)
+   - 8 Sandro Moraes da Silva (Denis)
+   - 9 Sandro Moraes da Silva (Denis)
+   - 10 José Ribamar Junior (DDS)
+   - 11 Jordi Marti Santacana
+   - 12 Thiago Scorza (Marcel)
+   - 13 Rodrigo (Ricardinho)
+   - 14 Thiago Scorza (Marcel)
+*********************************************************
+Lista de Eliminações: 
+   - 1 Ailton Francisco da Silva
+   - 2 Ricardo de Cassia Ferreira
+   - 3 Jordi Marti Santacana
+   - 4 Thiago Scorza (Marcel)
+   - 5 Daniel da Cunha Porto
+   - 6 Rodrigo (Ricardinho)
+   - 7 Jackson Cravo
+   - 8 Jefferson Oliveira de Carvalho
+   - 9 Marcel Cravo Conti
+   - 10 Alan Tremori de Almeida
+   - 11 Sandro Moraes da Silva (Denis)
+   - 12 José Ribamar Junior (DDS)
+   - 13 Ramon Cravo
+   - 14 Humberto Rechi Jr (DDS)
+   - 15 Nivaldo (DDS)
+*********************************************************
+==================================================================

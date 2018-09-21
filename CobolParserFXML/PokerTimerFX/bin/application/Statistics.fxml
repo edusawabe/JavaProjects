@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+   <children>
+      <TableView AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+        <columns>
+          <TableColumn maxWidth="500.0" prefWidth="200.0" text="Jogador" />
+          <TableColumn maxWidth="120.0" minWidth="-1.0" prefWidth="90.0" text="Média Pontos" />
+            <TableColumn maxWidth="120.0" minWidth="-1.0" prefWidth="90.0" text="Média Rebuys" />
+            <TableColumn maxWidth="120.0" minWidth="-1.0" prefWidth="110.0" text="Max Qtde Rebuys" />
+            <TableColumn maxWidth="120.0" minWidth="-1.0" prefWidth="110.0" text="Meses Com Rebuy" />
+            <TableColumn maxWidth="120.0" minWidth="-1.0" prefWidth="110.0" text="Vezes Final Table" />
+            <TableColumn maxWidth="120.0" minWidth="-1.0" prefWidth="60.0" text="Vezes 1º" />
+            <TableColumn maxWidth="120.0" minWidth="-1.0" prefWidth="60.0" text="Vezes 2º" />
+            <TableColumn maxWidth="120.0" minWidth="-1.0" prefWidth="60.0" text="Vezes 3º" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

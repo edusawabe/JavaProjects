@@ -1,0 +1,49 @@
+===================== Etapa 21/10/2017==================================
+*********************************************************
+Jogadores           : 14
+Rebuys              : 18
+Total Arrecadado    : R$ 960.0
+Premiação 1o        : R$ 480.0
+Premiação 2o        : R$ 240.0
+Premiação 3o        : R$ 144.0
+Premiação 4o        : R$ 96.0
+Premiação 5o        : R$ 0.0
+Ultimo Round        : Rodada 22: 1200/2400 - Ante: 200
+*********************************************************
+Lista de Rebuys     : 
+   - 1 Nivaldo (Denis)
+   - 2 Nivaldo (Denis)
+   - 3 Jaime (Denis)
+   - 4 Ricardo de Cassia Ferreira
+   - 5 Eduardo Takeshi Sawabe
+   - 6 Denis Vinicius Pimentel Gonçalves
+   - 7 Thiago Scorza
+   - 8 Nivaldo (Denis)
+   - 9 Jaime (Denis)
+   - 10 Daniel da Cunha Porto
+   - 11 Thiago Scorza
+   - 12 Daniel da Cunha Porto
+   - 13 Thiago Scorza
+   - 14 Nivaldo (Denis)
+   - 15 Nivaldo (Denis)
+   - 16 Nivaldo (Denis)
+   - 17 Nivaldo (Denis)
+   - 18 Thiago Scorza
+*********************************************************
+Lista de Eliminações: 
+   - 1 Nivaldo (Denis)
+   - 2 Jaime (Denis)
+   - 3 José Ribamar Junior
+   - 4 Jackson Cravo
+   - 5 Thiago Scorza
+   - 6 Denis Vinicius Pimentel Gonçalves
+   - 7 Daniel da Cunha Porto
+   - 8 Venícius Augusto (Ricardinho)
+   - 9 Ramon Cravo
+   - 10 Eduardo Takeshi Sawabe
+   - 11 Ricardo de Cassia Ferreira
+   - 12 Sandro Morais da Silva
+   - 13 Nivaldo Custódio
+   - 14 Marcel Cravo Conti
+*********************************************************
+==================================================================

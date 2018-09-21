@@ -1,0 +1,40 @@
+===================== Etapa 03/12/2017==================================
+*********************************************************
+Jogadores           : 13
+Rebuys              : 10
+Total Arrecadado    : R$ 790.0
+Premiação 1o        : R$ 435.0
+Premiação 2o        : R$ 237.0
+Premiação 3o        : R$ 119.0
+Premiação 4o        : R$ 0.0
+Premiação 5o        : R$ 0.0
+Ultimo Round        : Rodada 25: 5000/10000 - Ante: 1000
+*********************************************************
+Lista de Rebuys     : 
+   - 1 Sandro Moraes da Silva
+   - 2 Eduardo Takeshi Sawabe
+   - 3 Marcel Cravo Conti
+   - 4 Rodrigo Chumbinho (Ramon)
+   - 5 Alan Tremori de Almeida
+   - 6 Sandro Moraes da Silva
+   - 7 Eduardo Takeshi Sawabe
+   - 8 Rodrigo Chumbinho (Ramon)
+   - 9 José Ribamar Junior
+   - 10 Ramon Cravo
+*********************************************************
+Lista de Eliminações: 
+   - 1 José Ribamar Junior
+   - 2 Alan Tremori de Almeida
+   - 3 Ramon Cravo
+   - 4 Rodrigo Chumbinho (Ramon)
+   - 5 Nivaldo Custódio
+   - 6 Jaime (Denis)
+   - 7 Thiago Scorza
+   - 8 Denis Vinicius Pimentel Gonçalves
+   - 9 Eduardo Takeshi Sawabe
+   - 10 Jackson Cravo
+   - 11 Sandro Moraes da Silva
+   - 12 Marcel Cravo Conti
+   - 13 Ricardo de Cassia Ferreira
+*********************************************************
+==================================================================

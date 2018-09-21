@@ -1,0 +1,46 @@
+===================== Etapa 14/04/2018==================================
+*********************************************************
+Jogadores           : 16
+Rebuys              : 13
+Total Arrecadado    : R$ 1000.0
+Premiação 1o        : R$ 500.0
+Premiação 2o        : R$ 250.0
+Premiação 3o        : R$ 150.0
+Premiação 4o        : R$ 100.0
+Premiação 5o        : R$ 0.0
+Ultimo Round        : Rodada 23: 5.000/10.000 - Ante: 1000
+*********************************************************
+Lista de Rebuys     : 
+   - 1 Nivaldo Custódio
+   - 2 Jaime (Denis)
+   - 3 Renildo (Jefferson)
+   - 4 Nivaldo (Denis)
+   - 5 Jefferson Oliveira de Carvalho
+   - 6 Jefferson Oliveira de Carvalho
+   - 7 Ricardo de Cassia Ferreira
+   - 8 Jefferson Oliveira de Carvalho
+   - 9 Denis Vinicius Pimentel Gonçalves
+   - 10 Humberto Rechi Jr (DDS)
+   - 11 Denis Vinicius Pimentel Gonçalves
+   - 12 Nivaldo (Denis)
+   - 13 Renildo (Jefferson)
+*********************************************************
+Lista de Eliminações: 
+   - 1 Denis Vinicius Pimentel Gonçalves
+   - 2 Renildo (Jefferson)
+   - 3 Nivaldo Custódio
+   - 4 Venícius Augusto (Ricardinho)
+   - 5 Nivaldo (Denis)
+   - 6 Jaime (Denis)
+   - 7 Caio Pignatari (Jefferson) 
+   - 8 Ricardo de Cassia Ferreira
+   - 9 Humberto Rechi Jr (DDS)
+   - 10 José Ribamar Junior
+   - 11 Thiago Scorza
+   - 12 Jefferson Oliveira de Carvalho
+   - 13 Eduardo Takeshi Sawabe
+   - 14 Triggo (Jefferson)
+   - 15 Santiago Rezende (Jefferson)
+   - 16 Sandro Moraes da Silva
+*********************************************************
+==================================================================

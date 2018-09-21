@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.RankingController">
+   <children>
+      <BorderPane layoutX="-249.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <center>
+            <ScrollPane BorderPane.alignment="CENTER">
+               <content>
+                  <TableView fx:id="tRanking" prefHeight="800.0" prefWidth="2000.0">
+                    <columns>
+                      <TableColumn fx:id="cJogador" prefWidth="200.0" text="Jogador" />
+                      <TableColumn fx:id="cResultado1" prefWidth="60.0" text="Jan" />
+                        <TableColumn fx:id="cResultado2" prefWidth="60.0" text="Fev" />
+                        <TableColumn fx:id="cResultado3" prefWidth="60.0" text="Mar" />
+                        <TableColumn fx:id="cResultado4" prefWidth="60.0" text="Abr" />
+                        <TableColumn fx:id="cResultado5" prefWidth="60.0" text="Mai" />
+                        <TableColumn fx:id="cResultado6" prefWidth="60.0" text="Jun" />
+                        <TableColumn fx:id="cResultado7" prefWidth="60.0" text="Jul" />
+                        <TableColumn fx:id="cResultado8" prefWidth="60.0" text="Ago" />
+                        <TableColumn fx:id="cResultado9" prefWidth="60.0" text="Set" />
+                        <TableColumn fx:id="cResultado10" prefWidth="60.0" text="Out" />
+                        <TableColumn fx:id="cResultado11" prefWidth="60.0" text="Nov" />
+                        <TableColumn fx:id="cResultado12" prefWidth="60.0" text="Dez" />
+                        <TableColumn fx:id="cResultado121" prefWidth="60.0" text="Total" />
+                        <TableColumn fx:id="cTotal" prefWidth="200.0" text="Resumo" />
+                    </columns>
+                  </TableView>
+               </content>
+            </ScrollPane>
+         </center>
+         <bottom>
+            <Button mnemonicParsing="false" text="Button" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </BorderPane.margin>
+            </Button>
+         </bottom>
+      </BorderPane>
+   </children>
+</AnchorPane>

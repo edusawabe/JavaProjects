@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="PokerTimerFX.jnlp">
+  <information>
+    <title>PokerTimerFX</title>
+    <vendor>Edu</vendor>
+    <description>PokerTimer</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="PokerTimerFX.jar" size="1699938" download="eager" />
+    <jar href="libs\commons-collections4-4.1.jar" size="751238" download="eager" />
+    <jar href="libs\jmf.jar" size="2082557" download="eager" />
+    <jar href="libs\log4j-1.2.17.jar" size="489883" download="eager" />
+    <jar href="libs\mail.jar" size="521000" download="eager" />
+    <jar href="libs\poi-3.15.jar" size="2579580" download="eager" />
+    <jar href="libs\poi-ooxml-3.15.jar" size="1338241" download="eager" />
+    <jar href="libs\poi-ooxml-schemas-3.15.jar" size="5859007" download="eager" />
+    <jar href="libs\xmlbeans-2.6.0.jar" size="2730866" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="0" height="0" main-class="application.Main"  name="PokerTimer" />
+  <update check="background"/>
+</jnlp>

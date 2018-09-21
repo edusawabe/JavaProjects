@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1278.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.RankingController">
+   <children>
+      <BorderPane layoutX="-249.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <center>
+            <ScrollPane BorderPane.alignment="CENTER">
+               <content>
+                  <TableView fx:id="tRanking" prefHeight="800.0" prefWidth="2000.0">
+                    <columns>
+                      <TableColumn fx:id="cJogador" editable="false" prefWidth="200.0" text="Jogador" />
+                      <TableColumn fx:id="cResultado1" editable="false" prefWidth="80.0" text="Jan" />
+                        <TableColumn fx:id="cResultado2" editable="false" prefWidth="80.0" text="Fev" />
+                        <TableColumn fx:id="cResultado3" editable="false" prefWidth="80.0" text="Mar" />
+                        <TableColumn fx:id="cResultado4" editable="false" prefWidth="80.0" text="Abr" />
+                        <TableColumn fx:id="cResultado5" editable="false" prefWidth="80.0" text="Mai" />
+                        <TableColumn fx:id="cResultado6" editable="false" prefWidth="80.0" text="Jun" />
+                        <TableColumn fx:id="cResultado7" editable="false" prefWidth="80.0" text="Jul" />
+                        <TableColumn fx:id="cResultado8" editable="false" prefWidth="80.0" text="Ago" />
+                        <TableColumn fx:id="cResultado9" editable="false" prefWidth="80.0" text="Set" />
+                        <TableColumn fx:id="cResultado10" editable="false" prefWidth="80.0" text="Out" />
+                        <TableColumn fx:id="cResultado11" editable="false" prefWidth="80.0" text="Nov" />
+                        <TableColumn fx:id="cResultado12" editable="false" prefWidth="80.0" text="Dez" />
+                        <TableColumn fx:id="cTotal" editable="false" prefWidth="100.0" text="Total" />
+                        <TableColumn fx:id="cTotalDescarte" editable="false" prefWidth="100.0" text="Total c\ Desc." />
+                        <TableColumn fx:id="cTotalRebuys" editable="false" prefWidth="63.0" text="Rebuys" />
+						<TableColumn fx:id="cTotalGanho" editable="false" prefWidth="100.0" text="Total Ganho" />
+                        <TableColumn fx:id="cTotalGasto" editable="false" prefWidth="100.0" text="Total Gasto" />
+                        <TableColumn fx:id="cSaldo" editable="false" prefWidth="100.0" text="Saldo" />
+                    </columns>
+                  </TableView>
+               </content>
+            </ScrollPane>
+         </center>
+         <bottom>
+         </bottom>
+      </BorderPane>
+   </children>
+</AnchorPane>

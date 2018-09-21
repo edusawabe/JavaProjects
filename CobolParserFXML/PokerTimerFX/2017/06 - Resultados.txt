@@ -1,0 +1,52 @@
+===================== Etapa 10/06/2017==================================
+*********************************************************
+Jogadores           : 17
+Rebuys              : 18
+Total Arrecadado    : R$ 1020.0
+Premiação 1o        : R$ 510.0
+Premiação 2o        : R$ 255.0
+Premiação 3o        : R$ 153.0
+Premiação 4o        : R$ 102.0
+Premiação 5o        : R$ 0.0
+Ultimo Round        : Rodada 23: 2500/5000 - Ante: 500
+*********************************************************
+Lista de Rebuys     : 
+   - 1 José Ribamar Junior
+   - 2 Thiago Scorza
+   - 3 Nivaldo Custódio
+   - 4 Nivaldo Custódio
+   - 5 Sandro Moraes da Silva
+   - 6 Eduardo Takeshi Sawabe
+   - 7 José Ribamar Junior
+   - 8 Ramon Cravo
+   - 9 Jackson Cravo
+   - 10 Ricardo de Cassia Ferreira
+   - 11 Rodrigo Conti Costa
+   - 12 Marcel Cravo Conti
+   - 13 Ricardo de Cassia Ferreira
+   - 14 Eduardo Takeshi Sawabe
+   - 15 Thiago Scorza
+   - 16 Eduardo Takeshi Sawabe
+   - 17 Thiago Scorza
+   - 18 Denis Vinicius Pimentel Gonçalves
+*********************************************************
+Lista de Eliminações: 
+   - 1 Jaime (Denis)
+   - 2 Denis Vinicius Pimentel Gonçalves
+   - 3 Thiago Scorza
+   - 4 Jackson Cravo
+   - 5 Eduardo Takeshi Sawabe
+   - 6 Ricardo de Cassia Ferreira
+   - 7 José Ribamar Junior
+   - 8 Marcel Cravo Conti
+   - 9 Humberto Rechi Jr (DDS)
+   - 10 Alan Tremori de Almeida
+   - 11 Nivaldo Custódio
+   - 12 Jefferson Oliveira de Carvalho
+   - 13 Rodrigo Conti Costa
+   - 14 Sandro Moraes da Silva
+   - 15 Nivaldo (Denis)
+   - 16 Ramon Cravo
+   - 17 Ailton Francisco da Silva
+*********************************************************
+==================================================================
