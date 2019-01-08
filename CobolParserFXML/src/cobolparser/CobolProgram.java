@@ -5,6 +5,7 @@
  */
 package cobolparser;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -147,6 +148,66 @@ public class CobolProgram {
         for (String lArq : wrkSection.getArqList()) {
         	ret = ret + "\n" + programName + ";" + lArq;
 		}
+
+        return ret;
+    }
+
+    public String toStringResumed(){
+        String ret = "";
+        String loopString;
+        String copy;
+        Iterator<CobolElement> pgmIterator = lPgmCall.iterator();
+        Iterator<String> copyIterator = wrkSection.getCopyList().iterator();
+        Iterator<String> sqlIterator = wrkSection.getSqlList().iterator();
+        boolean copyNext = true, pgmNext = true, sqlNext = true;
+
+        while(copyNext || pgmNext || sqlNext){
+        	loopString = "";
+
+        	if(copyIterator.hasNext()){
+        		copy = copyIterator.next();
+    			if (!copy.equals("I#FRWKGE") && !copy.equals("I#FRWKMD") && !copy.equals("I#FRWKME")
+    					&& !copy.equals("I#FRWK04") && !copy.equals("I#FRWKCI") && !copy.equals("I#FRWKDB")
+    					&& !copy.equals("FRWKWAAA") && !copy.equals("SQLCA") && !copy.contains("I#FRWKAR")
+    					&& !copy.equals("I#FRWKLI")){
+    				loopString = loopString + copy + ";";
+    			} else {
+    				copy = "";
+    				loopString = loopString + copy + ";";
+    			}
+        	} else{
+        		copyNext = false;
+        		loopString = loopString + "" + ";";
+        	}
+
+        	if(pgmIterator.hasNext()){
+        		loopString = loopString + ";" + pgmIterator.next().getName() + ";";
+        	} else{
+        		pgmNext = false;
+        		loopString = loopString + ";" + "" + ";";
+        	}
+
+        	if(sqlIterator.hasNext()){
+        		copy = sqlIterator.next();
+        		if(copy.equals("SQLCA")){
+        			if(sqlIterator.hasNext()){
+        				copy = sqlIterator.next();
+        				loopString = loopString + ";;;;;;" + copy + "\n";
+        			} else {
+                		sqlNext = false;
+                		loopString = loopString + ";;;;;;" + "" + "\n";
+        			}
+        		} else{
+        			loopString = loopString + ";;;;;;" + copy + "\n";
+        		}
+        	} else{
+        		sqlNext = false;
+        		loopString = loopString + ";;;;;;" + "" + "\n";
+        	}
+        	if(!loopString.equals(";;;;;;;;;\n")) {
+        		ret = ret + programName + ";" + loopString;
+        	}
+        }
 
         return ret;
     }

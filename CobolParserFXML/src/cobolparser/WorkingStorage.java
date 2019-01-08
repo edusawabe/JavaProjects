@@ -157,7 +157,7 @@ public class WorkingStorage {
                 add = false;
         }
         if (add){
-            copyList.add(sql);
+            sqlList.add(sql);
         }
     }
 

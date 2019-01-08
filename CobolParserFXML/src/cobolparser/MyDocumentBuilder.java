@@ -39,7 +39,7 @@ public class MyDocumentBuilder {
 		Element element = doc.getDocumentElement();
 		buildFileWorkigStorage(pgm, element);
 		buildFileProcedureDivisionProgramCalls(pgm, element);
-		buildProgramCalls(pgm, element);
+		buildProcedureDivisionProgramCalls(pgm,element);
 		buildDB2Elments(pgm, element);
 
 		return pgm;
@@ -490,6 +490,26 @@ public class MyDocumentBuilder {
                     }
                 }
             }
+        }
+    }
+
+    private void buildProcedureDivisionProgramCalls(CobolProgram pgm, Element element) {
+        //obtem node da PROCEDURE DIVISION
+        Element procedureDivision = (Element) element.getElementsByTagName("procedureDivision").item(0);
+
+        //lista de comandos da procedure
+        NodeList callStatementList = procedureDivision.getElementsByTagName("callStatement");
+        for (int i = 0; i < callStatementList.getLength(); i++) {
+            Element e = (Element) callStatementList.item(i);
+            Element pgmElement = null;
+            if(e.getElementsByTagName("alphanumericLiteral").getLength() > 0)
+            	pgmElement = (Element) e.getElementsByTagName("alphanumericLiteral").item(0);
+            else {
+            	if (e.getElementsByTagName("cobolWord").getLength() > 0){
+            		pgmElement = (Element) e.getElementsByTagName("cobolWord").item(0);
+            	}
+            }
+            pgm.addProgramCall(pgmElement.getTextContent());
         }
     }
 

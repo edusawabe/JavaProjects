@@ -96,7 +96,7 @@ public class MainGUIController implements Initializable{
 		olTabelaProgramas.clear();
 		taAreatexto.setText("");
 		DirectoryChooser dch = new DirectoryChooser();
-		dch.setInitialDirectory(new File("C:\\E!SuperCopia"));
+		dch.setInitialDirectory(new File("C:\\Fonte"));
 		dir = dch.showDialog(lbDir.getScene().getWindow());
 		indFile = 0;
 		totalFiles = 0;
@@ -197,6 +197,12 @@ public class MainGUIController implements Initializable{
 	private void doProcess() throws Exception {
 		if (fileInProcess >= olTabelaProgramas.size()) {
 			processWorker.stop();
+			String[] tmp = taAreatexto.getText().split("\n");
+			taAreatexto.setText("");
+			for (int i = 0; i < tmp.length; i++) {
+				if(!tmp[i].equals(""))
+					taAreatexto.setText(taAreatexto.getText().concat(tmp[i] + "\n"));
+			}
 			return;
 		} else {
 			if ((!tvTabProgs.getItems().get(fileInProcess).getArquivo().contains(".xml"))

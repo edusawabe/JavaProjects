@@ -1,5 +1,7 @@
 package application;
 
+import com.aquafx_project.AquaFx;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -11,6 +13,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			AquaFx.style();
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("MainGui.fxml"));
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());

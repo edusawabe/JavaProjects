@@ -64,7 +64,7 @@ public class FolderToXMLProcessor {
      * @param skipExistingFile skips the files that already have a xml file generated
      */
     private void process() throws IOException{
-        String programs = new String();
+        String programs = "Programa;Serviço;Books;DCLGENs\n";
 
         CobolProgram pgm;
         int i = 0;
@@ -80,14 +80,14 @@ public class FolderToXMLProcessor {
 							pgm = docBuilder.buildFile(outFile);
 							db2Driver.insertUpdateDeleteStatement(
 									StatementCreator.generateInsertProgramStatement(pgm.getProgramName(), ""));
-							programs = programs + pgm.toString();
+							programs = programs + pgm.toStringResumed();
 							i++;
 						}
 						if (!outFile.exists()) {
 							outFile.createNewFile();
 							processFile(lFile1, outFile, coordinator);
 							pgm = docBuilder.buildFile(outFile);
-							programs = programs + pgm.toString();
+							programs = programs + pgm.toStringResumed();
 							db2Driver.insertUpdateDeleteStatement(
 									StatementCreator.generateInsertProgramStatement(pgm.getProgramName(), ""));
 							i++;
@@ -107,7 +107,7 @@ public class FolderToXMLProcessor {
                 try {
 					pgm = docBuilder.buildFile(outFile);
 	                db2Driver.insertUpdateDeleteStatement(StatementCreator.generateInsertProgramStatement(pgm.getProgramName(), ""));
-	                programs = programs + pgm.toString();
+	                programs = programs + pgm.toStringResumed();
                 } catch (ParserConfigurationException | SAXException ex) {
                 	logger.log(Level.ERROR, null, ex);
 				}
@@ -117,7 +117,7 @@ public class FolderToXMLProcessor {
                 processFile(folder, outFile, coordinator);
                 try {
 					pgm = docBuilder.buildFile(outFile);
-	                programs = programs + pgm.toString();
+	                programs = programs + pgm.toStringResumed();
 	                db2Driver.insertUpdateDeleteStatement(StatementCreator.generateInsertProgramStatement(pgm.getProgramName(), ""));
                 } catch (ParserConfigurationException | SAXException ex) {
                 	logger.log(Level.ERROR, null, ex);
@@ -160,7 +160,7 @@ public class FolderToXMLProcessor {
 					olTabelaProgramas.get(j).setStatus("Processado");
 					db2Driver.insertUpdateDeleteStatement(
 							StatementCreator.generateInsertProgramStatement(pgm.getProgramName(), ""));
-			        return pgm.toString();
+			        return pgm.toStringResumed();
 				}
 				else {
 					olTabelaProgramas.get(j).setStatus("Erro");
