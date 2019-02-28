@@ -19,10 +19,40 @@
 	
 		<mkdir dir="externalLibs" />
 	
+		<copy todir="externalLibs">
+			<fileset dir="C:\Jars">
+				<filename name="koopa.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Jars">
+				<filename name="log4j-1.2.16.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Jars\commons-io-2.6">
+				<filename name="commons-io-2.6-sources.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Jars\commons-io-2.6">
+				<filename name="commons-io-2.6.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Jars">
+				<filename name="postgresql-9.4-1203.jdbc41.jar"/>
+			</fileset>
+		</copy>
 	
 		<mkdir dir="project" />
 		<copy todir="project">
-			<fileset dir="C:\Users\eduardo.sawabe\workspace_4.5.1\CobolParserFXML">
+			<fileset dir="C:\Users\edusa\git\JavaProjects\CobolParserFXML">
+				<include name="resource/**" />
+			</fileset>
+		</copy>
+		<copy todir="project">
+			<fileset dir="C:\Users\edusa\git\JavaProjects\CobolParserFXML">
 				<include name="src/**" />
 			</fileset>
 		</copy>
@@ -38,12 +68,22 @@
 		<!-- Copy project-libs references -->
 		<copy todir="build/libs">
 			<fileset dir="externalLibs">
+				<include name="postgresql-9.4-1203.jdbc41.jar"/>
+				<include name="commons-io-2.6.jar"/>
+				<include name="commons-io-2.6-sources.jar"/>
+				<include name="koopa.jar"/>
+				<include name="log4j-1.2.16.jar"/>
 			</fileset>
 		</copy>
 	
 		<!-- Copy project references -->
 	
 		<!-- Copy project sources itself -->
+		<copy todir="build/src">
+			<fileset dir="project/resource">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
 		<copy todir="build/src">
 			<fileset dir="project/src">
 				<include name="**/*"/>
@@ -60,6 +100,9 @@
 	
 		<!-- Copy over none Java-Files -->
 		<copy todir="build/classes">
+		<fileset dir="project/resource">
+			<exclude name="**/*.java"/>
+		</fileset>
 		<fileset dir="project/src">
 			<exclude name="**/*.java"/>
 		</fileset>
@@ -89,6 +132,7 @@
 		<fx:application id="fxApplication"
 			name="CobolParser"
 			mainClass=""
+			toolkit="fx"
 		/>
 	
 		<mkdir dir="build/classes/META-INF" />
@@ -110,6 +154,23 @@
 		</fx:jar>
 	
 	
+		<mkdir dir="deploy" />
+		<!-- Need to use ${basedir} because somehow the ant task is calculating the directory differently -->
+		<fx:deploy
+			embedJNLP="false"
+			extension="false"
+			includeDT="false"
+			offlineAllowed="true"
+			outdir="${basedir}/deploy"
+			outfile="CobolParserFXML" nativeBundles="none"
+			updatemode="background" >
+	
+			<fx:platform basedir="${java.home}"/>
+			<fx:info title="CobolParserFXML" vendor="Edu"/>
+	
+			<fx:application refId="fxApplication"/>
+			<fx:resources refid="appRes"/>
+		</fx:deploy>
 	
 	
 	</target>
