@@ -7,5 +7,7 @@
 	<classpathentry kind="lib" path="C:/Jars/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="C:/Jars/postgresql-9.4-1203.jdbc41.jar"/>
 	<classpathentry kind="src" path="resource"/>
+	<classpathentry kind="lib" path="C:/Jars/commons-io-2.6/commons-io-2.6.jar"/>
+	<classpathentry kind="lib" path="C:/Jars/commons-io-2.6/commons-io-2.6-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

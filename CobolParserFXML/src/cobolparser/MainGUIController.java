@@ -1,10 +1,24 @@
 package cobolparser;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.MalformedInputException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Stream;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import javafx.animation.KeyFrame;
@@ -74,6 +88,8 @@ public class MainGUIController implements Initializable{
 	private Double di = new Double("0");
 	private Double ds = new Double("0");
 	private int totalFiles;
+	private File configFile;
+	private String initDir;
     final static Logger logger = Logger.getLogger(MainGUIController.class);
 
 	@Override
@@ -86,6 +102,23 @@ public class MainGUIController implements Initializable{
 		tvTabProgs.getItems().setAll(olTabelaProgramas);
 		//dbDriver = new DBDriver();
 		//dbDriver.openConnection();
+		configFile = new File("./config.txt");
+		try {
+			if(configFile.exists()){
+				BufferedReader reader = new BufferedReader(new FileReader(configFile));
+				initDir = reader.readLine();
+				reader.close();
+			} else {
+				BufferedWriter writer = new BufferedWriter(new FileWriter(configFile));
+				initDir = "C:\\";
+				writer.write(initDir);
+				writer.flush();
+				writer.close();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 
@@ -96,13 +129,24 @@ public class MainGUIController implements Initializable{
 		olTabelaProgramas.clear();
 		taAreatexto.setText("");
 		DirectoryChooser dch = new DirectoryChooser();
-		dch.setInitialDirectory(new File("C:\\Fonte"));
+		dch.setInitialDirectory(new File(initDir));
 		dir = dch.showDialog(lbDir.getScene().getWindow());
 		indFile = 0;
 		totalFiles = 0;
 
 		if (dir == null)
 			return;
+		configFile = new File("./config.txt");
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(configFile));
+			initDir = dir.getAbsolutePath();
+			writer.write(dir.getAbsolutePath());
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		lbDir.setText("Diretorio: " + dir.getAbsolutePath());
 
 		files = dir.listFiles();
@@ -224,12 +268,41 @@ public class MainGUIController implements Initializable{
 	private void doOpenDir() throws Exception {
 		if (indFile > (totalFiles-1)) {
 			oPenProcess.stop();
+			logger.info("Fim Abrir Pasta!");
 			return;
 		} else {
-			if ((!lFiles.get(indFile).getName().contains(".xml")) && lFiles.get(indFile).isFile()) {
+			if ( (lFiles.get(indFile).getName().contains(".txt") || lFiles.get(indFile).getName().contains(".cbl")
+			   || (!lFiles.get(indFile).getName().contains("."))) && lFiles.get(indFile).isFile()) {
 				ProgramsTableLine pgmLine = new ProgramsTableLine();
 				pgmLine.setId("" + (indFile + 1));
 				pgmLine.setArquivo(lFiles.get(indFile).getAbsolutePath());
+				Path path = Paths.get(lFiles.get(indFile).getAbsolutePath());
+				String p1, p2, toWrite;
+				String[] splitContent;
+				int i1 = 0, i2 = 0;
+				try {
+					List<String> contents = FileUtils.readLines(new File(lFiles.get(indFile).getAbsolutePath()), StandardCharsets.UTF_8);
+					BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));
+					// Read from the stream
+					for (String content : contents) {
+						if(content.contains("I#") && content.contains(".") && !content.contains("'") && !content.contains("*")){
+							toWrite = "";
+							i1 = content.indexOf("I#");
+							i2 = content.indexOf(".");
+							splitContent = content.split("I#");
+							p1 = splitContent[0];
+							p2 = content.substring(i1, i2);
+							toWrite = p1 + "'" + p2 + "'" + ".";
+							logger.info("Programa: " + lFiles.get(indFile).getName() + " Corrigindo linha: " + content);
+							content = toWrite;
+						}
+						writer.write(content+"\n");
+					}
+					writer.flush();
+					writer.close();
+				} catch (IOException ex) {
+					logger.info("doOpenDir Exception: ", ex);
+				}
 				olTabelaProgramas.add(pgmLine);
 				tvTabProgs.setItems(olTabelaProgramas);
 
