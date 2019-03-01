@@ -31,7 +31,11 @@ public class MyDocumentBuilder {
 		CobolProgram pgm = new CobolProgram();
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;
-
+		LinkedList<String> listMove = null;
+		int listSize;
+		boolean add;
+		boolean valueFound;
+		CobolElement toAdd = null;
 		docBuilder = dbf.newDocumentBuilder();
 		// realiza parse do arquivo
 		Document doc = docBuilder.parse(file);
@@ -41,7 +45,44 @@ public class MyDocumentBuilder {
 		buildFileProcedureDivisionProgramCalls(pgm, element);
 		buildProcedureDivisionProgramCalls(pgm,element);
 		buildDB2Elments(pgm, element);
-
+		listSize = pgm.getlPgmCall().size();
+		for (int i = 0; i < listSize; i++) {
+			valueFound = false;
+			for (int m = 0; m < pgm.getWrkSection().getWrkList().size(); m++) {
+				if(pgm.getWrkSection().getWrkList().get(m).getName().equals(pgm.getlPgmCall().get(i).getName())){
+					if(pgm.getWrkSection().getWrkList().get(m).getContent().size() > 0){
+						pgm.getlPgmCall().get(i).setName(pgm.getWrkSection().getWrkList().get(m).getContent().get(0));
+						valueFound = true;
+					}
+					break;
+				}
+			}
+			if(!valueFound){
+				listMove = getAlphaNumericMoveVar(element, pgm.getlPgmCall().get(i).getName());
+				if(listMove.size() > 0){
+					//pgm.getlPgmCall().remove(i);
+					for (int k = 0; k < listMove.size(); k++) {
+						toAdd = new CobolElement();
+						toAdd.setName(listMove.get(k));
+						add = true;
+						for (int j = 0; j < pgm.getlPgmCall().size(); j++) {
+							if(pgm.getlPgmCall().get(j).getName().equals(toAdd.getName())){
+								add = false;
+								break;
+							}
+						}
+						if(add)
+							pgm.getlPgmCall().add(toAdd);
+					}
+				} else {
+					pgm.getlPgmCall().get(i).setName(pgm.getlPgmCall().get(i).getName().replaceAll("WRK-", ""));
+				}
+			}
+		}
+		for (int n = 0; n < pgm.getlPgmCall().size(); n++) {
+			if(pgm.getlPgmCall().get(n).getName().contains("WRK-"))
+				pgm.getlPgmCall().remove(n);
+		}
 		return pgm;
 	}
 

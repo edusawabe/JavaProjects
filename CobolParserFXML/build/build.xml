@@ -48,12 +48,12 @@
 		<mkdir dir="project" />
 		<copy todir="project">
 			<fileset dir="C:\Users\edusa\git\JavaProjects\CobolParserFXML">
-				<include name="resource/**" />
+				<include name="src/**" />
 			</fileset>
 		</copy>
 		<copy todir="project">
 			<fileset dir="C:\Users\edusa\git\JavaProjects\CobolParserFXML">
-				<include name="src/**" />
+				<include name="resource/**" />
 			</fileset>
 		</copy>
 	
@@ -148,7 +148,7 @@
 			<manifest>
 				<attribute name="Implementation-Vendor" value="Edu"/>
 				<attribute name="Implementation-Title" value="CobolParser"/>
-				<attribute name="Implementation-Version" value="1.0"/>
+				<attribute name="Implementation-Version" value="2.0"/>
 				<attribute name="JavaFX-Feature-Proxy" value="None"/>
 			</manifest>
 		</fx:jar>

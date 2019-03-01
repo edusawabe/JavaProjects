@@ -129,8 +129,13 @@ public class MainGUIController implements Initializable{
 		olTabelaProgramas.clear();
 		taAreatexto.setText("");
 		DirectoryChooser dch = new DirectoryChooser();
-		dch.setInitialDirectory(new File(initDir));
-		dir = dch.showDialog(lbDir.getScene().getWindow());
+		try {
+			dch.setInitialDirectory(new File(initDir));
+			dir = dch.showDialog(lbDir.getScene().getWindow());
+		} catch (IllegalArgumentException e) {
+			dch.setInitialDirectory(new File("C:\\"));
+			dir = dch.showDialog(lbDir.getScene().getWindow());
+		}
 		indFile = 0;
 		totalFiles = 0;
 
@@ -214,9 +219,9 @@ public class MainGUIController implements Initializable{
 				folderProcessor.setFolder(dir);
 				folderProcessor.setOlTabelaProgramas(olTabelaProgramas);
 				if (rbGerarXMLSim.isSelected())
-					folderProcessor.setSkipExistingFile(true);
-				if (rbGerarXMLNao.isSelected())
 					folderProcessor.setSkipExistingFile(false);
+				if (rbGerarXMLNao.isSelected())
+					folderProcessor.setSkipExistingFile(true);
 				folderProcessor.setDb2Driver(new DBDriver());
 
 				processWorker = new Timeline();
