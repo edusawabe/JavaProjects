@@ -131,7 +131,7 @@
 	
 		<fx:application id="fxApplication"
 			name="CobolParser"
-			mainClass=""
+			mainClass="cobolparser.Main"
 			toolkit="fx"
 		/>
 	
