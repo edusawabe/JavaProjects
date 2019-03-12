@@ -36,6 +36,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -100,6 +101,8 @@ public class MainGUIController implements Initializable{
 		tcColunaNome.setCellValueFactory(new PropertyValueFactory<ProgramsTableLine, String>("nomePrograma"));
 		tcColunaStatus.setCellValueFactory(new PropertyValueFactory<ProgramsTableLine, String>("status"));
 		tvTabProgs.getItems().setAll(olTabelaProgramas);
+		tvTabProgs.getSelectionModel().setCellSelectionEnabled(true);
+		tvTabProgs.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		//dbDriver = new DBDriver();
 		//dbDriver.openConnection();
 		configFile = new File("./config.txt");

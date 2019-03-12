@@ -162,7 +162,7 @@
 			includeDT="false"
 			offlineAllowed="true"
 			outdir="${basedir}/deploy"
-			outfile="CobolParserFXML" nativeBundles="none"
+			outfile="CobolParserFXML" nativeBundles="exe"
 			updatemode="background" >
 	
 			<fx:platform basedir="${java.home}"/>

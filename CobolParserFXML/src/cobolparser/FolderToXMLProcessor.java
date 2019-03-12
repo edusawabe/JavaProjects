@@ -66,7 +66,7 @@ public class FolderToXMLProcessor {
     private void process() throws IOException{
         String programs = "Programa;Serviço;Books;DCLGENs\n";
 
-        CobolProgram pgm;
+        CobolProgram pgm = null;
         int i = 0;
         if (olTabelaProgramas.size() > 0){
 			for (int j = 0; j < olTabelaProgramas.size(); j++) {
@@ -98,6 +98,7 @@ public class FolderToXMLProcessor {
 					}
 				}
 				olTabelaProgramas.get(j).setStatus("Processado");
+				olTabelaProgramas.get(j).setNomePrograma(pgm.getProgramName());
 			}
 		} else {
             File outFile = new File(folder.getAbsolutePath() + ".xml");
@@ -158,6 +159,7 @@ public class FolderToXMLProcessor {
 				        return "";
 					}
 					olTabelaProgramas.get(j).setStatus("Processado");
+					olTabelaProgramas.get(j).setNomePrograma(pgm.getProgramName());
 					db2Driver.insertUpdateDeleteStatement(
 							StatementCreator.generateInsertProgramStatement(pgm.getProgramName(), ""));
 			        return pgm.toStringResumed();
